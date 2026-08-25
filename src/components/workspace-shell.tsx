@@ -20,6 +20,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { WorkspaceFeedback } from "@/components/workspace-feedback";
 import { cn } from "@/lib/utils";
 
 type WorkspaceShellProps = {
@@ -128,8 +129,8 @@ export function WorkspaceShell({ children, userName }: WorkspaceShellProps) {
   const [isNavigationOpen, setIsNavigationOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-background lg:grid lg:grid-cols-[15.5rem_minmax(0,1fr)]">
-      <aside className="hidden border-r border-border bg-card lg:flex lg:min-h-screen lg:flex-col">
+    <div className="min-h-screen bg-background xl:grid xl:grid-cols-[15.5rem_minmax(0,1fr)]">
+      <aside className="hidden border-r border-border bg-card xl:flex xl:min-h-screen xl:flex-col">
         <div className="border-b border-border px-5 py-5">
           <Link className="flex items-center gap-3" href="/demo/dashboard">
             <DmsMark />
@@ -155,13 +156,13 @@ export function WorkspaceShell({ children, userName }: WorkspaceShellProps) {
       </aside>
 
       <div className="min-w-0">
-        <header className="sticky top-0 z-20 flex min-h-16 items-center justify-between border-b border-border bg-background/95 px-4 backdrop-blur lg:px-8">
+        <header className="sticky top-0 z-20 flex min-h-16 items-center justify-between border-b border-border bg-background/95 px-4 backdrop-blur xl:px-8">
           <div className="flex items-center gap-3">
             <Dialog onOpenChange={setIsNavigationOpen} open={isNavigationOpen}>
               <DialogTrigger asChild>
                 <Button
                   aria-label="Open workspace navigation"
-                  className="lg:hidden"
+                  className="xl:hidden"
                   size="icon"
                   variant="ghost"
                 >
@@ -194,7 +195,7 @@ export function WorkspaceShell({ children, userName }: WorkspaceShellProps) {
               </DialogContent>
             </Dialog>
             <Link
-              className="flex items-center gap-2 lg:hidden"
+              className="flex items-center gap-2 xl:hidden"
               href="/demo/dashboard"
             >
               <DmsMark />
@@ -205,6 +206,7 @@ export function WorkspaceShell({ children, userName }: WorkspaceShellProps) {
         </header>
         {children}
       </div>
+      <WorkspaceFeedback />
     </div>
   );
 }

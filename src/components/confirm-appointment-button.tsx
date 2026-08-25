@@ -4,6 +4,7 @@ import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { announceWorkspaceFeedback } from "@/components/workspace-feedback";
 
 type ConfirmAppointmentButtonProps = {
   appointmentId: string;
@@ -38,6 +39,7 @@ export function ConfirmAppointmentButton({
         );
       }
 
+      announceWorkspaceFeedback("Appointment confirmed.");
       router.refresh();
     } catch (cause) {
       setError(

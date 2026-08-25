@@ -1,12 +1,7 @@
-import {
-  CalendarPlus,
-  CheckCircle2,
-  Clock3,
-  FileText,
-  MoveRight,
-} from "lucide-react";
+import { CalendarPlus, CheckCircle2, Clock3, FileText } from "lucide-react";
 import Link from "next/link";
 import { ConfirmAppointmentButton } from "@/components/confirm-appointment-button";
+import { ExploreDmsGuide } from "@/components/explore-dms-guide";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -264,26 +259,7 @@ export default async function DashboardPage() {
         </section>
       </div>
 
-      <section
-        aria-labelledby="explore-title"
-        className="mt-10 border-t border-border pt-7"
-      >
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h2 className="font-medium" id="explore-title">
-              Explore DMS
-            </h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Review today’s agenda, confirm an appointment, and follow patient
-              context across the workspace.
-            </p>
-          </div>
-          <MoveRight
-            aria-hidden
-            className="hidden size-5 text-primary sm:block"
-          />
-        </div>
-      </section>
+      <ExploreDmsGuide />
     </main>
   );
 }

@@ -1,6 +1,10 @@
 export default function PatientLoading() {
   return (
-    <main className="mx-auto w-full max-w-7xl animate-pulse px-4 py-8 sm:px-6 lg:px-8">
+    <main
+      aria-busy="true"
+      aria-label="Loading patient record"
+      className="mx-auto w-full max-w-7xl animate-pulse px-4 py-8 sm:px-6 lg:px-8"
+    >
       <div className="h-11 w-28 rounded bg-secondary" />
       <div className="mt-4 border-b border-border pb-7">
         <div className="h-3 w-28 rounded bg-secondary" />

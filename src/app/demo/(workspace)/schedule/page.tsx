@@ -1,4 +1,6 @@
 import { ScheduleBoard } from "@/components/schedule-board";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { getDemoClock } from "@/lib/demo/constants";
 import { parseScheduleWeek, scheduleWeekStart } from "@/lib/demo/schedule";
 import { getScheduleData } from "@/lib/schedule-data";
@@ -42,6 +44,9 @@ export default async function SchedulePage({
           <p className="mt-3 leading-7 text-muted-foreground">
             Try again after the demo database connection is available.
           </p>
+          <Button asChild className="mt-6" variant="outline">
+            <Link href="/demo/schedule">Try again</Link>
+          </Button>
         </section>
       </main>
     );

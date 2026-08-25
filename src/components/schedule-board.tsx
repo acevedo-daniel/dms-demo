@@ -209,7 +209,7 @@ export function ScheduleBoard({
       <section aria-label="Week schedule" className="mt-8 hidden md:block">
         <div className="overflow-x-auto border border-border">
           <div className="min-w-[62rem]">
-            <div className="sticky top-16 z-10 grid grid-cols-[4.5rem_repeat(5,minmax(10.5rem,1fr))] border-b border-border bg-background">
+            <div className="relative z-10 grid grid-cols-[4.5rem_repeat(5,minmax(10.5rem,1fr))] border-b border-border bg-background">
               <div className="border-r border-border px-3 py-4 font-mono text-xs text-muted-foreground">
                 Time
               </div>
@@ -414,7 +414,12 @@ export function ScheduleBoard({
             >
               Clear filter
             </Button>
-          ) : null}
+          ) : (
+            <Button className="mt-4" onClick={() => openCreate()}>
+              <CalendarPlus aria-hidden className="size-4" />
+              Create appointment
+            </Button>
+          )}
         </section>
       ) : null}
 

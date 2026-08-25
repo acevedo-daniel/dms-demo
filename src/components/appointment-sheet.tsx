@@ -126,6 +126,8 @@ export function AppointmentSheet({
   const [isDiscardOpen, setIsDiscardOpen] = useState(false);
   const [isPending, setIsPending] = useState(false);
   const [isStatusPending, setIsStatusPending] = useState(false);
+  const canManageStatus =
+    appointment?.status === "SCHEDULED" || appointment?.status === "CONFIRMED";
   const isDirty = JSON.stringify(values) !== JSON.stringify(initialFormValues);
   const dateTimeError =
     error &&
@@ -286,7 +288,7 @@ export function AppointmentSheet({
             onSubmit={saveAppointment}
           >
             <div className="space-y-5 overflow-y-auto px-6 py-6">
-              {isEditing && appointment ? (
+              {isEditing && appointment && canManageStatus ? (
                 <div className="flex flex-wrap gap-2 border-b border-border pb-5">
                   {appointment.status === "SCHEDULED" ? (
                     <Button
@@ -467,7 +469,7 @@ export function AppointmentSheet({
                 </p>
               ) : null}
 
-              {isEditing && appointment ? (
+              {isEditing && appointment && canManageStatus ? (
                 <div className="border-t border-border pt-5">
                   <AlertDialog>
                     <AlertDialogTrigger asChild>

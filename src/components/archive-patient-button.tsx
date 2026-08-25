@@ -15,6 +15,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { announceWorkspaceFeedback } from "@/components/workspace-feedback";
 
 type ArchivePatientButtonProps = {
   isBlocked: boolean;
@@ -50,6 +51,7 @@ export function ArchivePatientButton({
         );
       }
 
+      announceWorkspaceFeedback("Patient archived.");
       router.push("/demo/patients");
       router.refresh();
     } catch (cause) {

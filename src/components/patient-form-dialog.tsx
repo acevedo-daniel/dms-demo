@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { announceWorkspaceFeedback } from "@/components/workspace-feedback";
 
 export type EditablePatient = {
   email: string | null;
@@ -138,6 +139,9 @@ export function PatientFormDialog({
       setValues(savedValues);
       setIsOpen(false);
       onSaved?.(payload);
+      announceWorkspaceFeedback(
+        isEditing ? "Patient updated." : "Patient added.",
+      );
       router.refresh();
     } catch (cause) {
       setError(

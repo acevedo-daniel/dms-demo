@@ -273,6 +273,25 @@ export default async function PatientPage({ params }: PatientPageProps) {
               <p className="font-medium">
                 No appointments or notes have been recorded yet.
               </p>
+              {!patient.archivedAt ? (
+                <div className="mt-4 flex flex-wrap justify-center gap-2">
+                  <Button asChild variant="outline">
+                    <Link
+                      href={`/demo/schedule?create=1&patient=${patient.id}`}
+                    >
+                      <CalendarPlus aria-hidden className="size-4" />
+                      Create appointment
+                    </Link>
+                  </Button>
+                  {noteOptions ? (
+                    <PatientNoteAction
+                      patientId={patient.id}
+                      patients={noteOptions.patients}
+                      treatments={noteOptions.treatments}
+                    />
+                  ) : null}
+                </div>
+              ) : null}
             </div>
           )}
         </section>

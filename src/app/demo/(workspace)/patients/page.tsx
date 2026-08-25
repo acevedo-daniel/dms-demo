@@ -1,4 +1,6 @@
 import { PatientDirectory } from "@/components/patient-directory";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { getPatientDirectory } from "@/lib/patients";
 
 async function loadPatientDirectory() {
@@ -31,6 +33,9 @@ export default async function PatientsPage() {
           <p className="mt-3 leading-7 text-muted-foreground">
             Check the demo database connection and try again.
           </p>
+          <Button asChild className="mt-6" variant="outline">
+            <Link href="/demo/patients">Try again</Link>
+          </Button>
         </section>
       </main>
     );
