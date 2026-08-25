@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { gsap } from "gsap";
 import {
   Card,
   CardContent,
@@ -377,20 +376,6 @@ export default function TurnosPage() {
 
     filterAppointments();
   }, [appointments, viewMode, selectedDate]);
-
-  useEffect(() => {
-    gsap.fromTo(
-      ".turnos-header",
-      { opacity: 0, y: -30 },
-      { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }
-    );
-
-    gsap.fromTo(
-      ".calendar-container",
-      { opacity: 0, scale: 0.95 },
-      { opacity: 1, scale: 1, duration: 0.8, delay: 0.2, ease: "power3.out" }
-    );
-  }, []);
 
   const handleAppointmentSelect = (event: CalendarEvent) => {
     setSelectedAppointment(event);

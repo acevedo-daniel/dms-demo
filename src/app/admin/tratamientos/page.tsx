@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { gsap } from "gsap";
 import Link from "next/link";
 import {
   Card,
@@ -91,26 +90,6 @@ export default function TratamientosPage() {
     };
 
     fetchTreatments();
-  }, []);
-
-  useEffect(() => {
-    gsap.fromTo(
-      ".treatments-header",
-      { opacity: 0, y: -30 },
-      { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }
-    );
-
-    gsap.fromTo(
-      ".treatments-stats",
-      { opacity: 0, scale: 0.9 },
-      { opacity: 1, scale: 1, duration: 0.8, delay: 0.2, ease: "power3.out" }
-    );
-
-    gsap.fromTo(
-      ".treatments-table",
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 0.8, delay: 0.4, ease: "power3.out" }
-    );
   }, []);
 
   useEffect(() => {

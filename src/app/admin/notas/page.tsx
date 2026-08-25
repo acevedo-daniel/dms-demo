@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { gsap } from "gsap";
 import {
   Card,
   CardContent,
@@ -95,26 +94,6 @@ export default function NotasPage() {
     };
 
     fetchData();
-  }, []);
-
-  useEffect(() => {
-    gsap.fromTo(
-      ".notes-header",
-      { opacity: 0, y: -30 },
-      { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }
-    );
-
-    gsap.fromTo(
-      ".notes-form",
-      { opacity: 0, x: -30 },
-      { opacity: 1, x: 0, duration: 0.8, delay: 0.2, ease: "power3.out" }
-    );
-
-    gsap.fromTo(
-      ".notes-list",
-      { opacity: 0, x: 30 },
-      { opacity: 1, x: 0, duration: 0.8, delay: 0.4, ease: "power3.out" }
-    );
   }, []);
 
   useEffect(() => {
@@ -398,4 +377,3 @@ export default function NotasPage() {
     </div>
   );
 }
-

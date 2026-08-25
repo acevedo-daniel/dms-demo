@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { gsap } from "gsap";
 import {
   Card,
   CardContent,
@@ -92,36 +91,6 @@ export default function AdminPanel() {
 
     fetchStats();
   }, []);
-
-  useEffect(() => {
-    if (!stats.loading) {
-      gsap.fromTo(
-        ".stat-card",
-        { opacity: 0, scale: 0.8, rotationY: 45 },
-        {
-          opacity: 1,
-          scale: 1,
-          rotationY: 0,
-          duration: 0.8,
-          stagger: 0.2,
-          ease: "back.out(1.7)",
-        }
-      );
-
-      gsap.fromTo(
-        ".quick-action",
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          stagger: 0.1,
-          delay: 0.5,
-          ease: "power3.out",
-        }
-      );
-    }
-  }, [stats.loading]);
 
   if (stats.loading) {
     return (

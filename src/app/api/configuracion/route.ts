@@ -1,12 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import connectDB from '@/lib/db';
 
 // GET - Obtener configuración de la clínica
 export async function GET() {
   try {
-    await connectDB();
-    
-    
     const config = {
       clinicName: "DMS Demo Clinic",
       address: {
@@ -54,7 +50,6 @@ export async function GET() {
 // PUT - Actualizar configuración de la clínica
 export async function PUT(request: NextRequest) {
   try {
-    await connectDB();
     const body = await request.json();
     
     // Por ahora solo devolvemos un mensaje de éxito

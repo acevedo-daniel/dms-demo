@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { gsap } from "gsap";
 import {
   Card,
   CardContent,
@@ -122,20 +121,6 @@ export default function PacientesPage() {
     };
 
     fetchPatients();
-  }, []);
-
-  useEffect(() => {
-    gsap.fromTo(
-      ".patients-header",
-      { opacity: 0, y: -30 },
-      { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }
-    );
-
-    gsap.fromTo(
-      ".patients-table",
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 0.8, delay: 0.2, ease: "power3.out" }
-    );
   }, []);
 
   useEffect(() => {

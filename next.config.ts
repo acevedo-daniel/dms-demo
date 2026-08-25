@@ -6,10 +6,7 @@ const nextConfig: NextConfig = {
   // Configuración de seguridad
   poweredByHeader: false, // Ocultar header X-Powered-By
 
-  // Ignorar errores de ESLint y TypeScript durante el build
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+  // Ignorar errores de TypeScript durante el build
   typescript: {
     ignoreBuildErrors: true,
   },

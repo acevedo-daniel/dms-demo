@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { gsap } from "gsap";
+import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -26,28 +25,6 @@ export default function ConfiguracionPage() {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-  useEffect(() => {
-    gsap.fromTo(
-      ".config-header",
-      { opacity: 0, y: -30 },
-      { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }
-    );
-
-    gsap.fromTo(
-      ".config-card",
-      { opacity: 0, y: 30, scale: 0.95 },
-      {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 0.8,
-        stagger: 0.2,
-        delay: 0.2,
-        ease: "power3.out",
-      }
-    );
-  }, []);
 
   const handleEmailChange = () => {
     if (newEmail && confirmEmail && newEmail === confirmEmail) {
