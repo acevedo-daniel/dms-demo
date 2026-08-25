@@ -1,17 +1,24 @@
 # DMS — Dental Management System
 
-Public portfolio demo of a dental clinic management system.
+> A public portfolio edition of a dental management system.
 
-This repository is a sanitized public baseline inspired by experience gained while delivering a full-stack solution for a real dental practice as part of a small team. It contains fictional data only and excludes private repository history, credentials, contact information, images, and documents from the source project. Generic legacy application code is retained only as a transitional baseline for the planned rewrite.
+DMS is a modern, SaaS-oriented workspace for organizing the daily operations of a dental practice: appointments, patient records, treatment tracking, and patient notes.
 
-## Current status
+## About this edition
 
-The project is in its public-baseline phase. The architecture, PostgreSQL migration, authentication, tests, and final interface are planned in [docs/ROADMAP.md](docs/ROADMAP.md).
+This public edition is a modern, portfolio-focused version of a system originally delivered for a dental client by a small team. The active client project is maintained in a private repository; this repository presents the product and engineering approach through a dedicated demo.
 
-## Local setup
+The demo is designed for exploration around a sample dental practice and uses representative sample data.
 
-Copy `.env.example` to `.env.local` and use placeholder values until the database migration phase begins. Do not use real patient or client data.
+## Product focus
 
-## Portfolio scope
+DMS presents the core workflows of a dental practice in one focused workspace:
 
-This is a demonstration project, not a production clinical system. Payments, real messaging integrations, file uploads, and regulated production workflows are intentionally out of scope.
+- Appointment coordination
+- Patient records
+- Treatment tracking
+- Patient notes
+
+## Documentation
+
+- [Product overview](docs/PROJECT.md) — product scope, actors, workflows, and domain rules.

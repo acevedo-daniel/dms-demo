@@ -63,7 +63,6 @@ export async function POST(request: NextRequest) {
     // 3. CONEXIÓN A BASE DE DATOS
     await connectDB();
 
-    // A public baseline must never bootstrap a predictable administrator account.
     const admin = await Admin.findOne({ username });
 
     if (!admin) {

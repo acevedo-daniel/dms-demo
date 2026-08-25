@@ -41,6 +41,13 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Legacy private assets are deliberately excluded from the public portfolio repo.
+# Public assets
 /public/*
 !/public/dms-mark.svg
+
+# Local planning, design, and agent guidance. These files must never be committed.
+/AGENTS.md
+/ROADMAP.md
+/DESIGN-DIRECTION.md
+/docs/DESIGN*.md
+/docs/templates/

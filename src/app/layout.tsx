@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "DMS — Dental Management System",
-  description: "Public portfolio demo for a dental management system.",
+  description: "Dental management workspace.",
   icons: {
     icon: "/dms-mark.svg",
   },
