@@ -36,24 +36,14 @@ type NavigationItem = {
 
 const navigationItems: NavigationItem[] = [
   { href: "/demo/dashboard", icon: LayoutDashboard, label: "Dashboard" },
-  {
-    disabled: true,
-    href: "/demo/schedule",
-    icon: CalendarDays,
-    label: "Schedule",
-  },
+  { href: "/demo/schedule", icon: CalendarDays, label: "Schedule" },
   {
     href: "/demo/patients",
     icon: UsersRound,
     label: "Patients",
   },
-  {
-    disabled: true,
-    href: "/demo/treatments",
-    icon: ClipboardList,
-    label: "Treatments",
-  },
-  { disabled: true, href: "/demo/notes", icon: NotebookPen, label: "Notes" },
+  { href: "/demo/treatments", icon: ClipboardList, label: "Treatments" },
+  { href: "/demo/notes", icon: NotebookPen, label: "Notes" },
 ];
 
 function DmsMark() {

@@ -104,9 +104,11 @@ export default async function DashboardPage() {
             {formatDemoDate(getDemoClock())}
           </p>
         </div>
-        <Button disabled title="Available with the schedule workspace">
-          <CalendarPlus aria-hidden className="size-4" />
-          Create appointment
+        <Button asChild>
+          <Link href="/demo/schedule">
+            <CalendarPlus aria-hidden className="size-4" />
+            Create appointment
+          </Link>
         </Button>
       </header>
 
@@ -142,9 +144,12 @@ export default async function DashboardPage() {
                   {formatDemoTime(appointment.startsAt)}
                 </time>
                 <div className="min-w-0">
-                  <p className="font-medium text-foreground">
+                  <Link
+                    className="font-medium text-foreground hover:text-primary"
+                    href={`/demo/patients/${appointment.patientId}`}
+                  >
                     {appointment.patientName}
-                  </p>
+                  </Link>
                   <p className="mt-1 truncate text-sm text-muted-foreground">
                     {appointment.treatmentName}
                   </p>
@@ -270,7 +275,7 @@ export default async function DashboardPage() {
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
               Review today’s agenda, confirm an appointment, and follow patient
-              context in the next workspace slices.
+              context across the workspace.
             </p>
           </div>
           <MoveRight

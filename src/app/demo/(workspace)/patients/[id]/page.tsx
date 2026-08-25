@@ -1,13 +1,8 @@
-import {
-  ArrowLeft,
-  CalendarPlus,
-  ClipboardList,
-  FileText,
-  Pencil,
-} from "lucide-react";
+import { ArrowLeft, CalendarPlus, ClipboardList, Pencil } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArchivePatientButton } from "@/components/archive-patient-button";
+import { PatientNoteAction } from "@/components/patient-note-action";
 import {
   PatientFormDialog,
   type EditablePatient,
@@ -16,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatDemoDate, formatDemoTime } from "@/lib/demo/format";
 import { NotFoundError } from "@/lib/domain/errors";
+import { getNoteComposerOptions } from "@/lib/notes";
 import { getPatientRecord } from "@/lib/patients";
 
 type PatientPageProps = { params: Promise<{ id: string }> };
@@ -73,6 +69,17 @@ export default async function PatientPage({ params }: PatientPageProps) {
     );
   }
 
+  let noteOptions: Awaited<ReturnType<typeof getNoteComposerOptions>> | null =
+    null;
+
+  if (!patient.archivedAt) {
+    try {
+      noteOptions = await getNoteComposerOptions();
+    } catch {
+      noteOptions = null;
+    }
+  }
+
   const name = patientName(patient);
   const editablePatient: EditablePatient = {
     email: patient.email,
@@ -116,9 +123,11 @@ export default async function PatientPage({ params }: PatientPageProps) {
           ) : null}
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <Button disabled title="Available with the schedule workspace">
-            <CalendarPlus aria-hidden className="size-4" />
-            Create appointment
+          <Button asChild>
+            <Link href={`/demo/schedule?create=1&patient=${patient.id}`}>
+              <CalendarPlus aria-hidden className="size-4" />
+              Create appointment
+            </Link>
           </Button>
           {!patient.archivedAt ? (
             <PatientFormDialog
@@ -181,8 +190,7 @@ export default async function PatientPage({ params }: PatientPageProps) {
               No upcoming appointment
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Create an appointment from the schedule workspace when it is
-              available.
+              Create an appointment from the schedule workspace when needed.
             </p>
           </div>
         )}
@@ -202,14 +210,13 @@ export default async function PatientPage({ params }: PatientPageProps) {
                 Activity
               </h2>
             </div>
-            <Button
-              disabled
-              title="Available with the notes workspace"
-              variant="outline"
-            >
-              <FileText aria-hidden className="size-4" />
-              Add note
-            </Button>
+            {noteOptions ? (
+              <PatientNoteAction
+                patientId={patient.id}
+                patients={noteOptions.patients}
+                treatments={noteOptions.treatments}
+              />
+            ) : null}
           </div>
           {patient.timeline.length ? (
             <ol className="mt-5 divide-y divide-border border-y border-border">
