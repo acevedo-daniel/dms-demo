@@ -56,7 +56,7 @@ export default function NuevoPaciente() {
     setError(null);
 
     try {
-      const response = await fetch("/api/pacientes", {
+      const response = await fetch("/api/patients", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -73,7 +73,7 @@ export default function NuevoPaciente() {
       console.log("Paciente creado:", newPatient);
 
       // Redirigir a la lista de pacientes
-      router.push("/admin/pacientes");
+      router.push("/admin/patients");
     } catch (error) {
       console.error("Error creating patient:", error);
       setError(

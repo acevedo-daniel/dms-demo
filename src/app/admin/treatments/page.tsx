@@ -76,7 +76,7 @@ export default function TratamientosPage() {
     const fetchTreatments = async () => {
       try {
         setLoading(true);
-        const response = await fetch("/api/tratamientos");
+        const response = await fetch("/api/treatments");
         if (!response.ok) {
           throw new Error("Error al cargar los tratamientos");
         }
@@ -126,22 +126,19 @@ export default function TratamientosPage() {
 
     setUpdating(true);
     try {
-      const response = await fetch(
-        `/api/tratamientos/${editingTreatment._id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: editFormData.name,
-            description: "Tratamiento dental",
-            cost: parseFloat(editFormData.cost),
-            duration: 30,
-            category: "General",
-          }),
+      const response = await fetch(`/api/treatments/${editingTreatment._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({
+          name: editFormData.name,
+          description: "Tratamiento dental",
+          cost: parseFloat(editFormData.cost),
+          duration: 30,
+          category: "General",
+        }),
+      });
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -182,7 +179,7 @@ export default function TratamientosPage() {
 
   const handleDeleteTreatment = async (treatmentId: string) => {
     try {
-      const response = await fetch(`/api/tratamientos/${treatmentId}`, {
+      const response = await fetch(`/api/treatments/${treatmentId}`, {
         method: "DELETE",
       });
 
@@ -237,9 +234,7 @@ export default function TratamientosPage() {
         </div>
         <Button className="bg-primary hover:bg-primary/90">
           <Plus className="w-4 h-4 mr-2" />
-          <Link href="/admin/tratamientos/nuevo-tratamiento">
-            Nuevo Tratamiento
-          </Link>
+          <Link href="/admin/treatments/new-treatment">Nuevo Tratamiento</Link>
         </Button>
       </div>
 

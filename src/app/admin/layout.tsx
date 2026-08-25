@@ -18,12 +18,12 @@ import {
 import { Button } from "@/components/ui/button";
 
 const sidebarItems = [
-  { href: "/admin/panel", label: "Panel", icon: LayoutDashboard },
-  { href: "/admin/pacientes", label: "Pacientes", icon: Users },
-  { href: "/admin/turnos", label: "Turnos", icon: CalendarIcon },
-  { href: "/admin/tratamientos", label: "Tratamientos", icon: Activity },
-  { href: "/admin/configuracion", label: "Configuración", icon: Settings },
-  { href: "/admin/notas", label: "Notas", icon: FileText },
+  { href: "/admin/dashboard", label: "Panel", icon: LayoutDashboard },
+  { href: "/admin/patients", label: "Pacientes", icon: Users },
+  { href: "/admin/appointments", label: "Turnos", icon: CalendarIcon },
+  { href: "/admin/treatments", label: "Tratamientos", icon: Activity },
+  { href: "/admin/settings", label: "Configuración", icon: Settings },
+  { href: "/admin/notes", label: "Notas", icon: FileText },
 ];
 
 export default function AdminLayout({

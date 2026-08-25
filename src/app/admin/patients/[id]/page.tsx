@@ -130,10 +130,10 @@ export default function PatientDetailPage({
           notesResponse,
           treatmentsResponse,
         ] = await Promise.all([
-          fetch(`/api/pacientes/${id}`),
-          fetch("/api/turnos"),
-          fetch("/api/notas"),
-          fetch("/api/tratamientos"),
+          fetch(`/api/patients/${id}`),
+          fetch("/api/appointments"),
+          fetch("/api/notes"),
+          fetch("/api/treatments"),
         ]);
 
         if (!patientResponse.ok) {
@@ -208,7 +208,7 @@ export default function PatientDetailPage({
     }
 
     try {
-      const response = await fetch("/api/notas", {
+      const response = await fetch("/api/notes", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -253,7 +253,7 @@ export default function PatientDetailPage({
 
     try {
       setUpdatingNote(true);
-      const response = await fetch(`/api/notas/${editingNote._id}`, {
+      const response = await fetch(`/api/notes/${editingNote._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -293,7 +293,7 @@ export default function PatientDetailPage({
     }
 
     try {
-      const response = await fetch(`/api/notas/${noteId}`, {
+      const response = await fetch(`/api/notes/${noteId}`, {
         method: "DELETE",
       });
 
@@ -326,7 +326,7 @@ export default function PatientDetailPage({
           <p className="text-red-500 mb-4">
             {error || "Paciente no encontrado"}
           </p>
-          <Link href="/admin/pacientes">
+          <Link href="/admin/patients">
             <Button>Volver a Pacientes</Button>
           </Link>
         </div>
@@ -342,7 +342,7 @@ export default function PatientDetailPage({
       <div className="border-b pb-4">
         <div className="flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-col space-y-3">
-            <Link href="/admin/pacientes">
+            <Link href="/admin/patients">
               <Button variant="outline" size="sm" className="w-fit">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Volver
@@ -358,7 +358,7 @@ export default function PatientDetailPage({
             </div>
           </div>
           <div className="flex flex-row gap-2 sm:space-x-2">
-            <Link href="/admin/turnos" className="flex-1 sm:flex-none">
+            <Link href="/admin/appointments" className="flex-1 sm:flex-none">
               <Button className="w-full bg-blue-600 hover:bg-blue-700">
                 <Calendar className="w-4 h-4 mr-2" />
                 <span className="hidden sm:inline">Nuevo Turno</span>

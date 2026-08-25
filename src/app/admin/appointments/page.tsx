@@ -280,7 +280,7 @@ export default function TurnosPage() {
     const fetchAppointments = async () => {
       try {
         setLoading(true);
-        const response = await fetch("/api/turnos");
+        const response = await fetch("/api/appointments");
         if (!response.ok) {
           throw new Error("Error al cargar los turnos");
         }
@@ -332,8 +332,8 @@ export default function TurnosPage() {
       const fetchData = async () => {
         try {
           const [patientsResponse, treatmentsResponse] = await Promise.all([
-            fetch("/api/pacientes"),
-            fetch("/api/tratamientos"),
+            fetch("/api/patients"),
+            fetch("/api/treatments"),
           ]);
 
           if (patientsResponse.ok && treatmentsResponse.ok) {
@@ -450,7 +450,7 @@ export default function TurnosPage() {
         `${newAppointment.date}T${newAppointment.time}`,
       );
 
-      const response = await fetch("/api/turnos", {
+      const response = await fetch("/api/appointments", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -563,16 +563,19 @@ export default function TurnosPage() {
         `${editAppointment.date}T${editAppointment.time}`,
       );
 
-      const response = await fetch(`/api/turnos/${editingAppointment._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `/api/appointments/${editingAppointment._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...editAppointment,
+            date: appointmentDateTime.toISOString(),
+          }),
         },
-        body: JSON.stringify({
-          ...editAppointment,
-          date: appointmentDateTime.toISOString(),
-        }),
-      });
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -642,7 +645,7 @@ export default function TurnosPage() {
     }
 
     try {
-      const response = await fetch(`/api/turnos/${appointmentId}`, {
+      const response = await fetch(`/api/appointments/${appointmentId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -656,7 +659,7 @@ export default function TurnosPage() {
       }
 
       // Actualizar la lista de turnos
-      const updatedAppointments = await fetch("/api/turnos").then((res) =>
+      const updatedAppointments = await fetch("/api/appointments").then((res) =>
         res.json(),
       );
       setAppointments(updatedAppointments);
@@ -678,7 +681,7 @@ export default function TurnosPage() {
     }
 
     try {
-      const response = await fetch(`/api/turnos/${appointmentId}`, {
+      const response = await fetch(`/api/appointments/${appointmentId}`, {
         method: "DELETE",
       });
 
@@ -688,7 +691,7 @@ export default function TurnosPage() {
       }
 
       // Actualizar la lista de turnos
-      const updatedAppointments = await fetch("/api/turnos").then((res) =>
+      const updatedAppointments = await fetch("/api/appointments").then((res) =>
         res.json(),
       );
       setAppointments(updatedAppointments);

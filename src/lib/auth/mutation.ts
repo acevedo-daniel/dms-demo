@@ -1,7 +1,8 @@
 import "server-only";
 
-import { NextResponse } from "next/server";
 import { authorizeDemoRequest } from "@/lib/auth/authorization";
+import { AuthenticationError, AuthorizationError } from "@/lib/domain/errors";
+import { errorResponse } from "@/lib/domain/http";
 
 export async function authorizeDemoMutation(headers: Headers) {
   const authorization = await authorizeDemoRequest(headers);
@@ -10,8 +11,9 @@ export async function authorizeDemoMutation(headers: Headers) {
     return authorization;
   }
 
-  return NextResponse.json(
-    { error: "A demo_admin session is required for this action." },
-    { status: authorization.status === "unauthenticated" ? 401 : 403 },
+  return errorResponse(
+    authorization.status === "unauthenticated"
+      ? new AuthenticationError()
+      : new AuthorizationError(),
   );
 }

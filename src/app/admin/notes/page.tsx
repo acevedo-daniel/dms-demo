@@ -74,9 +74,9 @@ export default function NotasPage() {
         // Cargar notas, clientes y tratamientos en paralelo
         const [notesResponse, clientsResponse, treatmentsResponse] =
           await Promise.all([
-            fetch("/api/notas"),
-            fetch("/api/pacientes"),
-            fetch("/api/tratamientos"),
+            fetch("/api/notes"),
+            fetch("/api/patients"),
+            fetch("/api/treatments"),
           ]);
 
         if (
@@ -134,7 +134,7 @@ export default function NotasPage() {
     }
 
     try {
-      const response = await fetch("/api/notas", {
+      const response = await fetch("/api/notes", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -167,7 +167,7 @@ export default function NotasPage() {
 
   const deleteNote = async (noteId: string) => {
     try {
-      const response = await fetch(`/api/notas/${noteId}`, {
+      const response = await fetch(`/api/notes/${noteId}`, {
         method: "DELETE",
       });
 

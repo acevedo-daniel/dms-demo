@@ -47,9 +47,9 @@ export default function AdminPanel() {
         // Cargar datos en paralelo
         const [patientsResponse, appointmentsResponse, treatmentsResponse] =
           await Promise.all([
-            fetch("/api/pacientes"),
-            fetch("/api/turnos"),
-            fetch("/api/tratamientos"),
+            fetch("/api/patients"),
+            fetch("/api/appointments"),
+            fetch("/api/treatments"),
           ]);
 
         if (
@@ -195,7 +195,7 @@ export default function AdminPanel() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Link href="/admin/pacientes">
+            <Link href="/admin/patients">
               <Button className="w-full bg-primary hover:bg-primary/90">
                 <Users className="w-4 h-4 mr-2" />
                 Ir a Pacientes
@@ -213,7 +213,7 @@ export default function AdminPanel() {
             <CardDescription>Gestionar citas y horarios</CardDescription>
           </CardHeader>
           <CardContent>
-            <Link href="/admin/turnos">
+            <Link href="/admin/appointments">
               <Button className="w-full bg-sky-500 hover:bg-sky-600">
                 <CalendarIcon className="w-4 h-4 mr-2" />
                 Ver Calendario
@@ -231,7 +231,7 @@ export default function AdminPanel() {
             <CardDescription>Administrar servicios y precios</CardDescription>
           </CardHeader>
           <CardContent>
-            <Link href="/admin/tratamientos">
+            <Link href="/admin/treatments">
               <Button className="w-full bg-emerald-500 hover:bg-emerald-600">
                 <Activity className="w-4 h-4 mr-2" />
                 Ver Tratamientos

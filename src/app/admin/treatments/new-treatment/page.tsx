@@ -32,7 +32,7 @@ export default function NuevoTratamiento() {
     setError(null);
 
     try {
-      const response = await fetch("/api/tratamientos", {
+      const response = await fetch("/api/treatments", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -53,7 +53,7 @@ export default function NuevoTratamiento() {
 
       const newTreatment = await response.json();
       console.log("Tratamiento creado:", newTreatment);
-      router.push("/admin/tratamientos");
+      router.push("/admin/treatments");
     } catch (error) {
       console.error("Error creating treatment:", error);
       setError(
@@ -134,7 +134,7 @@ export default function NuevoTratamiento() {
 
                 {/* Botones */}
                 <div className="flex space-x-3">
-                  <Link href="/admin/tratamientos" className="flex-1">
+                  <Link href="/admin/treatments" className="flex-1">
                     <Button type="button" variant="outline" className="w-full">
                       <ArrowLeft className="w-4 h-4 mr-2" />
                       Volver

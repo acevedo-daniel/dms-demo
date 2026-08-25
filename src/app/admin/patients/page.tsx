@@ -105,7 +105,7 @@ export default function PacientesPage() {
     const fetchPatients = async () => {
       try {
         setLoading(true);
-        const response = await fetch("/api/pacientes");
+        const response = await fetch("/api/patients");
         if (!response.ok) {
           throw new Error("Error al cargar los pacientes");
         }
@@ -164,7 +164,7 @@ export default function PacientesPage() {
 
     setUpdating(true);
     try {
-      const response = await fetch(`/api/pacientes/${editingPatient._id}`, {
+      const response = await fetch(`/api/patients/${editingPatient._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -232,7 +232,7 @@ export default function PacientesPage() {
 
   const handleDeletePatient = async (patientId: string) => {
     try {
-      const response = await fetch(`/api/pacientes/${patientId}`, {
+      const response = await fetch(`/api/patients/${patientId}`, {
         method: "DELETE",
       });
 
@@ -285,7 +285,7 @@ export default function PacientesPage() {
         </div>
         <Button className="bg-primary hover:bg-primary/90">
           <Plus className="w-4 h-4 mr-2" />
-          <Link href="/admin/pacientes/nuevo-paciente">Nuevo Paciente</Link>
+          <Link href="/admin/patients/new-patient">Nuevo Paciente</Link>
         </Button>
       </div>
 
@@ -362,7 +362,7 @@ export default function PacientesPage() {
                     </TableCell>
                     <TableCell>
                       <div className="flex space-x-2">
-                        <Link href={`/admin/pacientes/${patient._id}`}>
+                        <Link href={`/admin/patients/${patient._id}`}>
                           <Button
                             size="sm"
                             variant="outline"

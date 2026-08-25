@@ -15,6 +15,13 @@
       "when": 1787652883168,
       "tag": "0001_better_auth_demo_session",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1787653883168,
+      "tag": "0002_prevent_active_appointment_overlap",
+      "breakpoints": true
     }
   ]
 }
