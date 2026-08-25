@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { authorizeDemoMutation } from "@/lib/auth/mutation";
 
 // GET - Obtener configuración de la clínica
 export async function GET() {
@@ -49,6 +50,12 @@ export async function GET() {
 
 // PUT - Actualizar configuración de la clínica
 export async function PUT(request: NextRequest) {
+  const authorization = await authorizeDemoMutation(request.headers);
+
+  if (authorization instanceof NextResponse) {
+    return authorization;
+  }
+
   try {
     const body = await request.json();
 

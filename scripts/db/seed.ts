@@ -1,22 +1,41 @@
 import "dotenv/config";
+import { hashPassword } from "better-auth/crypto";
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import {
   appointments,
+  authAccounts,
+  authSessions,
+  authUsers,
+  authVerifications,
   patientNotes,
   patients,
   practices,
   treatments,
 } from "../../src/db/schema";
+import {
+  DEMO_ADMIN_NAME,
+  DEMO_ADMIN_ROLE,
+  DEMO_PRACTICE_ID,
+} from "../../src/lib/demo/constants";
 
-const databaseUrl = process.env.DATABASE_URL;
+function requireEnvironment(name: string) {
+  const value = process.env[name];
 
-if (!databaseUrl) {
-  throw new Error("DATABASE_URL is required for database commands.");
+  if (!value) {
+    throw new Error(`${name} is required for database commands.`);
+  }
+
+  return value;
 }
 
+const databaseUrl = requireEnvironment("DATABASE_URL");
+const demoAuthEmail = requireEnvironment("DEMO_AUTH_EMAIL");
+const demoAuthPassword = requireEnvironment("DEMO_AUTH_PASSWORD");
+
 const demoClock = new Date("2026-05-12T12:00:00.000Z");
-const practiceId = "10000000-0000-4000-8000-000000000001";
+const practiceId = DEMO_PRACTICE_ID;
+const demoAdminId = "demo-admin";
 
 const pool = new Pool({ connectionString: databaseUrl });
 const db = drizzle({ client: pool });
@@ -27,6 +46,10 @@ async function seed() {
     await tx.delete(appointments);
     await tx.delete(patients);
     await tx.delete(treatments);
+    await tx.delete(authVerifications);
+    await tx.delete(authSessions);
+    await tx.delete(authAccounts);
+    await tx.delete(authUsers);
     await tx.delete(practices);
 
     await tx.insert(practices).values({
@@ -195,6 +218,30 @@ async function seed() {
         updatedAt: new Date("2026-05-12T11:00:00.000Z"),
       },
     ]);
+  });
+
+  const password = await hashPassword(demoAuthPassword);
+
+  await db.insert(authUsers).values({
+    id: demoAdminId,
+    practiceId,
+    role: DEMO_ADMIN_ROLE,
+    name: DEMO_ADMIN_NAME,
+    email: demoAuthEmail,
+    emailVerified: true,
+    createdAt: demoClock,
+    updatedAt: demoClock,
+  });
+
+  await db.insert(authAccounts).values({
+    id: "demo-admin-credential",
+    issuer: "local:credential",
+    accountId: demoAdminId,
+    providerId: "credential",
+    userId: demoAdminId,
+    password,
+    createdAt: demoClock,
+    updatedAt: demoClock,
   });
 }
 
