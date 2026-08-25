@@ -1,0 +1,11 @@
+.next
+coverage
+node_modules
+out
+pnpm-lock.yaml
+test-results
+
+AGENTS.md
+ROADMAP.md
+DESIGN-DIRECTION.md
+docs/templates

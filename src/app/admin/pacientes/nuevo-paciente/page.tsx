@@ -5,7 +5,17 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { User, Phone, Mail, Calendar, IdCard, Home, FileDigit, Loader2, Building2 } from "lucide-react";
+import {
+  User,
+  Phone,
+  Mail,
+  Calendar,
+  IdCard,
+  Home,
+  FileDigit,
+  Loader2,
+  Building2,
+} from "lucide-react";
 
 export default function NuevoPaciente() {
   const router = useRouter();
@@ -19,21 +29,21 @@ export default function NuevoPaciente() {
     dni: "",
     obraSocial: "",
     address: {
-      street: ""
-    }
+      street: "",
+    },
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    
-    if (name.startsWith('address.')) {
-      const field = name.split('.')[1];
+
+    if (name.startsWith("address.")) {
+      const field = name.split(".")[1];
       setFormData((prev) => ({
         ...prev,
         address: {
           ...prev.address,
-          [field]: value
-        }
+          [field]: value,
+        },
       }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
@@ -46,27 +56,29 @@ export default function NuevoPaciente() {
     setError(null);
 
     try {
-      const response = await fetch('/api/pacientes', {
-        method: 'POST',
+      const response = await fetch("/api/pacientes", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Error al crear el paciente');
+        throw new Error(errorData.error || "Error al crear el paciente");
       }
 
       const newPatient = await response.json();
-      console.log('Paciente creado:', newPatient);
-      
+      console.log("Paciente creado:", newPatient);
+
       // Redirigir a la lista de pacientes
-      router.push('/admin/pacientes');
+      router.push("/admin/pacientes");
     } catch (error) {
-      console.error('Error creating patient:', error);
-      setError(error instanceof Error ? error.message : 'Error al crear el paciente');
+      console.error("Error creating patient:", error);
+      setError(
+        error instanceof Error ? error.message : "Error al crear el paciente",
+      );
     } finally {
       setLoading(false);
     }
@@ -183,7 +195,10 @@ export default function NuevoPaciente() {
 
                 {/* Fecha de Nacimiento */}
                 <div>
-                  <Label htmlFor="birthDate" className="text-primary font-medium">
+                  <Label
+                    htmlFor="birthDate"
+                    className="text-primary font-medium"
+                  >
                     Fecha de Nacimiento
                   </Label>
                   <div className="relative mt-1">
@@ -206,7 +221,8 @@ export default function NuevoPaciente() {
                     htmlFor="obraSocial"
                     className="text-primary font-medium"
                   >
-                    Obra Social <span className="text-gray-500 text-sm">(Opcional)</span>
+                    Obra Social{" "}
+                    <span className="text-gray-500 text-sm">(Opcional)</span>
                   </Label>
                   <div className="relative mt-1">
                     <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/50" />
@@ -255,7 +271,7 @@ export default function NuevoPaciente() {
                       Guardando...
                     </>
                   ) : (
-                    'Guardar Paciente'
+                    "Guardar Paciente"
                   )}
                 </Button>
               </form>

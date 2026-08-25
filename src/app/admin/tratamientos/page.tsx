@@ -59,13 +59,15 @@ export default function TratamientosPage() {
   const [filteredTreatments, setFilteredTreatments] = useState<Treatment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Estados para edición
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [editingTreatment, setEditingTreatment] = useState<Treatment | null>(null);
+  const [editingTreatment, setEditingTreatment] = useState<Treatment | null>(
+    null,
+  );
   const [editFormData, setEditFormData] = useState({
     name: "",
-    cost: ""
+    cost: "",
   });
   const [updating, setUpdating] = useState(false);
 
@@ -74,16 +76,16 @@ export default function TratamientosPage() {
     const fetchTreatments = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/tratamientos');
+        const response = await fetch("/api/tratamientos");
         if (!response.ok) {
-          throw new Error('Error al cargar los tratamientos');
+          throw new Error("Error al cargar los tratamientos");
         }
         const data = await response.json();
         setTreatments(data);
         setFilteredTreatments(data);
       } catch (error) {
-        console.error('Error fetching treatments:', error);
-        setError('Error al cargar los tratamientos');
+        console.error("Error fetching treatments:", error);
+        setError("Error al cargar los tratamientos");
       } finally {
         setLoading(false);
       }
@@ -93,26 +95,27 @@ export default function TratamientosPage() {
   }, []);
 
   useEffect(() => {
-    const filtered = treatments.filter((treatment) =>
-      treatment.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      treatment.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      treatment.category.toLowerCase().includes(searchTerm.toLowerCase())
+    const filtered = treatments.filter(
+      (treatment) =>
+        treatment.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        treatment.description
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        treatment.category.toLowerCase().includes(searchTerm.toLowerCase()),
     );
     setFilteredTreatments(filtered);
   }, [searchTerm, treatments]);
 
   const totalTreatments = filteredTreatments.length;
-  const totalRevenue = filteredTreatments.reduce(
-    (acc, t) => acc + t.cost,
-    0
-  );
-  const averageRevenue = totalTreatments > 0 ? totalRevenue / totalTreatments : 0;
+  const totalRevenue = filteredTreatments.reduce((acc, t) => acc + t.cost, 0);
+  const averageRevenue =
+    totalTreatments > 0 ? totalRevenue / totalTreatments : 0;
 
   const handleEditTreatment = (treatment: Treatment) => {
     setEditingTreatment(treatment);
     setEditFormData({
       name: treatment.name,
-      cost: treatment.cost.toString()
+      cost: treatment.cost.toString(),
     });
     setIsEditModalOpen(true);
   };
@@ -123,42 +126,55 @@ export default function TratamientosPage() {
 
     setUpdating(true);
     try {
-      const response = await fetch(`/api/tratamientos/${editingTreatment._id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `/api/tratamientos/${editingTreatment._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: editFormData.name,
+            description: "Tratamiento dental",
+            cost: parseFloat(editFormData.cost),
+            duration: 30,
+            category: "General",
+          }),
         },
-        body: JSON.stringify({
-          name: editFormData.name,
-          description: "Tratamiento dental",
-          cost: parseFloat(editFormData.cost),
-          duration: 30,
-          category: "General"
-        }),
-      });
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Error al actualizar el tratamiento');
+        throw new Error(
+          errorData.error || "Error al actualizar el tratamiento",
+        );
       }
 
       const updatedTreatment = await response.json();
-      
+
       // Actualizar la lista de tratamientos
-      setTreatments(prev => prev.map(treatment => 
-        treatment._id === updatedTreatment._id ? updatedTreatment : treatment
-      ));
-      setFilteredTreatments(prev => prev.map(treatment => 
-        treatment._id === updatedTreatment._id ? updatedTreatment : treatment
-      ));
+      setTreatments((prev) =>
+        prev.map((treatment) =>
+          treatment._id === updatedTreatment._id ? updatedTreatment : treatment,
+        ),
+      );
+      setFilteredTreatments((prev) =>
+        prev.map((treatment) =>
+          treatment._id === updatedTreatment._id ? updatedTreatment : treatment,
+        ),
+      );
 
       // Cerrar modal y limpiar formulario
       setIsEditModalOpen(false);
       setEditingTreatment(null);
       setEditFormData({ name: "", cost: "" });
     } catch (error) {
-      console.error('Error updating treatment:', error);
-      setError(error instanceof Error ? error.message : 'Error al actualizar el tratamiento');
+      console.error("Error updating treatment:", error);
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Error al actualizar el tratamiento",
+      );
     } finally {
       setUpdating(false);
     }
@@ -167,19 +183,23 @@ export default function TratamientosPage() {
   const handleDeleteTreatment = async (treatmentId: string) => {
     try {
       const response = await fetch(`/api/tratamientos/${treatmentId}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
-      
+
       if (!response.ok) {
-        throw new Error('Error al eliminar el tratamiento');
+        throw new Error("Error al eliminar el tratamiento");
       }
-      
+
       // Actualizar la lista de tratamientos
-      setTreatments(treatments.filter(treatment => treatment._id !== treatmentId));
-      setFilteredTreatments(filteredTreatments.filter(treatment => treatment._id !== treatmentId));
+      setTreatments(
+        treatments.filter((treatment) => treatment._id !== treatmentId),
+      );
+      setFilteredTreatments(
+        filteredTreatments.filter((treatment) => treatment._id !== treatmentId),
+      );
     } catch (error) {
-      console.error('Error deleting treatment:', error);
-      setError('Error al eliminar el tratamiento');
+      console.error("Error deleting treatment:", error);
+      setError("Error al eliminar el tratamiento");
     }
   };
 
@@ -197,9 +217,7 @@ export default function TratamientosPage() {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <p className="text-red-500 mb-4">{error}</p>
-          <Button onClick={() => window.location.reload()}>
-            Reintentar
-          </Button>
+          <Button onClick={() => window.location.reload()}>Reintentar</Button>
         </div>
       </div>
     );
@@ -219,7 +237,9 @@ export default function TratamientosPage() {
         </div>
         <Button className="bg-primary hover:bg-primary/90">
           <Plus className="w-4 h-4 mr-2" />
-          <Link href="/admin/tratamientos/nuevo-tratamiento">Nuevo Tratamiento</Link>
+          <Link href="/admin/tratamientos/nuevo-tratamiento">
+            Nuevo Tratamiento
+          </Link>
         </Button>
       </div>
 
@@ -327,14 +347,16 @@ export default function TratamientosPage() {
                         {treatment.description}
                       </div>
                     </TableCell>
-                   
+
                     <TableCell>
                       <div className="flex items-center">
                         <DollarSign className="w-3 h-3 mr-1 text-emerald-600" />
-                        <span className="font-medium">${treatment.cost.toLocaleString()}</span>
+                        <span className="font-medium">
+                          ${treatment.cost.toLocaleString()}
+                        </span>
                       </div>
                     </TableCell>
-                    
+
                     <TableCell>
                       <div className="flex space-x-2">
                         <Button
@@ -361,12 +383,20 @@ export default function TratamientosPage() {
                                 ¿Estás seguro de eliminar este tratamiento?
                               </AlertDialogTitle>
                               <AlertDialogDescription>
-                                Esta acción no se puede deshacer. Se eliminará permanentemente el tratamiento <span className="text-primary text-md font-semibold">{treatment.name}</span>
+                                Esta acción no se puede deshacer. Se eliminará
+                                permanentemente el tratamiento{" "}
+                                <span className="text-primary text-md font-semibold">
+                                  {treatment.name}
+                                </span>
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                               <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                              <AlertDialogAction onClick={() => handleDeleteTreatment(treatment._id)}>
+                              <AlertDialogAction
+                                onClick={() =>
+                                  handleDeleteTreatment(treatment._id)
+                                }
+                              >
                                 Continuar
                               </AlertDialogAction>
                             </AlertDialogFooter>
@@ -386,8 +416,10 @@ export default function TratamientosPage() {
       {isEditModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
-            <h2 className="text-xl font-bold text-primary mb-4">Editar Tratamiento</h2>
-            
+            <h2 className="text-xl font-bold text-primary mb-4">
+              Editar Tratamiento
+            </h2>
+
             <form onSubmit={handleUpdateTreatment} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -396,12 +428,17 @@ export default function TratamientosPage() {
                 <input
                   type="text"
                   value={editFormData.name}
-                  onChange={(e) => setEditFormData(prev => ({ ...prev, name: e.target.value }))}
+                  onChange={(e) =>
+                    setEditFormData((prev) => ({
+                      ...prev,
+                      name: e.target.value,
+                    }))
+                  }
                   className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
                   required
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Precio ($)
@@ -411,7 +448,12 @@ export default function TratamientosPage() {
                   step="0.01"
                   min="0"
                   value={editFormData.cost}
-                  onChange={(e) => setEditFormData(prev => ({ ...prev, cost: e.target.value }))}
+                  onChange={(e) =>
+                    setEditFormData((prev) => ({
+                      ...prev,
+                      cost: e.target.value,
+                    }))
+                  }
                   className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
                   required
                 />
@@ -446,7 +488,7 @@ export default function TratamientosPage() {
                       Actualizando...
                     </>
                   ) : (
-                    'Actualizar Tratamiento'
+                    "Actualizar Tratamiento"
                   )}
                 </Button>
               </div>

@@ -73,7 +73,7 @@ export default function ConfiguracionPage() {
       }
     } else {
       alert(
-        "Verifica que todos los campos estén completos y las contraseñas coincidan"
+        "Verifica que todos los campos estén completos y las contraseñas coincidan",
       );
     }
   };
@@ -89,8 +89,6 @@ export default function ConfiguracionPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-       
-
         {/* Password Configuration */}
         <Card className="config-card">
           <CardHeader>

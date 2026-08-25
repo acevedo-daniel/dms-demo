@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
 // GET - Obtener configuración de la clínica
 export async function GET() {
@@ -9,7 +9,7 @@ export async function GET() {
         street: "Demo address",
         city: "Demo city",
         state: "Demo region",
-        zipCode: "0000"
+        zipCode: "0000",
       },
       phone: "Not configured",
       email: "demo@example.com",
@@ -20,29 +20,29 @@ export async function GET() {
         thursday: "9:00 - 18:00",
         friday: "9:00 - 18:00",
         saturday: "9:00 - 13:00",
-        sunday: "Cerrado"
+        sunday: "Cerrado",
       },
       services: [
         "Odontología General",
         "Ortodoncia",
         "Cirugía Oral",
         "Estética Dental",
-        "Odontopediatría"
+        "Odontopediatría",
       ],
       settings: {
         appointmentDuration: 60, // minutos
         maxAppointmentsPerDay: 20,
         allowOnlineBooking: true,
-        requireConfirmation: true
-      }
+        requireConfirmation: true,
+      },
     };
 
     return NextResponse.json(config);
   } catch (error) {
-    console.error('Error fetching configuration:', error);
+    console.error("Error fetching configuration:", error);
     return NextResponse.json(
-      { error: 'Error al obtener la configuración' },
-      { status: 500 }
+      { error: "Error al obtener la configuración" },
+      { status: 500 },
     );
   }
 }
@@ -51,20 +51,20 @@ export async function GET() {
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
-    
+
     // Por ahora solo devolvemos un mensaje de éxito
     // En el futuro esto actualizaría la configuración en la base de datos
-    console.log('Configuration update request:', body);
-    
+    console.log("Configuration update request:", body);
+
     return NextResponse.json(
-      { message: 'Configuración actualizada correctamente' },
-      { status: 200 }
+      { message: "Configuración actualizada correctamente" },
+      { status: 200 },
     );
   } catch (error) {
-    console.error('Error updating configuration:', error);
+    console.error("Error updating configuration:", error);
     return NextResponse.json(
-      { error: 'Error al actualizar la configuración' },
-      { status: 500 }
+      { error: "Error al actualizar la configuración" },
+      { status: 500 },
     );
   }
 }

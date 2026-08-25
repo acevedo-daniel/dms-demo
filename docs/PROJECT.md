@@ -12,8 +12,8 @@ Dental practices coordinate connected information throughout the day: who is sch
 
 ## Actors
 
-| Actor | Capabilities / responsibility |
-| --- | --- |
+| Actor                  | Capabilities / responsibility                                                                      |
+| ---------------------- | -------------------------------------------------------------------------------------------------- |
 | Practice administrator | Coordinates appointments, maintains patient records, tracks treatments, and records patient notes. |
 
 ## Scope

@@ -42,33 +42,42 @@ export default function AdminPanel() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        setStats(prev => ({ ...prev, loading: true, error: null }));
-        
-        // Cargar datos en paralelo
-        const [patientsResponse, appointmentsResponse, treatmentsResponse] = await Promise.all([
-          fetch('/api/pacientes'),
-          fetch('/api/turnos'),
-          fetch('/api/tratamientos')
-        ]);
+        setStats((prev) => ({ ...prev, loading: true, error: null }));
 
-        if (!patientsResponse.ok || !appointmentsResponse.ok || !treatmentsResponse.ok) {
-          throw new Error('Error al cargar las estadísticas');
+        // Cargar datos en paralelo
+        const [patientsResponse, appointmentsResponse, treatmentsResponse] =
+          await Promise.all([
+            fetch("/api/pacientes"),
+            fetch("/api/turnos"),
+            fetch("/api/tratamientos"),
+          ]);
+
+        if (
+          !patientsResponse.ok ||
+          !appointmentsResponse.ok ||
+          !treatmentsResponse.ok
+        ) {
+          throw new Error("Error al cargar las estadísticas");
         }
 
         const [patients, appointments, treatments] = await Promise.all([
           patientsResponse.json(),
           appointmentsResponse.json(),
-          treatmentsResponse.json()
+          treatmentsResponse.json(),
         ]);
 
         // Calcular estadísticas
         const today = startOfDay(new Date());
-        const todayAppointments = appointments.filter((appointment: any) => 
-          isToday(new Date(appointment.date)) && appointment.client && appointment.treatment
+        const todayAppointments = appointments.filter(
+          (appointment: any) =>
+            isToday(new Date(appointment.date)) &&
+            appointment.client &&
+            appointment.treatment,
         );
 
-        const totalRevenue = treatments.reduce((sum: number, treatment: any) => 
-          sum + treatment.cost, 0
+        const totalRevenue = treatments.reduce(
+          (sum: number, treatment: any) => sum + treatment.cost,
+          0,
         );
 
         setStats({
@@ -80,11 +89,11 @@ export default function AdminPanel() {
           error: null,
         });
       } catch (error) {
-        console.error('Error fetching stats:', error);
-        setStats(prev => ({
+        console.error("Error fetching stats:", error);
+        setStats((prev) => ({
           ...prev,
           loading: false,
-          error: 'Error al cargar las estadísticas'
+          error: "Error al cargar las estadísticas",
         }));
       }
     };
@@ -106,9 +115,7 @@ export default function AdminPanel() {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <p className="text-red-500 mb-4">{stats.error}</p>
-          <Button onClick={() => window.location.reload()}>
-            Reintentar
-          </Button>
+          <Button onClick={() => window.location.reload()}>Reintentar</Button>
         </div>
       </div>
     );

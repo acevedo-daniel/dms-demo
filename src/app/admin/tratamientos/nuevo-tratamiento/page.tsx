@@ -14,10 +14,14 @@ export default function NuevoTratamiento() {
   const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: "",
-    cost: ""
+    cost: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -28,31 +32,35 @@ export default function NuevoTratamiento() {
     setError(null);
 
     try {
-      const response = await fetch('/api/tratamientos', {
-        method: 'POST',
+      const response = await fetch("/api/tratamientos", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           name: formData.name,
           description: "Tratamiento dental",
           cost: parseFloat(formData.cost),
           duration: 30,
-          category: "General"
+          category: "General",
         }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Error al crear el tratamiento');
+        throw new Error(errorData.error || "Error al crear el tratamiento");
       }
 
       const newTreatment = await response.json();
-      console.log('Tratamiento creado:', newTreatment);
-      router.push('/admin/tratamientos');
+      console.log("Tratamiento creado:", newTreatment);
+      router.push("/admin/tratamientos");
     } catch (error) {
-      console.error('Error creating treatment:', error);
-      setError(error instanceof Error ? error.message : 'Error al crear el tratamiento');
+      console.error("Error creating treatment:", error);
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Error al crear el tratamiento",
+      );
     } finally {
       setLoading(false);
     }
@@ -127,11 +135,7 @@ export default function NuevoTratamiento() {
                 {/* Botones */}
                 <div className="flex space-x-3">
                   <Link href="/admin/tratamientos" className="flex-1">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="w-full"
-                    >
+                    <Button type="button" variant="outline" className="w-full">
                       <ArrowLeft className="w-4 h-4 mr-2" />
                       Volver
                     </Button>
@@ -147,7 +151,7 @@ export default function NuevoTratamiento() {
                         Guardando...
                       </>
                     ) : (
-                      'Guardar Tratamiento'
+                      "Guardar Tratamiento"
                     )}
                   </Button>
                 </div>

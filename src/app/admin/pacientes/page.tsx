@@ -51,7 +51,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { DialogClose } from "@radix-ui/react-dialog";
 
@@ -79,7 +79,7 @@ export default function PacientesPage() {
   const [filteredPatients, setFilteredPatients] = useState<Patient[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Estados para edición
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingPatient, setEditingPatient] = useState<Patient | null>(null);
@@ -95,8 +95,8 @@ export default function PacientesPage() {
       street: "",
       city: "",
       state: "",
-      zipCode: ""
-    }
+      zipCode: "",
+    },
   });
   const [updating, setUpdating] = useState(false);
 
@@ -105,16 +105,16 @@ export default function PacientesPage() {
     const fetchPatients = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/pacientes');
+        const response = await fetch("/api/pacientes");
         if (!response.ok) {
-          throw new Error('Error al cargar los pacientes');
+          throw new Error("Error al cargar los pacientes");
         }
         const data = await response.json();
         setPatients(data);
         setFilteredPatients(data);
       } catch (error) {
-        console.error('Error fetching patients:', error);
-        setError('Error al cargar los pacientes');
+        console.error("Error fetching patients:", error);
+        setError("Error al cargar los pacientes");
       } finally {
         setLoading(false);
       }
@@ -128,9 +128,10 @@ export default function PacientesPage() {
       (patient) =>
         patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         patient.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (patient.email && patient.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (patient.email &&
+          patient.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
         patient.phoneNumber.includes(searchTerm) ||
-        patient.dni.includes(searchTerm)
+        patient.dni.includes(searchTerm),
     );
     setFilteredPatients(filtered);
   }, [searchTerm, patients]);
@@ -143,14 +144,16 @@ export default function PacientesPage() {
       dni: patient.dni,
       phoneNumber: patient.phoneNumber,
       email: patient.email || "",
-      birthDate: patient.birthDate ? new Date(patient.birthDate).toISOString().split('T')[0] : "",
+      birthDate: patient.birthDate
+        ? new Date(patient.birthDate).toISOString().split("T")[0]
+        : "",
       obraSocial: patient.obraSocial || "",
       address: {
         street: patient.address?.street || "",
         city: patient.address?.city || "",
         state: patient.address?.state || "",
-        zipCode: patient.address?.zipCode || ""
-      }
+        zipCode: patient.address?.zipCode || "",
+      },
     });
     setIsEditModalOpen(true);
   };
@@ -162,9 +165,9 @@ export default function PacientesPage() {
     setUpdating(true);
     try {
       const response = await fetch(`/api/pacientes/${editingPatient._id}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           name: editFormData.name,
@@ -174,24 +177,28 @@ export default function PacientesPage() {
           email: editFormData.email || undefined,
           birthDate: editFormData.birthDate,
           obraSocial: editFormData.obraSocial || undefined,
-          address: editFormData.address
+          address: editFormData.address,
         }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Error al actualizar el paciente');
+        throw new Error(errorData.error || "Error al actualizar el paciente");
       }
 
       const updatedPatient = await response.json();
-      
+
       // Actualizar la lista de pacientes
-      setPatients(prev => prev.map(patient => 
-        patient._id === updatedPatient._id ? updatedPatient : patient
-      ));
-      setFilteredPatients(prev => prev.map(patient => 
-        patient._id === updatedPatient._id ? updatedPatient : patient
-      ));
+      setPatients((prev) =>
+        prev.map((patient) =>
+          patient._id === updatedPatient._id ? updatedPatient : patient,
+        ),
+      );
+      setFilteredPatients((prev) =>
+        prev.map((patient) =>
+          patient._id === updatedPatient._id ? updatedPatient : patient,
+        ),
+      );
 
       // Cerrar modal y limpiar formulario
       setIsEditModalOpen(false);
@@ -208,12 +215,16 @@ export default function PacientesPage() {
           street: "",
           city: "",
           state: "",
-          zipCode: ""
-        }
+          zipCode: "",
+        },
       });
     } catch (error) {
-      console.error('Error updating patient:', error);
-      setError(error instanceof Error ? error.message : 'Error al actualizar el paciente');
+      console.error("Error updating patient:", error);
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Error al actualizar el paciente",
+      );
     } finally {
       setUpdating(false);
     }
@@ -222,19 +233,21 @@ export default function PacientesPage() {
   const handleDeletePatient = async (patientId: string) => {
     try {
       const response = await fetch(`/api/pacientes/${patientId}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
-      
+
       if (!response.ok) {
-        throw new Error('Error al eliminar el paciente');
+        throw new Error("Error al eliminar el paciente");
       }
-      
+
       // Actualizar la lista de pacientes
-      setPatients(patients.filter(patient => patient._id !== patientId));
-      setFilteredPatients(filteredPatients.filter(patient => patient._id !== patientId));
+      setPatients(patients.filter((patient) => patient._id !== patientId));
+      setFilteredPatients(
+        filteredPatients.filter((patient) => patient._id !== patientId),
+      );
     } catch (error) {
-      console.error('Error deleting patient:', error);
-      setError('Error al eliminar el paciente');
+      console.error("Error deleting patient:", error);
+      setError("Error al eliminar el paciente");
     }
   };
 
@@ -252,9 +265,7 @@ export default function PacientesPage() {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <p className="text-red-500 mb-4">{error}</p>
-          <Button onClick={() => window.location.reload()}>
-            Reintentar
-          </Button>
+          <Button onClick={() => window.location.reload()}>Reintentar</Button>
         </div>
       </div>
     );
@@ -373,8 +384,6 @@ export default function PacientesPage() {
                                 <Edit className="w-4 h-4" />
                               </Button>
                             </DialogTrigger>
-
-                            
                           </form>
                         </Dialog>
 
@@ -391,14 +400,22 @@ export default function PacientesPage() {
 
                           <AlertDialogContent>
                             <AlertDialogHeader>
-                              <AlertDialogTitle className="text-bold text-primary text-xl">¿Estás seguro de borrar este paciente?</AlertDialogTitle>
+                              <AlertDialogTitle className="text-bold text-primary text-xl">
+                                ¿Estás seguro de borrar este paciente?
+                              </AlertDialogTitle>
                               <AlertDialogDescription>
-                                Esta acción no se puede deshacer. Se eliminará permanentemente el perfil de <span className="text-primary text-md font-semibold">{patient.name} {patient.lastName}</span> 
+                                Esta acción no se puede deshacer. Se eliminará
+                                permanentemente el perfil de{" "}
+                                <span className="text-primary text-md font-semibold">
+                                  {patient.name} {patient.lastName}
+                                </span>
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                               <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                              <AlertDialogAction onClick={() => handleDeletePatient(patient._id)}>
+                              <AlertDialogAction
+                                onClick={() => handleDeletePatient(patient._id)}
+                              >
                                 Continuar
                               </AlertDialogAction>
                             </AlertDialogFooter>
@@ -418,8 +435,10 @@ export default function PacientesPage() {
       {isEditModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
-            <h2 className="text-xl font-bold text-primary mb-4">Editar Paciente</h2>
-            
+            <h2 className="text-xl font-bold text-primary mb-4">
+              Editar Paciente
+            </h2>
+
             <form onSubmit={handleUpdatePatient} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -429,12 +448,17 @@ export default function PacientesPage() {
                   <input
                     type="text"
                     value={editFormData.name}
-                    onChange={(e) => setEditFormData(prev => ({ ...prev, name: e.target.value }))}
+                    onChange={(e) =>
+                      setEditFormData((prev) => ({
+                        ...prev,
+                        name: e.target.value,
+                      }))
+                    }
                     className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
                     required
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Apellido *
@@ -442,7 +466,12 @@ export default function PacientesPage() {
                   <input
                     type="text"
                     value={editFormData.lastName}
-                    onChange={(e) => setEditFormData(prev => ({ ...prev, lastName: e.target.value }))}
+                    onChange={(e) =>
+                      setEditFormData((prev) => ({
+                        ...prev,
+                        lastName: e.target.value,
+                      }))
+                    }
                     className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
                     required
                   />
@@ -457,12 +486,17 @@ export default function PacientesPage() {
                   <input
                     type="text"
                     value={editFormData.dni}
-                    onChange={(e) => setEditFormData(prev => ({ ...prev, dni: e.target.value }))}
+                    onChange={(e) =>
+                      setEditFormData((prev) => ({
+                        ...prev,
+                        dni: e.target.value,
+                      }))
+                    }
                     className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
                     required
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Teléfono *
@@ -470,14 +504,17 @@ export default function PacientesPage() {
                   <input
                     type="tel"
                     value={editFormData.phoneNumber}
-                    onChange={(e) => setEditFormData(prev => ({ ...prev, phoneNumber: e.target.value }))}
+                    onChange={(e) =>
+                      setEditFormData((prev) => ({
+                        ...prev,
+                        phoneNumber: e.target.value,
+                      }))
+                    }
                     className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
                     required
                   />
                 </div>
               </div>
-
-             
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -486,7 +523,12 @@ export default function PacientesPage() {
                 <input
                   type="date"
                   value={editFormData.birthDate}
-                  onChange={(e) => setEditFormData(prev => ({ ...prev, birthDate: e.target.value }))}
+                  onChange={(e) =>
+                    setEditFormData((prev) => ({
+                      ...prev,
+                      birthDate: e.target.value,
+                    }))
+                  }
                   className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
                   required
                 />
@@ -494,12 +536,18 @@ export default function PacientesPage() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Obra Social <span className="text-gray-500 text-xs">(Opcional)</span>
+                  Obra Social{" "}
+                  <span className="text-gray-500 text-xs">(Opcional)</span>
                 </label>
                 <input
                   type="text"
                   value={editFormData.obraSocial}
-                  onChange={(e) => setEditFormData(prev => ({ ...prev, obraSocial: e.target.value }))}
+                  onChange={(e) =>
+                    setEditFormData((prev) => ({
+                      ...prev,
+                      obraSocial: e.target.value,
+                    }))
+                  }
                   placeholder="Ej: OSDE, Swiss Medical, Particular"
                   className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
@@ -512,21 +560,16 @@ export default function PacientesPage() {
                 <input
                   type="text"
                   value={editFormData.address.street}
-                  onChange={(e) => setEditFormData(prev => ({ 
-                    ...prev, 
-                    address: { ...prev.address, street: e.target.value }
-                  }))}
+                  onChange={(e) =>
+                    setEditFormData((prev) => ({
+                      ...prev,
+                      address: { ...prev.address, street: e.target.value },
+                    }))
+                  }
                   placeholder="Calle y número"
                   className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
               </div>
-
-              
-                
-               
-                
-                
-              
 
               {error && (
                 <div className="p-3 bg-red-50 border border-red-200 rounded-md">
@@ -553,8 +596,8 @@ export default function PacientesPage() {
                         street: "",
                         city: "",
                         state: "",
-                        zipCode: ""
-                      }
+                        zipCode: "",
+                      },
                     });
                   }}
                 >
@@ -571,7 +614,7 @@ export default function PacientesPage() {
                       Actualizando...
                     </>
                   ) : (
-                    'Actualizar Paciente'
+                    "Actualizar Paciente"
                   )}
                 </Button>
               </div>

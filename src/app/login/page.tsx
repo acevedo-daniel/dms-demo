@@ -77,7 +77,10 @@ export default function LoginPage() {
                 )}
 
                 <div>
-                  <Label htmlFor="username" className="text-primary font-medium">
+                  <Label
+                    htmlFor="username"
+                    className="text-primary font-medium"
+                  >
                     Nombre de usuario
                   </Label>
                   <div className="relative mt-1">
