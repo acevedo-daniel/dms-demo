@@ -4,6 +4,7 @@ import { and, asc, desc, eq, gte, inArray, lt, sql } from "drizzle-orm";
 import { getDatabase } from "@/db/client";
 import { appointments, patientNotes, patients, treatments } from "@/db/schema";
 import { DEMO_PRACTICE_ID, getDemoClock } from "@/lib/demo/constants";
+export { formatDemoDate, formatDemoTime } from "@/lib/demo/format";
 
 const practiceTimeZone = "America/Argentina/Buenos_Aires";
 const activeAppointmentStatuses = ["SCHEDULED", "CONFIRMED"] as const;
@@ -60,25 +61,6 @@ function startOfDemoDay() {
   );
 
   return new Date(localMidnight - getTimeZoneOffset(clock));
-}
-
-export function formatDemoDate(date: Date) {
-  return new Intl.DateTimeFormat("en-GB", {
-    day: "numeric",
-    month: "long",
-    timeZone: practiceTimeZone,
-    weekday: "long",
-    year: "numeric",
-  }).format(date);
-}
-
-export function formatDemoTime(date: Date) {
-  return new Intl.DateTimeFormat("en-GB", {
-    hour: "2-digit",
-    hour12: false,
-    minute: "2-digit",
-    timeZone: practiceTimeZone,
-  }).format(date);
 }
 
 export async function getDashboardData() {

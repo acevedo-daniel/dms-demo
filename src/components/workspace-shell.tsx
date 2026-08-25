@@ -43,7 +43,6 @@ const navigationItems: NavigationItem[] = [
     label: "Schedule",
   },
   {
-    disabled: true,
     href: "/demo/patients",
     icon: UsersRound,
     label: "Patients",
