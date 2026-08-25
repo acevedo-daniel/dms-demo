@@ -1,0 +1,284 @@
+import {
+  CalendarPlus,
+  CheckCircle2,
+  Clock3,
+  FileText,
+  MoveRight,
+} from "lucide-react";
+import Link from "next/link";
+import { ConfirmAppointmentButton } from "@/components/confirm-appointment-button";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  formatDemoDate,
+  formatDemoTime,
+  getDashboardData,
+  type DashboardAppointmentStatus,
+} from "@/lib/dashboard";
+import { getDemoClock } from "@/lib/demo/constants";
+
+const statusAppearance: Record<
+  DashboardAppointmentStatus,
+  { className: string; label: string }
+> = {
+  CANCELLED: {
+    className: "border-[#b42318]/25 bg-[#fee4e2] text-[#b42318]",
+    label: "Cancelled",
+  },
+  COMPLETED: {
+    className: "border-[#166534]/25 bg-[#dcfce7] text-[#166534]",
+    label: "Completed",
+  },
+  CONFIRMED: {
+    className: "border-primary/25 bg-accent text-primary",
+    label: "Confirmed",
+  },
+  SCHEDULED: {
+    className: "border-[#7a8e86] bg-card text-muted-foreground",
+    label: "Scheduled",
+  },
+};
+
+function AppointmentStatus({ status }: { status: DashboardAppointmentStatus }) {
+  const appearance = statusAppearance[status];
+
+  return (
+    <Badge className={appearance.className} variant="outline">
+      {status === "CONFIRMED" || status === "COMPLETED" ? (
+        <CheckCircle2 aria-hidden className="size-3" />
+      ) : null}
+      {appearance.label}
+    </Badge>
+  );
+}
+
+async function loadDashboard() {
+  try {
+    return await getDashboardData();
+  } catch {
+    return null;
+  }
+}
+
+export default async function DashboardPage() {
+  const dashboard = await loadDashboard();
+
+  if (!dashboard) {
+    return (
+      <main className="mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-7xl items-center px-4 py-8 sm:px-6 lg:px-8">
+        <section
+          aria-labelledby="dashboard-error-title"
+          className="max-w-lg border-y border-border py-10"
+        >
+          <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-primary">
+            Dashboard
+          </p>
+          <h1
+            className="mt-3 text-3xl font-semibold tracking-[-0.03em]"
+            id="dashboard-error-title"
+          >
+            The workspace data could not be loaded.
+          </h1>
+          <p className="mt-3 leading-7 text-muted-foreground">
+            Check the demo database connection and try again.
+          </p>
+          <Button asChild className="mt-6" variant="outline">
+            <Link href="/demo/dashboard">Try again</Link>
+          </Button>
+        </section>
+      </main>
+    );
+  }
+
+  return (
+    <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <header className="flex flex-col gap-5 border-b border-border pb-7 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-primary">
+            Daily operating view
+          </p>
+          <h1 className="mt-3 text-3xl font-semibold tracking-[-0.03em]">
+            Dashboard
+          </h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            {formatDemoDate(getDemoClock())}
+          </p>
+        </div>
+        <Button disabled title="Available with the schedule workspace">
+          <CalendarPlus aria-hidden className="size-4" />
+          Create appointment
+        </Button>
+      </header>
+
+      <section aria-labelledby="today-title" className="pt-9">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <h2
+              className="text-xl font-semibold tracking-tight"
+              id="today-title"
+            >
+              Today
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              A chronological view of the demo day.
+            </p>
+          </div>
+          <span className="font-mono text-xs text-muted-foreground">
+            {dashboard.today.length} active
+          </span>
+        </div>
+
+        {dashboard.today.length ? (
+          <ol className="mt-5 divide-y divide-border border-y border-border">
+            {dashboard.today.map((appointment) => (
+              <li
+                className="grid gap-4 py-5 sm:grid-cols-[5.25rem_minmax(0,1fr)_auto] sm:items-center"
+                key={appointment.id}
+              >
+                <time
+                  className="font-mono text-sm font-medium tabular-nums text-foreground"
+                  dateTime={appointment.startsAt.toISOString()}
+                >
+                  {formatDemoTime(appointment.startsAt)}
+                </time>
+                <div className="min-w-0">
+                  <p className="font-medium text-foreground">
+                    {appointment.patientName}
+                  </p>
+                  <p className="mt-1 truncate text-sm text-muted-foreground">
+                    {appointment.treatmentName}
+                  </p>
+                </div>
+                <AppointmentStatus status={appointment.status} />
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <div className="mt-5 border-y border-border py-12 text-center">
+            <Clock3
+              aria-hidden
+              className="mx-auto size-5 text-muted-foreground"
+            />
+            <p className="mt-3 font-medium">
+              No appointments are scheduled for today.
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Create an appointment from the schedule workspace.
+            </p>
+          </div>
+        )}
+      </section>
+
+      <div className="mt-10 grid gap-8 border-t border-border pt-10 lg:grid-cols-2">
+        {dashboard.needsAttention.length ? (
+          <section aria-labelledby="attention-title">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <h2
+                  className="text-xl font-semibold tracking-tight"
+                  id="attention-title"
+                >
+                  Needs attention
+                </h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Scheduled appointments awaiting confirmation.
+                </p>
+              </div>
+              <span className="font-mono text-xs text-muted-foreground">
+                {dashboard.needsAttention.length} items
+              </span>
+            </div>
+            <ol className="mt-5 divide-y divide-border border-y border-border">
+              {dashboard.needsAttention.map((appointment) => (
+                <li
+                  className="flex items-center justify-between gap-4 py-4"
+                  key={appointment.id}
+                >
+                  <div className="min-w-0">
+                    <p className="font-medium">{appointment.patientName}</p>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      {formatDemoTime(appointment.startsAt)} ·{" "}
+                      {appointment.treatmentName}
+                    </p>
+                  </div>
+                  <ConfirmAppointmentButton
+                    appointmentId={appointment.id}
+                    patientName={appointment.patientName}
+                  />
+                </li>
+              ))}
+            </ol>
+          </section>
+        ) : null}
+
+        <section aria-labelledby="notes-title">
+          <div>
+            <h2
+              className="text-xl font-semibold tracking-tight"
+              id="notes-title"
+            >
+              Recent notes
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Operational context recorded in the workspace.
+            </p>
+          </div>
+          {dashboard.recentNotes.length ? (
+            <ol className="mt-5 divide-y divide-border border-y border-border">
+              {dashboard.recentNotes.map((note) => (
+                <li className="py-4" key={note.id}>
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+                    <span className="font-medium">{note.patientName}</span>
+                    {note.treatmentName ? (
+                      <span className="text-muted-foreground">
+                        · {note.treatmentName}
+                      </span>
+                    ) : null}
+                  </div>
+                  <p className="mt-2 text-sm leading-6 text-foreground">
+                    {note.body}
+                  </p>
+                  <time
+                    className="mt-2 block font-mono text-xs text-muted-foreground"
+                    dateTime={note.createdAt.toISOString()}
+                  >
+                    {formatDemoDate(note.createdAt)}
+                  </time>
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <div className="mt-5 border-y border-border py-12 text-center">
+              <FileText
+                aria-hidden
+                className="mx-auto size-5 text-muted-foreground"
+              />
+              <p className="mt-3 font-medium">No recent notes are available.</p>
+            </div>
+          )}
+        </section>
+      </div>
+
+      <section
+        aria-labelledby="explore-title"
+        className="mt-10 border-t border-border pt-7"
+      >
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 className="font-medium" id="explore-title">
+              Explore DMS
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Review today’s agenda, confirm an appointment, and follow patient
+              context in the next workspace slices.
+            </p>
+          </div>
+          <MoveRight
+            aria-hidden
+            className="hidden size-5 text-primary sm:block"
+          />
+        </div>
+      </section>
+    </main>
+  );
+}
