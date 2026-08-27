@@ -17,6 +17,22 @@ jobs:
   quality:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_DB: dms_test
+          POSTGRES_USER: dms_test
+          POSTGRES_PASSWORD: dms_test
+        options: >-
+          --health-cmd "pg_isready -U dms_test -d dms_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+        ports:
+          - 5432:5432
+    env:
+      TEST_DATABASE_URL: postgresql://dms_test:dms_test@localhost:5432/dms_test
 
     steps:
       - uses: actions/checkout@v6
@@ -34,5 +50,7 @@ jobs:
       - run: pnpm format:check
       - run: pnpm typecheck
       - run: pnpm test
+      - run: pnpm db:migrate:integration
+      - run: pnpm test:integration
       - run: pnpm test:e2e
       - run: pnpm build
