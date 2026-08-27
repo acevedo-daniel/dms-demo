@@ -1,6 +1,16 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { DemoAccessButton } from "@/components/demo-access-button";
+
+export const metadata: Metadata = {
+  title: "Open demo workspace",
+  description: "Open the resettable DMS sample workspace.",
+  robots: {
+    follow: false,
+    index: false,
+  },
+};
 
 export default function DemoAccessPage() {
   return (

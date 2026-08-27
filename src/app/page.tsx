@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -7,6 +8,21 @@ import {
   UsersRound,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
+export const metadata: Metadata = {
+  title: "DMS — Practice operations workspace",
+  description:
+    "Explore DMS, a focused workspace for scheduling, patient context, treatments, and operational notes.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    description:
+      "Explore DMS, a focused workspace for scheduling, patient context, treatments, and operational notes.",
+    title: "DMS — Practice operations workspace",
+    url: "/",
+  },
+};
 
 const workflow = [
   {

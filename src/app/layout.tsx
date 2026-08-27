@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { getSiteUrl, siteName } from "@/lib/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -13,10 +14,37 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "DMS — Practice operations workspace",
-  description: "A focused dental practice operations workspace.",
+  metadataBase: getSiteUrl(),
+  applicationName: siteName,
+  title: {
+    default: "DMS — Practice operations workspace",
+    template: "%s | DMS",
+  },
+  description:
+    "A focused workspace for dental practice operations, appointments, patient context, treatments, and notes.",
+  category: "business",
+  formatDetection: {
+    address: false,
+    email: false,
+    telephone: false,
+  },
   icons: {
     icon: "/dms-mark.svg",
+  },
+  openGraph: {
+    description:
+      "A focused workspace for dental practice operations, appointments, patient context, treatments, and notes.",
+    locale: "en_US",
+    siteName,
+    title: "DMS — Practice operations workspace",
+    type: "website",
+  },
+  robots: {
+    follow: true,
+    index: true,
+  },
+  twitter: {
+    card: "summary_large_image",
   },
 };
 

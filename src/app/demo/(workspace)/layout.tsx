@@ -1,9 +1,17 @@
+import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { WorkspaceShell } from "@/components/workspace-shell";
 import { authorizeDemoRequest } from "@/lib/auth/authorization";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  robots: {
+    follow: false,
+    index: false,
+  },
+};
 
 export default async function DemoWorkspaceLayout({
   children,

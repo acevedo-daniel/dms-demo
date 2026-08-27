@@ -82,12 +82,9 @@
     @apply bg-background text-foreground;
   }
 
-  button,
-  a,
-  input,
-  select,
-  textarea {
-    @apply focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-ring;
+  :focus-visible {
+    outline: 3px solid var(--ring) !important;
+    outline-offset: 2px !important;
   }
 
   ::selection {
