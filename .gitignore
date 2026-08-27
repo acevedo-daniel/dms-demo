@@ -5,6 +5,7 @@
 
 # Build and test output
 /.next/
+/.next-e2e/
 /out/
 /build/
 /coverage/

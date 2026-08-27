@@ -1,8 +1,12 @@
 # DMS
 
+[![CI](https://github.com/acevedo-daniel/dms-demo/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/acevedo-daniel/dms-demo/actions/workflows/ci.yml)
+
 > A public portfolio demo of a dental practice operations workspace.
 
 DMS brings appointments, patient records, treatments, and operational notes into one calm workspace for a single dental practice. This public edition presents a modern demo of a system developed with a small team for a dental client; every practice, person, and record shown here is fictional.
+
+**[Explore the live demo](https://dms-showcase.vercel.app)**
 
 ## Screenshots
 
@@ -94,3 +98,4 @@ CI runs formatting, type checking, unit tests, PostgreSQL integration tests, Pla
 
 - [Project overview](docs/PROJECT.md) — product scope, workflows, and durable domain rules.
 - [Deployment](docs/DEPLOYMENT.md) — manual Vercel and Neon configuration, migration sequencing, and release validation.
+- [Security policy](.github/SECURITY.md) — responsible disclosure guidance.

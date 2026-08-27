@@ -20,6 +20,7 @@ const testEnvironment = {
   DATABASE_URL: requireTestDatabaseUrl(),
   DEMO_AUTH_EMAIL: credentials.email,
   DEMO_AUTH_PASSWORD: credentials.password,
+  DMS_NEXT_DIST_DIR: ".next-e2e",
   NEXT_PUBLIC_APP_URL: baseURL,
 };
 

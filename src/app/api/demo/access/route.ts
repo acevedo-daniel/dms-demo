@@ -11,21 +11,30 @@ function copySessionCookies(source: Response, target: NextResponse) {
 }
 
 export async function POST() {
-  const { email, password } = getDemoCredentials();
-  const signInResponse = await getAuth().api.signInEmail({
-    body: { email, password, rememberMe: false },
-    asResponse: true,
-  });
+  try {
+    const { email, password } = getDemoCredentials();
+    const signInResponse = await getAuth().api.signInEmail({
+      body: { email, password, rememberMe: false },
+      asResponse: true,
+    });
 
-  if (!signInResponse.ok) {
+    if (!signInResponse.ok) {
+      return NextResponse.json(
+        { error: "Demo access is temporarily unavailable." },
+        { status: 503 },
+      );
+    }
+
+    const response = NextResponse.json({ ok: true });
+    copySessionCookies(signInResponse, response);
+
+    return response;
+  } catch (error) {
+    console.error("Demo access request failed", error);
+
     return NextResponse.json(
       { error: "Demo access is temporarily unavailable." },
       { status: 503 },
     );
   }
-
-  const response = NextResponse.json({ ok: true });
-  copySessionCookies(signInResponse, response);
-
-  return response;
 }

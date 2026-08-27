@@ -16,11 +16,13 @@ export function DemoAccessButton() {
 
     try {
       const response = await fetch("/api/demo/access", { method: "POST" });
-      const payload = (await response.json()) as { error?: string };
+      const payload = (await response.json().catch(() => null)) as {
+        error?: string;
+      } | null;
 
       if (!response.ok) {
         throw new Error(
-          payload.error ?? "Demo access is temporarily unavailable.",
+          payload?.error ?? "Demo access is temporarily unavailable.",
         );
       }
 
