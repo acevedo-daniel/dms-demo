@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { DemoAccessButton } from "@/components/demo-access-button";
 import { DmsLogo } from "@/components/dms-logo";
+import { authorizeDemoRequest } from "@/lib/auth/authorization";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Open demo workspace",
@@ -13,7 +18,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function DemoAccessPage() {
+export default async function DemoAccessPage() {
+  const authorization = await authorizeDemoRequest(await headers());
+
+  if (authorization.status === "authorized") {
+    redirect("/demo/dashboard");
+  }
+
   return (
     <main className="grid min-h-screen place-items-center bg-background px-4 py-10 sm:px-6">
       <section

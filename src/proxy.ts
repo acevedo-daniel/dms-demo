@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { authorizeDemoRequest } from "@/lib/auth/authorization";
 
 function applyDemoHeaders(response: NextResponse) {
   response.headers.set("Cache-Control", "no-store, private");
@@ -29,18 +28,6 @@ export async function proxy(request: NextRequest) {
     pathname.startsWith("/admin/") ||
     pathname === "/login"
   ) {
-    return redirect(request, "/demo/access");
-  }
-
-  const authorization = await authorizeDemoRequest(request.headers);
-
-  if (pathname === "/demo/access") {
-    return authorization.status === "authorized"
-      ? redirect(request, "/demo/dashboard")
-      : applyDemoHeaders(NextResponse.next());
-  }
-
-  if (authorization.status !== "authorized") {
     return redirect(request, "/demo/access");
   }
 

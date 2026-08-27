@@ -4,7 +4,6 @@ import { and, eq, inArray, lt, ne, sql } from "drizzle-orm";
 import {
   createAppointmentSchema,
   type CreateAppointmentInput,
-  type UpdateAppointmentInput,
   updateAppointmentSchema,
 } from "@/lib/contracts/appointment";
 import { getDatabase } from "@/db/client";

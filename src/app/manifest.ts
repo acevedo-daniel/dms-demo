@@ -11,8 +11,8 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: "#0f6b62",
     icons: [
       {
-        src: "/dms-logo.png",
-        sizes: "1254x1254",
+        src: "/icon",
+        sizes: "64x64",
         type: "image/png",
       },
     ],

@@ -28,9 +28,6 @@ export const metadata: Metadata = {
     email: false,
     telephone: false,
   },
-  icons: {
-    icon: "/dms-logo.png",
-  },
   openGraph: {
     description:
       "A focused workspace for dental practice operations, appointments, patient context, treatments, and notes.",
