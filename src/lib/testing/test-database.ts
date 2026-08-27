@@ -1,13 +1,14 @@
 const expectedDatabaseName = "dms_test";
+const localTestDatabaseUrl =
+  "postgresql://dms_test:dms_test@localhost:5434/dms_test";
+
+export const defaultTestDemoCredentials = {
+  email: "demo-admin@dms.invalid",
+  password: "dms-e2e-test-password",
+};
 
 export function requireTestDatabaseUrl() {
-  const value = process.env.TEST_DATABASE_URL;
-
-  if (!value) {
-    throw new Error(
-      "TEST_DATABASE_URL is required to run PostgreSQL integration tests.",
-    );
-  }
+  const value = process.env.TEST_DATABASE_URL ?? localTestDatabaseUrl;
 
   let databaseUrl: URL;
 
@@ -28,4 +29,12 @@ export function requireTestDatabaseUrl() {
   }
 
   return value;
+}
+
+export function getTestDemoCredentials() {
+  return {
+    email: process.env.DEMO_AUTH_EMAIL ?? defaultTestDemoCredentials.email,
+    password:
+      process.env.DEMO_AUTH_PASSWORD ?? defaultTestDemoCredentials.password,
+  };
 }
