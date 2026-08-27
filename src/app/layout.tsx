@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     telephone: false,
   },
   icons: {
-    icon: "/dms-mark.svg",
+    icon: "/dms-logo.png",
   },
   openGraph: {
     description:

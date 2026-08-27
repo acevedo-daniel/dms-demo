@@ -1,52 +1,32 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
+# Dependencies
+/node_modules/
 /.pnp
 .pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
 
-# testing
-/coverage
-/test-results
-
-# next.js
+# Build and test output
 /.next/
 /out/
-
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# env files (can opt-in for committing if needed)
-.env*
-!.env.example
-
-# vercel
-.vercel
-
-# typescript
+/build/
+/coverage/
+/playwright-report/
+/test-results/
 *.tsbuildinfo
 next-env.d.ts
 
-# Public assets
-/public/*
-!/public/dms-mark.svg
+# Local environment and deployment state
+.env*
+!.env.example
+/.vercel/
 
-# Local planning, design, and agent guidance. These files must never be committed.
+# Logs and operating-system files
+*.log
+*.pem
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Local working resources and temporary assets
+/temporal/
 /AGENTS.md
 /ROADMAP.md
 /DESIGN-DIRECTION.md

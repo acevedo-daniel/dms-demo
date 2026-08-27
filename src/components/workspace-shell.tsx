@@ -12,6 +12,7 @@ import {
   UsersRound,
 } from "lucide-react";
 import { useState, type ComponentType, type ReactNode } from "react";
+import { DmsLogo } from "@/components/dms-logo";
 import {
   Dialog,
   DialogContent,
@@ -46,17 +47,6 @@ const navigationItems: NavigationItem[] = [
   { href: "/demo/treatments", icon: ClipboardList, label: "Treatments" },
   { href: "/demo/notes", icon: NotebookPen, label: "Notes" },
 ];
-
-function DmsMark() {
-  return (
-    <span
-      aria-hidden="true"
-      className="grid size-9 place-items-center rounded-lg bg-primary font-mono text-base font-semibold text-primary-foreground"
-    >
-      D
-    </span>
-  );
-}
 
 function WorkspaceNavigation({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
@@ -133,7 +123,7 @@ export function WorkspaceShell({ children, userName }: WorkspaceShellProps) {
       <aside className="hidden border-r border-border bg-card xl:flex xl:min-h-screen xl:flex-col">
         <div className="border-b border-border px-5 py-5">
           <Link className="flex items-center gap-3" href="/demo/dashboard">
-            <DmsMark />
+            <DmsLogo className="size-9" />
             <span>
               <span className="block text-sm font-semibold tracking-tight">
                 DMS
@@ -172,7 +162,7 @@ export function WorkspaceShell({ children, userName }: WorkspaceShellProps) {
               <DialogContent className="top-0 right-0 left-auto h-dvh w-[min(20rem,calc(100%-2rem))] max-w-none translate-x-0 translate-y-0 rounded-none border-y-0 border-r-0 p-0 sm:max-w-none">
                 <DialogHeader className="border-b border-border p-5 text-left">
                   <DialogTitle className="flex items-center gap-3">
-                    <DmsMark />
+                    <DmsLogo className="size-9" />
                     <span>
                       <span className="block text-sm font-semibold">DMS</span>
                       <span className="block pt-0.5 text-xs font-normal text-muted-foreground">
@@ -198,7 +188,7 @@ export function WorkspaceShell({ children, userName }: WorkspaceShellProps) {
               className="flex items-center gap-2 xl:hidden"
               href="/demo/dashboard"
             >
-              <DmsMark />
+              <DmsLogo className="size-9" />
               <span className="text-sm font-semibold">DMS</span>
             </Link>
           </div>

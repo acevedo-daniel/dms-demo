@@ -7,6 +7,7 @@ import {
   Stethoscope,
   UsersRound,
 } from "lucide-react";
+import { DmsLogo } from "@/components/dms-logo";
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
@@ -57,9 +58,7 @@ export default function Home() {
       <header className="border-b border-border">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link className="flex items-center gap-3" href="/">
-            <span className="grid size-9 place-items-center rounded-lg bg-primary font-mono text-base font-semibold text-primary-foreground">
-              D
-            </span>
+            <DmsLogo className="size-9" />
             <span className="text-sm font-semibold tracking-tight">DMS</span>
           </Link>
           <Button asChild size="sm" variant="outline">

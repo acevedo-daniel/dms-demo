@@ -1,4 +1,4 @@
-const fallbackSiteUrl = "https://dms-portfolio-demo.vercel.app";
+const fallbackSiteUrl = "https://dms-demo.vercel.app";
 
 export const siteName = "DMS";
 

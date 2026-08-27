@@ -1,0 +1,14 @@
+* text=auto eol=lf
+
+*.png binary -eol
+*.jpg binary -eol
+*.jpeg binary -eol
+*.gif binary -eol
+*.webp binary -eol
+*.avif binary -eol
+*.ico binary -eol
+*.pdf binary -eol
+*.woff binary -eol
+*.woff2 binary -eol
+
+*.svg text eol=lf

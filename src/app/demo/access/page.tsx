@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { DemoAccessButton } from "@/components/demo-access-button";
+import { DmsLogo } from "@/components/dms-logo";
 
 export const metadata: Metadata = {
   title: "Open demo workspace",
@@ -27,9 +28,7 @@ export default function DemoAccessPage() {
           Back to case study
         </Link>
         <div className="mt-12">
-          <span className="grid size-10 place-items-center rounded-lg bg-primary font-mono text-lg font-semibold text-primary-foreground">
-            D
-          </span>
+          <DmsLogo />
           <p className="mt-8 font-mono text-xs font-medium uppercase tracking-[0.16em] text-primary">
             DMS · Atelier Dental
           </p>
