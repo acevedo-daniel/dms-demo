@@ -32,7 +32,10 @@ export default async function DemoAccessPage() {
         className="mx-auto w-full max-w-2xl border-y border-border py-8 sm:py-10"
       >
         <div className="flex items-center justify-between gap-4">
-          <DmsLogo className="size-9" />
+          <div className="flex items-center gap-3">
+            <DmsLogo className="size-9" />
+            <span className="text-sm font-semibold tracking-tight">DMS</span>
+          </div>
           <Link
             className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground"
             href="/"
@@ -53,8 +56,9 @@ export default async function DemoAccessPage() {
             Open the DMS demo workspace
           </h1>
           <p className="mt-4 max-w-md leading-7 text-muted-foreground">
-            Open a provisioned session for a resettable fictional sample
-            workspace. No account, password, or personal data is required.
+            Open a provisioned session for a fictional workspace that resets to
+            its curated baseline. No account, password, or personal information
+            is requested.
           </p>
           <div className="mt-8">
             <DemoAccessButton />

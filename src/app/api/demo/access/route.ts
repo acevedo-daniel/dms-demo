@@ -20,7 +20,7 @@ export async function POST() {
 
     if (!signInResponse.ok) {
       return NextResponse.json(
-        { error: "Demo access is temporarily unavailable." },
+        { error: "The demo workspace could not be opened. Try again." },
         { status: 503 },
       );
     }
@@ -33,7 +33,7 @@ export async function POST() {
     console.error("Demo access request failed", error);
 
     return NextResponse.json(
-      { error: "Demo access is temporarily unavailable." },
+      { error: "The demo workspace could not be opened. Try again." },
       { status: 503 },
     );
   }

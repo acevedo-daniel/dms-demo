@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export function DemoAccessButton() {
   const router = useRouter();
@@ -43,6 +44,7 @@ export function DemoAccessButton() {
   return (
     <div className="space-y-3">
       <Button
+        aria-describedby="demo-access-feedback"
         className="w-full sm:w-auto"
         disabled={isLoading}
         onClick={openDemoWorkspace}
@@ -54,7 +56,11 @@ export function DemoAccessButton() {
       <p
         aria-atomic="true"
         aria-live="polite"
-        className="min-h-5 text-sm text-destructive"
+        className={cn(
+          "min-h-5 text-sm",
+          error ? "text-destructive" : "text-muted-foreground",
+        )}
+        id="demo-access-feedback"
       >
         {isLoading ? "Opening demo workspace." : error}
       </p>

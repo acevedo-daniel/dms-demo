@@ -30,25 +30,24 @@ export const metadata: Metadata = {
 const workflow = [
   {
     description:
-      "Keep a focused weekly view of appointments and the next action.",
+      "Plan the five-day workweek, see status, and create from an open slot.",
     icon: CalendarDays,
     label: "Schedule",
   },
   {
     description:
-      "Move from an appointment to a clear patient context without repetition.",
+      "Open history, the next appointment, and context without re-entering patient details.",
     icon: UsersRound,
     label: "Patient context",
   },
   {
-    description:
-      "Use a concise catalog to keep the appointment service visible.",
+    description: "Reference the appointment catalog and its default duration.",
     icon: ClipboardList,
     label: "Treatments",
   },
   {
     description:
-      "Record brief operational notes where they belong: with the patient.",
+      "Keep concise coordination details attached to the patient record.",
     icon: NotebookPen,
     label: "Notes",
   },
@@ -79,9 +78,9 @@ export default function Home() {
               A quieter way to coordinate the day.
             </h1>
             <p className="mt-6 text-lg leading-8 text-muted-foreground">
-              DMS brings appointments, patient context, treatment details, and
-              operational notes into one considered workspace for a dental
-              practice.
+              DMS keeps a single practice&apos;s schedule, patient context,
+              treatment catalog, and operational notes in one composed daily
+              view.
             </p>
             <div className="mt-8">
               <Button asChild size="lg">
@@ -98,11 +97,12 @@ export default function Home() {
               alt="DMS dashboard showing a day of appointments, follow-up work, and recent notes"
               className="aspect-video w-full border border-border object-cover"
               priority
+              sizes="(min-width: 1024px) 56vw, 100vw"
               src={dashboardScreenshot}
             />
             <figcaption className="px-1 pt-3 text-sm text-muted-foreground">
-              Atelier Dental · A fictional sample workspace with a fixed,
-              repeatable demo day.
+              Dashboard · Tuesday, 12 May 2026 · Fictional Atelier Dental
+              baseline.
             </figcaption>
           </figure>
         </div>
@@ -116,7 +116,7 @@ export default function Home() {
               className="mt-3 text-2xl font-semibold tracking-tight"
               id="workflow-title"
             >
-              One connected operational path.
+              The practice day, kept connected.
             </h2>
           </div>
           <ol className="mt-7 grid border-y border-border sm:grid-cols-2 lg:grid-cols-4">
@@ -144,9 +144,8 @@ export default function Home() {
               Designed around the next action
             </h2>
             <p className="mt-3 max-w-xl leading-7 text-muted-foreground">
-              The workspace favors a readable schedule, clear records, and
-              visible system status over decorative metrics and crowded
-              dashboard cards.
+              Scheduling, records, and visible status carry the interface.
+              Decorative metrics and generic dashboard cards do not.
             </p>
           </section>
           <section>
@@ -154,9 +153,8 @@ export default function Home() {
               A bounded, repeatable demo
             </h2>
             <p className="mt-3 max-w-xl leading-7 text-muted-foreground">
-              Explore a fictional sample practice through a provisioned session
-              and resettable data. The walkthrough stays consistent across every
-              visit.
+              A fixed demo day, provisioned session, and resettable fictional
+              dataset keep each walkthrough consistent.
             </p>
           </section>
         </div>
@@ -173,11 +171,11 @@ export default function Home() {
               className="mt-3 text-2xl font-semibold tracking-tight"
               id="demo-invitation-title"
             >
-              Explore the workspace on your own terms.
+              A self-contained workspace to explore.
             </h2>
             <p className="mt-3 leading-7 text-muted-foreground">
               Open a provisioned session with resettable fictional data. No
-              account or shared credential is shown.
+              account or shared credential is required.
             </p>
           </div>
           <Button asChild size="lg">
