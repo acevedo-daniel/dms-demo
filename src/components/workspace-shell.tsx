@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
+  CalendarPlus,
   CalendarDays,
   ClipboardList,
   LayoutDashboard,
@@ -48,6 +49,14 @@ const navigationItems: NavigationItem[] = [
   { href: "/demo/notes", icon: NotebookPen, label: "Notes" },
 ];
 
+function workspacePageTitle(pathname: string) {
+  if (pathname.startsWith("/demo/patients/")) {
+    return "Patient record";
+  }
+
+  return navigationItems.find((item) => item.href === pathname)?.label ?? "DMS";
+}
+
 function WorkspaceNavigation({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
 
@@ -80,6 +89,7 @@ function WorkspaceNavigation({ onNavigate }: { onNavigate?: () => void }) {
 
         return (
           <Link
+            aria-current={active ? "page" : undefined}
             className={className}
             href={href}
             key={href}
@@ -117,6 +127,9 @@ function SignOutButton() {
 
 export function WorkspaceShell({ children, userName }: WorkspaceShellProps) {
   const [isNavigationOpen, setIsNavigationOpen] = useState(false);
+  const pathname = usePathname();
+  const pageTitle = workspacePageTitle(pathname);
+  const hasMobileCreateAction = pathname === "/demo/dashboard";
 
   return (
     <div className="min-h-screen bg-background xl:grid xl:grid-cols-[15.5rem_minmax(0,1fr)]">
@@ -146,7 +159,7 @@ export function WorkspaceShell({ children, userName }: WorkspaceShellProps) {
       </aside>
 
       <div className="min-w-0">
-        <header className="sticky top-0 z-20 flex min-h-16 items-center justify-between border-b border-border bg-background/95 px-4 backdrop-blur xl:px-8">
+        <header className="sticky top-0 z-20 flex min-h-16 items-center justify-between border-b border-border bg-background px-4 xl:px-8">
           <div className="flex items-center gap-3">
             <Dialog onOpenChange={setIsNavigationOpen} open={isNavigationOpen}>
               <DialogTrigger asChild>
@@ -189,10 +202,25 @@ export function WorkspaceShell({ children, userName }: WorkspaceShellProps) {
               href="/demo/dashboard"
             >
               <DmsLogo className="size-9" />
-              <span className="text-sm font-semibold">DMS</span>
+              <span className="text-sm font-semibold">{pageTitle}</span>
             </Link>
           </div>
-          <span className="text-sm text-muted-foreground">Demo workspace</span>
+          <div className="flex items-center gap-3">
+            <span className="hidden text-sm text-muted-foreground sm:inline">
+              Demo workspace
+            </span>
+            {hasMobileCreateAction ? (
+              <Button asChild className="h-9 px-3 text-xs md:hidden" size="sm">
+                <Link
+                  aria-label="Create appointment"
+                  href="/demo/schedule?create=1"
+                >
+                  <CalendarPlus aria-hidden className="size-4" />
+                  Create
+                </Link>
+              </Button>
+            ) : null}
+          </div>
         </header>
         {children}
       </div>

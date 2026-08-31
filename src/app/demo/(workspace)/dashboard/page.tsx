@@ -68,8 +68,8 @@ export default async function DashboardPage() {
             {formatDemoDate(getDemoClock())}
           </p>
         </div>
-        <Button asChild>
-          <Link href="/demo/schedule">
+        <Button asChild className="hidden md:inline-flex">
+          <Link href="/demo/schedule?create=1">
             <CalendarPlus aria-hidden className="size-4" />
             Create appointment
           </Link>
@@ -95,33 +95,40 @@ export default async function DashboardPage() {
         </div>
 
         {dashboard.today.length ? (
-          <ol className="mt-5 divide-y divide-border border-y border-border">
-            {dashboard.today.map((appointment) => (
-              <li
-                className="grid gap-4 py-5 sm:grid-cols-[5.25rem_minmax(0,1fr)_auto] sm:items-center"
-                key={appointment.id}
-              >
-                <time
-                  className="font-mono text-sm font-medium tabular-nums text-foreground"
-                  dateTime={appointment.startsAt.toISOString()}
+          <>
+            <ol className="mt-5 divide-y divide-border border-y border-border">
+              {dashboard.today.map((appointment) => (
+                <li
+                  className="grid gap-4 py-5 sm:grid-cols-[5.25rem_minmax(0,1fr)_auto] sm:items-center"
+                  key={appointment.id}
                 >
-                  {formatDemoTime(appointment.startsAt)}
-                </time>
-                <div className="min-w-0">
-                  <Link
-                    className="font-medium text-foreground hover:text-primary"
-                    href={`/demo/patients/${appointment.patientId}`}
+                  <time
+                    className="font-mono text-sm font-medium tabular-nums text-foreground"
+                    dateTime={appointment.startsAt.toISOString()}
                   >
-                    {appointment.patientName}
-                  </Link>
-                  <p className="mt-1 truncate text-sm text-muted-foreground">
-                    {appointment.treatmentName}
-                  </p>
-                </div>
-                <AppointmentStatus status={appointment.status} />
-              </li>
-            ))}
-          </ol>
+                    {formatDemoTime(appointment.startsAt)}
+                  </time>
+                  <div className="min-w-0">
+                    <Link
+                      className="font-medium text-foreground hover:text-primary"
+                      href={`/demo/patients/${appointment.patientId}`}
+                    >
+                      {appointment.patientName}
+                    </Link>
+                    <p className="mt-1 truncate text-sm text-muted-foreground">
+                      {appointment.treatmentName}
+                    </p>
+                  </div>
+                  <AppointmentStatus status={appointment.status} />
+                </li>
+              ))}
+            </ol>
+            <div className="mt-3 flex justify-end">
+              <Button asChild size="sm" variant="ghost">
+                <Link href="/demo/schedule">Open schedule</Link>
+              </Button>
+            </div>
+          </>
         ) : (
           <div className="mt-5 border-y border-border py-12 text-center">
             <Clock3
@@ -154,7 +161,7 @@ export default async function DashboardPage() {
                 </p>
               </div>
               <span className="font-mono text-xs text-muted-foreground">
-                {dashboard.needsAttention.length} items
+                {dashboard.needsAttention.length} scheduled
               </span>
             </div>
             <ol className="mt-5 divide-y divide-border border-y border-border">
@@ -204,7 +211,7 @@ export default async function DashboardPage() {
                       </span>
                     ) : null}
                   </div>
-                  <p className="mt-2 text-sm leading-6 text-foreground">
+                  <p className="mt-2 line-clamp-2 text-sm leading-6 text-foreground">
                     {note.body}
                   </p>
                   <time
