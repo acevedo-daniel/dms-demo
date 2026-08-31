@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export function DemoAccessButton() {
   const router = useRouter();
@@ -22,7 +23,8 @@ export function DemoAccessButton() {
 
       if (!response.ok) {
         throw new Error(
-          payload?.error ?? "Demo access is temporarily unavailable.",
+          payload?.error ??
+            "The demo workspace could not be opened. Try again.",
         );
       }
 
@@ -32,7 +34,7 @@ export function DemoAccessButton() {
       setError(
         cause instanceof Error
           ? cause.message
-          : "Demo access is temporarily unavailable.",
+          : "The demo workspace could not be opened. Try again.",
       );
     } finally {
       setIsLoading(false);
@@ -42,6 +44,7 @@ export function DemoAccessButton() {
   return (
     <div className="space-y-3">
       <Button
+        aria-describedby="demo-access-feedback"
         className="w-full sm:w-auto"
         disabled={isLoading}
         onClick={openDemoWorkspace}
@@ -50,8 +53,16 @@ export function DemoAccessButton() {
         {isLoading ? "Opening workspace…" : "Open demo workspace"}
         {!isLoading ? <ArrowRight aria-hidden className="size-4" /> : null}
       </Button>
-      <p aria-live="polite" className="min-h-5 text-sm text-destructive">
-        {error}
+      <p
+        aria-atomic="true"
+        aria-live="polite"
+        className={cn(
+          "min-h-5 text-sm",
+          error ? "text-destructive" : "text-muted-foreground",
+        )}
+        id="demo-access-feedback"
+      >
+        {isLoading ? "Opening demo workspace." : error}
       </p>
     </div>
   );

@@ -26,40 +26,48 @@ export default async function DemoAccessPage() {
   }
 
   return (
-    <main className="grid min-h-screen place-items-center bg-background px-4 py-10 sm:px-6">
+    <main className="flex min-h-screen items-center bg-background px-4 py-10 sm:px-6">
       <section
         aria-labelledby="demo-access-title"
-        className="w-full max-w-xl border-y border-border py-10 sm:border sm:bg-card sm:p-10"
+        className="mx-auto w-full max-w-2xl border-y border-border py-8 sm:py-10"
       >
-        <Link
-          className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground"
-          href="/"
-        >
-          <ArrowLeft aria-hidden className="size-4" />
-          Back to case study
-        </Link>
-        <div className="mt-12">
-          <DmsLogo />
-          <p className="mt-8 font-mono text-xs font-medium uppercase tracking-[0.16em] text-primary">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <DmsLogo className="size-9" />
+            <span className="text-sm font-semibold tracking-tight">DMS</span>
+          </div>
+          <Link
+            className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground"
+            href="/"
+          >
+            <ArrowLeft aria-hidden className="size-4" />
+            Back to case study
+          </Link>
+        </div>
+        <div className="mt-12 max-w-xl">
+          <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-primary">
             DMS · Atelier Dental
           </p>
           <h1
-            className="mt-4 text-3xl font-semibold tracking-[-0.03em]"
+            className="mt-4 text-3xl font-semibold tracking-[-0.03em] sm:text-4xl"
             id="demo-access-title"
+            tabIndex={-1}
           >
-            Open the demo workspace
+            Open the DMS demo workspace
           </h1>
           <p className="mt-4 max-w-md leading-7 text-muted-foreground">
-            Explore a resettable sample workspace for a fictional practice. No
-            account, password, or personal data is required.
+            Open a provisioned session for a fictional workspace that resets to
+            its curated baseline. No account, password, or personal information
+            is requested.
           </p>
           <div className="mt-8">
             <DemoAccessButton />
           </div>
         </div>
-        <div className="mt-10 border-t border-border pt-6 text-sm leading-6 text-muted-foreground">
-          Includes a daily dashboard, patient context, treatments, and
-          operational notes built around one consistent workweek.
+        <div className="mt-12 border-t border-border pt-6 text-sm leading-6 text-muted-foreground">
+          Includes a daily dashboard, weekly schedule, patient records,
+          treatment catalog, and operational notes built around one consistent
+          workweek.
         </div>
       </section>
     </main>
