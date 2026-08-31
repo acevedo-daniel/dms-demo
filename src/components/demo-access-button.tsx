@@ -22,7 +22,8 @@ export function DemoAccessButton() {
 
       if (!response.ok) {
         throw new Error(
-          payload?.error ?? "Demo access is temporarily unavailable.",
+          payload?.error ??
+            "The demo workspace could not be opened. Try again.",
         );
       }
 
@@ -32,7 +33,7 @@ export function DemoAccessButton() {
       setError(
         cause instanceof Error
           ? cause.message
-          : "Demo access is temporarily unavailable.",
+          : "The demo workspace could not be opened. Try again.",
       );
     } finally {
       setIsLoading(false);
@@ -50,8 +51,12 @@ export function DemoAccessButton() {
         {isLoading ? "Opening workspace…" : "Open demo workspace"}
         {!isLoading ? <ArrowRight aria-hidden className="size-4" /> : null}
       </Button>
-      <p aria-live="polite" className="min-h-5 text-sm text-destructive">
-        {error}
+      <p
+        aria-atomic="true"
+        aria-live="polite"
+        className="min-h-5 text-sm text-destructive"
+      >
+        {isLoading ? "Opening demo workspace." : error}
       </p>
     </div>
   );
