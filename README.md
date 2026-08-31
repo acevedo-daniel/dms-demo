@@ -4,7 +4,7 @@
 
 > A public portfolio demo of a dental practice operations workspace.
 
-DMS brings appointments, patient records, treatments, and operational notes into one calm workspace for a single dental practice. This public edition presents a modern demo of a system developed with a small team for a dental client; every practice, person, and record shown here is fictional.
+DMS brings appointments, patient records, a treatment catalog, and operational notes into one calm workspace for a single dental practice. This independent public portfolio demo is informed by a system delivered with a small team for a dental client; every practice, person, and record shown here is fictional.
 
 **[Explore the live demo](https://dms-showcase.vercel.app)**
 
@@ -31,14 +31,14 @@ DMS brings appointments, patient records, treatments, and operational notes into
 - **Appointment coordination:** Create, reschedule, confirm, complete, or cancel appointments while preventing conflicting active slots.
 - **Patient directory:** Find, add, edit, archive, and review patients within the sample practice.
 - **Connected records:** Keep appointment activity, treatment context, and concise operational notes together on each patient record.
-- **Guided public access:** Open a server-provisioned demo session without a public sign-up flow; an operator can restore the fictional workspace from its curated baseline when needed.
+- **Guided public access:** Open a server-provisioned demo session without a public sign-up flow. The resettable fictional dataset can be restored to its curated baseline when needed.
 
 ## Engineering highlights
 
 - **Domain rules remain close to persistence.** Small services and PostgreSQL-backed data protect practice ownership, appointment conflicts, and archive constraints.
 - **The public demo is intentionally bounded.** A deterministic clock and resettable seed keep every walkthrough, screenshot, and test run consistent.
 - **Authentication is purpose-built for exploration.** Better Auth provisions a server-side demo identity and protects workspace routes without exposing credentials in the interface.
-- **Quality checks cover the important boundaries.** Vitest verifies rules and PostgreSQL integration; Playwright covers the main workflow and automated WCAG checks; GitHub Actions runs the release checks.
+- **Quality checks cover the important boundaries.** Vitest verifies rules and PostgreSQL integration; Playwright covers the main workflow and automated WCAG checks; GitHub Actions runs CI quality checks.
 
 ## Architecture
 
@@ -97,5 +97,4 @@ CI runs formatting, type checking, unit tests, PostgreSQL integration tests, Pla
 ## Documentation
 
 - [Project overview](docs/PROJECT.md) — product scope, workflows, and durable domain rules.
-- [Deployment](docs/DEPLOYMENT.md) — manual Vercel and Neon configuration, migration sequencing, and release validation.
 - [Security policy](.github/SECURITY.md) — responsible disclosure guidance.

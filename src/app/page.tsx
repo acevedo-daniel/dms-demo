@@ -124,8 +124,8 @@ export default function Home() {
               A bounded, repeatable demo
             </h2>
             <p className="mt-3 max-w-xl leading-7 text-muted-foreground">
-              Explore a fictional sample practice with a real session and
-              resettable data. The walkthrough stays consistent across every
+              Explore a fictional sample practice through a provisioned session
+              and resettable data. The walkthrough stays consistent across every
               visit.
             </p>
           </section>
