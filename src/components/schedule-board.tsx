@@ -155,7 +155,10 @@ export function ScheduleBoard({
               {weekRange(days)} · Monday–Friday
             </p>
           </div>
-          <Button onClick={() => openCreate()}>
+          <Button
+            className="hidden md:inline-flex"
+            onClick={() => openCreate()}
+          >
             <CalendarPlus aria-hidden className="size-4" />
             Create appointment
           </Button>
@@ -203,10 +206,10 @@ export function ScheduleBoard({
       </p>
 
       <section aria-label="Week schedule" className="mt-8 hidden md:block">
-        <div className="overflow-x-auto border border-border">
+        <div className="overflow-x-auto border border-border pb-2">
           <div className="min-w-[62rem]">
             <div className="relative z-10 grid grid-cols-[4.5rem_repeat(5,minmax(10.5rem,1fr))] border-b border-border bg-background">
-              <div className="border-r border-border px-3 py-4 font-mono text-xs text-muted-foreground">
+              <div className="sticky left-0 z-20 border-r border-border bg-background px-3 py-4 font-mono text-xs text-muted-foreground">
                 Time
               </div>
               {days.map((day) => (
@@ -219,10 +222,10 @@ export function ScheduleBoard({
               ))}
             </div>
             <div className="grid grid-cols-[4.5rem_repeat(5,minmax(10.5rem,1fr))]">
-              <div className="border-r border-border">
+              <div className="sticky left-0 z-10 border-r border-border bg-background">
                 {Array.from({ length: scheduleSlotsPerDay }, (_, index) => (
                   <div
-                    className="h-12 border-b border-border px-3 pt-1 font-mono text-xs text-muted-foreground"
+                    className="h-12 border-b border-border bg-background px-3 pt-1 font-mono text-xs text-muted-foreground"
                     key={index}
                   >
                     {String(scheduleStartHour + Math.floor(index / 2)).padStart(
@@ -254,7 +257,7 @@ export function ScheduleBoard({
                       return (
                         <button
                           aria-label={`Create appointment for ${dayLabel(day)} at ${slotTime}`}
-                          className="block h-12 w-full border-b border-border text-left transition-colors hover:bg-secondary focus-visible:relative focus-visible:z-20 focus-visible:outline-none"
+                          className="block h-12 w-full border-b border-border text-left transition-colors hover:bg-secondary/70 focus-visible:relative focus-visible:z-20 focus-visible:outline-none"
                           key={startsAt}
                           onClick={() => openCreate(startsAt)}
                           type="button"
@@ -274,8 +277,8 @@ export function ScheduleBoard({
 
                       return (
                         <button
-                          aria-label={`Open appointment for ${appointmentName(appointment)} at ${formatDemoTime(new Date(appointment.startsAt))}`}
-                          className="absolute right-1 left-1 z-10 overflow-hidden rounded-md border px-2 py-1.5 text-left transition-colors hover:brightness-95 focus-visible:outline-none"
+                          aria-label={`Open ${appointment.status.toLowerCase()} appointment for ${appointmentName(appointment)} at ${formatDemoTime(new Date(appointment.startsAt))}`}
+                          className="absolute right-1 left-1 z-10 overflow-hidden rounded-md border bg-card px-2 py-1.5 text-left transition-colors hover:border-primary/35 hover:bg-accent/40 focus-visible:outline-none"
                           key={appointment.id}
                           onClick={() => setSheetState({ appointment })}
                           style={{
@@ -324,7 +327,7 @@ export function ScheduleBoard({
           >
             <ChevronLeft aria-hidden className="size-4" />
           </Button>
-          <p className="text-sm font-medium">
+          <p aria-live="polite" className="text-sm font-medium">
             {formatDemoDate(selectedMobileDay)}
           </p>
           <Button
@@ -355,7 +358,7 @@ export function ScheduleBoard({
                 {slotAppointments.length ? (
                   slotAppointments.map((appointment) => (
                     <button
-                      className="min-w-0 flex-1 rounded-md border border-border px-3 py-2 text-left focus-visible:outline-none"
+                      className="min-w-0 flex-1 rounded-md border border-border bg-card px-3 py-2 text-left transition-colors hover:border-primary/35 hover:bg-accent/40 focus-visible:outline-none"
                       key={appointment.id}
                       onClick={() => setSheetState({ appointment })}
                       type="button"

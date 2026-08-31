@@ -129,7 +129,8 @@ export function WorkspaceShell({ children, userName }: WorkspaceShellProps) {
   const [isNavigationOpen, setIsNavigationOpen] = useState(false);
   const pathname = usePathname();
   const pageTitle = workspacePageTitle(pathname);
-  const hasMobileCreateAction = pathname === "/demo/dashboard";
+  const hasMobileCreateAction =
+    pathname === "/demo/dashboard" || pathname === "/demo/schedule";
 
   return (
     <div className="min-h-screen bg-background xl:grid xl:grid-cols-[15.5rem_minmax(0,1fr)]">
