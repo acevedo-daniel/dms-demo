@@ -4,9 +4,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CalendarPlus, ChevronLeft, ChevronRight, Clock3 } from "lucide-react";
 import { useMemo, useState } from "react";
+import { AppointmentStatusBadge } from "@/components/appointment-status-badge";
 import { AppointmentSheet } from "@/components/appointment-sheet";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Select } from "@/components/ui/select";
 import { formatDemoDate, formatDemoTime } from "@/lib/demo/format";
 import {
   addPracticeDays,
@@ -39,11 +40,6 @@ type SheetState =
   | { appointment?: never; patientId?: string; startsAt?: string };
 
 type StatusFilter = "ALL" | "CONFIRMED" | "SCHEDULED";
-
-const statusAppearance = {
-  CONFIRMED: "border-primary/25 bg-accent text-primary",
-  SCHEDULED: "border-[#7a8e86] bg-card text-muted-foreground",
-} as const;
 
 function dayLabel(date: Date) {
   return new Intl.DateTimeFormat("en-GB", {
@@ -187,8 +183,8 @@ export function ScheduleBoard({
           </nav>
           <label className="flex items-center gap-2 text-sm text-muted-foreground">
             <span>Status</span>
-            <select
-              className="h-10 rounded-md border border-input bg-background px-2 text-sm text-foreground outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+            <Select
+              className="h-10 w-auto px-2"
               onChange={(event) =>
                 setFilter(event.target.value as StatusFilter)
               }
@@ -197,7 +193,7 @@ export function ScheduleBoard({
               <option value="ALL">All active</option>
               <option value="SCHEDULED">Scheduled</option>
               <option value="CONFIRMED">Confirmed</option>
-            </select>
+            </Select>
           </label>
         </div>
       </header>
@@ -258,7 +254,7 @@ export function ScheduleBoard({
                       return (
                         <button
                           aria-label={`Create appointment for ${dayLabel(day)} at ${slotTime}`}
-                          className="block h-12 w-full border-b border-border text-left transition-colors hover:bg-secondary focus-visible:relative focus-visible:z-20 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                          className="block h-12 w-full border-b border-border text-left transition-colors hover:bg-secondary focus-visible:relative focus-visible:z-20 focus-visible:outline-none"
                           key={startsAt}
                           onClick={() => openCreate(startsAt)}
                           type="button"
@@ -279,7 +275,7 @@ export function ScheduleBoard({
                       return (
                         <button
                           aria-label={`Open appointment for ${appointmentName(appointment)} at ${formatDemoTime(new Date(appointment.startsAt))}`}
-                          className="absolute right-1 left-1 z-10 overflow-hidden rounded-md border px-2 py-1.5 text-left shadow-xs transition-colors hover:brightness-95 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                          className="absolute right-1 left-1 z-10 overflow-hidden rounded-md border px-2 py-1.5 text-left transition-colors hover:brightness-95 focus-visible:outline-none"
                           key={appointment.id}
                           onClick={() => setSheetState({ appointment })}
                           style={{
@@ -359,7 +355,7 @@ export function ScheduleBoard({
                 {slotAppointments.length ? (
                   slotAppointments.map((appointment) => (
                     <button
-                      className="min-w-0 flex-1 rounded-md border border-border px-3 py-2 text-left focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                      className="min-w-0 flex-1 rounded-md border border-border px-3 py-2 text-left focus-visible:outline-none"
                       key={appointment.id}
                       onClick={() => setSheetState({ appointment })}
                       type="button"
@@ -371,14 +367,9 @@ export function ScheduleBoard({
                         {appointment.treatmentName} ·{" "}
                         {formatDemoTime(appointmentEnd(appointment))}
                       </p>
-                      <Badge
-                        className={`mt-2 ${statusAppearance[appointment.status]}`}
-                        variant="outline"
-                      >
-                        {appointment.status === "CONFIRMED"
-                          ? "Confirmed"
-                          : "Scheduled"}
-                      </Badge>
+                      <div className="mt-2">
+                        <AppointmentStatusBadge status={appointment.status} />
+                      </div>
                     </button>
                   ))
                 ) : (

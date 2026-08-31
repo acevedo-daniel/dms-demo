@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import {
   practiceDateInputValue,
@@ -323,8 +324,7 @@ export function AppointmentSheet({
 
               <div className="space-y-2">
                 <Label htmlFor={`${formId}-patient`}>Patient</Label>
-                <select
-                  className="h-11 w-full rounded-md border border-input bg-background px-3 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                <Select
                   id={`${formId}-patient`}
                   onChange={(event) =>
                     updateValue("patientId", event.target.value)
@@ -338,13 +338,12 @@ export function AppointmentSheet({
                       {patient.name} · {patient.identifier}
                     </option>
                   ))}
-                </select>
+                </Select>
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor={`${formId}-treatment`}>Treatment</Label>
-                <select
-                  className="h-11 w-full rounded-md border border-input bg-background px-3 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                <Select
                   id={`${formId}-treatment`}
                   onChange={(event) => {
                     const treatment = treatments.find(
@@ -367,7 +366,7 @@ export function AppointmentSheet({
                       {treatment.name} · {treatment.defaultDurationMinutes} min
                     </option>
                   ))}
-                </select>
+                </Select>
               </div>
 
               <div className="grid gap-5 sm:grid-cols-2">

@@ -1,6 +1,7 @@
 import { ArrowLeft, CalendarPlus, ClipboardList, Pencil } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { AppointmentStatusBadge } from "@/components/appointment-status-badge";
 import { ArchivePatientButton } from "@/components/archive-patient-button";
 import { PatientNoteAction } from "@/components/patient-note-action";
 import {
@@ -15,11 +16,6 @@ import { getNoteComposerOptions } from "@/lib/notes";
 import { getPatientRecord } from "@/lib/patients";
 
 type PatientPageProps = { params: Promise<{ id: string }> };
-
-const statusAppearance = {
-  CONFIRMED: "border-primary/25 bg-accent text-primary",
-  SCHEDULED: "border-[#7a8e86] bg-card text-muted-foreground",
-} as const;
 
 function patientName(patient: { firstName: string; lastName: string }) {
   return `${patient.firstName} ${patient.lastName}`;
@@ -175,14 +171,7 @@ export default async function PatientPage({ params }: PatientPageProps) {
                 {patient.nextAppointment.treatmentName}
               </p>
             </div>
-            <Badge
-              className={statusAppearance[patient.nextAppointment.status]}
-              variant="outline"
-            >
-              {patient.nextAppointment.status === "CONFIRMED"
-                ? "Confirmed"
-                : "Scheduled"}
-            </Badge>
+            <AppointmentStatusBadge status={patient.nextAppointment.status} />
           </div>
         ) : (
           <div className="mt-3">
@@ -240,19 +229,7 @@ export default async function PatientPage({ params }: PatientPageProps) {
                         <p className="text-sm text-muted-foreground">
                           {item.treatmentName}
                         </p>
-                        <Badge
-                          className={
-                            item.status === "COMPLETED"
-                              ? "border-[#166534]/25 bg-[#dcfce7] text-[#166534]"
-                              : item.status === "CANCELLED"
-                                ? "border-[#b42318]/25 bg-[#fee4e2] text-[#b42318]"
-                                : statusAppearance[item.status]
-                          }
-                          variant="outline"
-                        >
-                          {item.status.slice(0, 1) +
-                            item.status.slice(1).toLowerCase()}
-                        </Badge>
+                        <AppointmentStatusBadge status={item.status} />
                       </div>
                     ) : (
                       <>

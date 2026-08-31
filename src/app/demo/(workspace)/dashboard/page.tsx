@@ -1,8 +1,8 @@
-import { CalendarPlus, CheckCircle2, Clock3, FileText } from "lucide-react";
+import { CalendarPlus, Clock3, FileText } from "lucide-react";
 import Link from "next/link";
+import { AppointmentStatusBadge } from "@/components/appointment-status-badge";
 import { ConfirmAppointmentButton } from "@/components/confirm-appointment-button";
 import { ExploreDmsGuide } from "@/components/explore-dms-guide";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   formatDemoDate,
@@ -12,39 +12,8 @@ import {
 } from "@/lib/dashboard";
 import { getDemoClock } from "@/lib/demo/constants";
 
-const statusAppearance: Record<
-  DashboardAppointmentStatus,
-  { className: string; label: string }
-> = {
-  CANCELLED: {
-    className: "border-[#b42318]/25 bg-[#fee4e2] text-[#b42318]",
-    label: "Cancelled",
-  },
-  COMPLETED: {
-    className: "border-[#166534]/25 bg-[#dcfce7] text-[#166534]",
-    label: "Completed",
-  },
-  CONFIRMED: {
-    className: "border-primary/25 bg-accent text-primary",
-    label: "Confirmed",
-  },
-  SCHEDULED: {
-    className: "border-[#7a8e86] bg-card text-muted-foreground",
-    label: "Scheduled",
-  },
-};
-
 function AppointmentStatus({ status }: { status: DashboardAppointmentStatus }) {
-  const appearance = statusAppearance[status];
-
-  return (
-    <Badge className={appearance.className} variant="outline">
-      {status === "CONFIRMED" || status === "COMPLETED" ? (
-        <CheckCircle2 aria-hidden className="size-3" />
-      ) : null}
-      {appearance.label}
-    </Badge>
-  );
+  return <AppointmentStatusBadge status={status} />;
 }
 
 async function loadDashboard() {

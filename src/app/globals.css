@@ -20,7 +20,7 @@
   --destructive: #b42318;
   --destructive-foreground: #ffffff;
   --border: #dce8e4;
-  --input: #ffffff;
+  --input: #7a8e86;
   --ring: #0f6b62;
   --radius: 0.75rem;
   --sidebar: #ffffff;
@@ -80,6 +80,8 @@
 
   body {
     @apply bg-background text-foreground;
+    font-size: 0.9375rem;
+    line-height: 1.55;
   }
 
   :focus-visible {
@@ -88,8 +90,8 @@
   }
 
   ::selection {
-    background: #d9eee8;
-    color: #14211f;
+    background: var(--accent);
+    color: var(--foreground);
   }
 
   @media (prefers-reduced-motion: reduce) {

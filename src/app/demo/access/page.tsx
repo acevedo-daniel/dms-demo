@@ -29,7 +29,7 @@ export default async function DemoAccessPage() {
     <main className="grid min-h-screen place-items-center bg-background px-4 py-10 sm:px-6">
       <section
         aria-labelledby="demo-access-title"
-        className="w-full max-w-xl border-y border-border py-10 sm:border sm:bg-card sm:p-10 sm:shadow-sm"
+        className="w-full max-w-xl border-y border-border py-10 sm:border sm:bg-card sm:p-10"
       >
         <Link
           className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground"

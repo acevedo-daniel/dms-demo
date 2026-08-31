@@ -1,5 +1,3 @@
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
 import { ImageResponse } from "next/og";
 
 export const contentType = "image/png";
@@ -9,18 +7,12 @@ export const size = {
   height: 64,
 };
 
-const logoData = await readFile(
-  join(process.cwd(), "public", "dms-logo.png"),
-  "base64",
-);
-const logoSrc = `data:image/png;base64,${logoData}`;
-
 export default function Icon() {
   return new ImageResponse(
     <div
       style={{
         alignItems: "center",
-        background: "#d9eee8",
+        background: "#0f6b62",
         borderRadius: "14px",
         display: "flex",
         height: "100%",
@@ -29,8 +21,19 @@ export default function Icon() {
         width: "100%",
       }}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element -- ImageResponse renders standard image elements. */}
-      <img alt="" height={92} src={logoSrc} width={92} />
+      <span
+        style={{
+          color: "#ffffff",
+          display: "flex",
+          fontFamily: "sans-serif",
+          fontSize: "36px",
+          fontWeight: 700,
+          letterSpacing: "-4px",
+          marginLeft: "-3px",
+        }}
+      >
+        D
+      </span>
     </div>,
     size,
   );

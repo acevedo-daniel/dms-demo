@@ -23,6 +23,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import type {
   NoteComposerPatient,
@@ -221,12 +222,11 @@ export function NoteComposer({
                     {fixedPatient.name} / {fixedPatient.identifier}
                   </p>
                 ) : (
-                  <select
+                  <Select
                     aria-describedby={
                       patientError ? `${formId}-patient-error` : undefined
                     }
                     aria-invalid={Boolean(patientError)}
-                    className="h-11 w-full rounded-md border border-input bg-background px-3 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
                     id={`${formId}-patient`}
                     onChange={(event) =>
                       updateValue("patientId", event.target.value)
@@ -240,7 +240,7 @@ export function NoteComposer({
                         {patient.name} / {patient.identifier}
                       </option>
                     ))}
-                  </select>
+                  </Select>
                 )}
                 {patientError ? (
                   <p
@@ -254,8 +254,7 @@ export function NoteComposer({
 
               <div className="space-y-2">
                 <Label htmlFor={`${formId}-treatment`}>Treatment</Label>
-                <select
-                  className="h-11 w-full rounded-md border border-input bg-background px-3 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                <Select
                   id={`${formId}-treatment`}
                   onChange={(event) =>
                     updateValue("treatmentId", event.target.value)
@@ -268,7 +267,7 @@ export function NoteComposer({
                       {treatment.name}
                     </option>
                   ))}
-                </select>
+                </Select>
               </div>
 
               <div className="space-y-2">
