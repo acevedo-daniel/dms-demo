@@ -41,7 +41,7 @@ const workflow = [
     label: "Patient context",
   },
   {
-    description: "Reference the appointment catalog and its default duration.",
+    description: "Reference the treatment catalog and its default durations.",
     icon: ClipboardList,
     label: "Treatments",
   },
