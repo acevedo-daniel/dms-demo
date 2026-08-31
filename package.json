@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "description": "A public portfolio demo of a dental practice operations workspace.",
-  "homepage": "https://dms-demo-seven.vercel.app",
+  "homepage": "https://dms-showcase.vercel.app",
   "bugs": {
     "url": "https://github.com/acevedo-daniel/dms-demo/issues"
   },

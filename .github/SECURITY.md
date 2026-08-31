@@ -2,34 +2,22 @@
 
 ## Supported Versions
 
-Security fixes are applied to the latest version available on the `main` branch.
-
-Older versions, branches, forks, and archived releases may not receive security updates.
+Security fixes are applied to the latest version of the `main` branch.
 
 ## Reporting a Vulnerability
 
-Please do not report security vulnerabilities through public GitHub issues, discussions, pull requests, or other public channels.
+Please do not report security vulnerabilities through public GitHub issues, discussions, or pull requests.
 
-Use **GitHub Private Vulnerability Reporting** for this repository whenever available.
+Use GitHub's **Private Vulnerability Reporting** for this repository whenever possible.
 
-If private vulnerability reporting is unavailable, contact the repository owner through their GitHub profile with:
+If private vulnerability reporting is unavailable, contact the repository owner through their GitHub profile with a minimal description of the issue and a secure method for further communication.
 
-- A brief description of the vulnerability
-- The affected component or area
-- Steps to reproduce, when applicable
-- The potential impact
-- A secure way to continue the conversation if sensitive details are required
+When reporting a vulnerability, include enough information to reproduce and assess the issue without exposing credentials, personal data, or other sensitive information.
 
-Please avoid including credentials, secrets, access tokens, personal information, or other sensitive data unless explicitly requested through a secure channel.
+Please allow reasonable time for investigation and remediation before publicly disclosing the vulnerability.
 
-## Disclosure
+## Demo Data
 
-Please allow reasonable time for the vulnerability to be reviewed and addressed before publicly disclosing technical details.
+This repository is a public portfolio demonstration and contains only fictional data.
 
-Good-faith security research and responsible disclosure are appreciated.
-
-## Scope
-
-Only test against systems, environments, and data you are authorized to access.
-
-Demo and development environments should contain fictional or non-sensitive data only. Do not submit real personal, customer, production, or confidential information as part of a vulnerability report.
+Do not submit real patient, client, clinical, authentication, or other sensitive information as part of a security report.
