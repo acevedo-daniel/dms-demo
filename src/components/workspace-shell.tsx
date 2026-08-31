@@ -211,7 +211,7 @@ export function WorkspaceShell({ children, userName }: WorkspaceShellProps) {
               Demo workspace
             </span>
             {hasMobileCreateAction ? (
-              <Button asChild className="h-9 px-3 text-xs md:hidden" size="sm">
+              <Button asChild className="px-3 text-xs md:hidden">
                 <Link
                   aria-label="Create appointment"
                   href="/demo/schedule?create=1"

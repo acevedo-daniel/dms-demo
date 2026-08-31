@@ -81,6 +81,10 @@ function appointmentName(appointment: ScheduleAppointment) {
   return `${appointment.patientName} · ${appointment.treatmentName}`;
 }
 
+function appointmentStatusLabel(appointment: ScheduleAppointment) {
+  return appointment.status === "CONFIRMED" ? "Confirmed" : "Scheduled";
+}
+
 export function ScheduleBoard({
   appointments,
   initialPatientId,
@@ -175,7 +179,7 @@ export function ScheduleBoard({
                 <ChevronLeft aria-hidden className="size-4" />
               </Link>
             </Button>
-            <Button asChild size="sm" variant="ghost">
+            <Button asChild variant="ghost">
               <Link href="/demo/schedule">Today</Link>
             </Button>
             <Button asChild aria-label="Next week" size="icon" variant="ghost">
@@ -187,7 +191,7 @@ export function ScheduleBoard({
           <label className="flex items-center gap-2 text-sm text-muted-foreground">
             <span>Status</span>
             <Select
-              className="h-10 w-auto px-2"
+              className="w-auto px-2"
               onChange={(event) =>
                 setFilter(event.target.value as StatusFilter)
               }
@@ -206,7 +210,12 @@ export function ScheduleBoard({
       </p>
 
       <section aria-label="Week schedule" className="mt-8 hidden md:block">
-        <div className="overflow-x-auto border border-border pb-2">
+        <div
+          aria-label="Scrollable week schedule"
+          className="overflow-x-auto border border-border pb-2 focus-visible:outline-none"
+          role="region"
+          tabIndex={0}
+        >
           <div className="min-w-[62rem]">
             <div className="relative z-10 grid grid-cols-[4.5rem_repeat(5,minmax(10.5rem,1fr))] border-b border-border bg-background">
               <div className="sticky left-0 z-20 border-r border-border bg-background px-3 py-4 font-mono text-xs text-muted-foreground">
@@ -274,11 +283,12 @@ export function ScheduleBoard({
                     {dayAppointments.map((appointment) => {
                       const index = slotIndex(appointment);
                       const height = (appointment.durationMinutes / 30) * 3;
+                      const isCompact = appointment.durationMinutes <= 30;
 
                       return (
                         <button
                           aria-label={`Open ${appointment.status.toLowerCase()} appointment for ${appointmentName(appointment)} at ${formatDemoTime(new Date(appointment.startsAt))}`}
-                          className="absolute right-1 left-1 z-10 overflow-hidden rounded-md border bg-card px-2 py-1.5 text-left transition-colors hover:border-primary/35 hover:bg-accent/40 focus-visible:outline-none"
+                          className={`absolute right-1 left-1 z-10 overflow-hidden rounded-md border bg-card text-left transition-colors hover:border-primary/35 hover:bg-accent/40 focus-visible:outline-none ${isCompact ? "px-1 py-1" : "px-2 py-1.5"}`}
                           key={appointment.id}
                           onClick={() => setSheetState({ appointment })}
                           style={{
@@ -287,24 +297,36 @@ export function ScheduleBoard({
                           }}
                           type="button"
                         >
-                          <span className="block truncate text-xs font-semibold">
+                          <span className="block truncate text-xs leading-3 font-semibold">
                             {formatDemoTime(new Date(appointment.startsAt))} ·{" "}
                             {appointment.patientName}
                           </span>
-                          <span className="mt-1 block truncate text-xs text-muted-foreground">
-                            {appointment.treatmentName}
-                          </span>
-                          <span
-                            className={
-                              appointment.status === "CONFIRMED"
-                                ? "mt-1 block text-[10px] font-medium text-primary"
-                                : "mt-1 block text-[10px] font-medium text-muted-foreground"
-                            }
-                          >
-                            {appointment.status === "CONFIRMED"
-                              ? "Confirmed"
-                              : "Scheduled"}
-                          </span>
+                          {isCompact ? (
+                            <span
+                              className={
+                                appointment.status === "CONFIRMED"
+                                  ? "mt-0.5 block truncate text-[10px] leading-3 font-medium text-primary"
+                                  : "mt-0.5 block truncate text-[10px] leading-3 font-medium text-muted-foreground"
+                              }
+                            >
+                              {appointmentStatusLabel(appointment)}
+                            </span>
+                          ) : (
+                            <>
+                              <span className="mt-0.5 block truncate text-xs leading-3 text-muted-foreground">
+                                {appointment.treatmentName}
+                              </span>
+                              <span
+                                className={
+                                  appointment.status === "CONFIRMED"
+                                    ? "mt-0.5 block text-[10px] leading-3 font-medium text-primary"
+                                    : "mt-0.5 block text-[10px] leading-3 font-medium text-muted-foreground"
+                                }
+                              >
+                                {appointmentStatusLabel(appointment)}
+                              </span>
+                            </>
+                          )}
                         </button>
                       );
                     })}
@@ -358,6 +380,7 @@ export function ScheduleBoard({
                 {slotAppointments.length ? (
                   slotAppointments.map((appointment) => (
                     <button
+                      aria-label={`Open ${appointment.status.toLowerCase()} appointment for ${appointmentName(appointment)} at ${formatDemoTime(new Date(appointment.startsAt))}`}
                       className="min-w-0 flex-1 rounded-md border border-border bg-card px-3 py-2 text-left transition-colors hover:border-primary/35 hover:bg-accent/40 focus-visible:outline-none"
                       key={appointment.id}
                       onClick={() => setSheetState({ appointment })}

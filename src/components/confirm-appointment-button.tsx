@@ -58,7 +58,6 @@ export function ConfirmAppointmentButton({
         aria-label={`Confirm appointment for ${patientName}`}
         disabled={isPending}
         onClick={confirmAppointment}
-        size="sm"
         variant="outline"
       >
         <Check aria-hidden className="size-4 text-primary" />

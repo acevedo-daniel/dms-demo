@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { FilePenLine, Pencil } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   NoteComposer,
   type SavedPatientNote,
@@ -34,6 +34,7 @@ type NoteGroup = {
 export function NotesIndex({ notes, patients, treatments }: NotesIndexProps) {
   const [announcement, setAnnouncement] = useState("");
   const [displayNotes, setDisplayNotes] = useState(notes);
+  const pendingFocusNoteId = useRef<string | null>(null);
   const noteGroups = useMemo(() => {
     return displayNotes.reduce<NoteGroup[]>((groups, note) => {
       const label = dateLabel(note.createdAt);
@@ -51,6 +52,17 @@ export function NotesIndex({ notes, patients, treatments }: NotesIndexProps) {
       });
       return groups;
     }, []);
+  }, [displayNotes]);
+
+  useEffect(() => {
+    const noteId = pendingFocusNoteId.current;
+
+    if (!noteId) {
+      return;
+    }
+
+    document.getElementById(`note-${noteId}`)?.focus();
+    pendingFocusNoteId.current = null;
   }, [displayNotes]);
 
   function handleSaved(savedNote: SavedPatientNote) {
@@ -72,9 +84,7 @@ export function NotesIndex({ notes, patients, treatments }: NotesIndexProps) {
       ...current.filter((note) => note.id !== savedNote.id),
     ]);
     if (isNewNote) {
-      window.requestAnimationFrame(() => {
-        document.getElementById(`note-${savedNote.id}`)?.focus();
-      });
+      pendingFocusNoteId.current = savedNote.id;
     }
     setAnnouncement("Patient note saved.");
     window.setTimeout(() => setAnnouncement(""), 4000);

@@ -124,7 +124,7 @@ export default async function DashboardPage() {
               ))}
             </ol>
             <div className="mt-3 flex justify-end">
-              <Button asChild size="sm" variant="ghost">
+              <Button asChild variant="ghost">
                 <Link href="/demo/schedule">Open schedule</Link>
               </Button>
             </div>

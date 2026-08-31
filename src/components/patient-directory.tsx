@@ -54,6 +54,7 @@ export function PatientDirectory({ initialPatients }: PatientDirectoryProps) {
   const [patients, setPatients] = useState(initialPatients);
   const [query, setQuery] = useState("");
   const [resultAnnouncement, setResultAnnouncement] = useState("");
+  const pendingFocusPatientId = useRef<string | null>(null);
   const previousResultCount = useRef(initialPatients.length);
   const normalizedQuery = query.trim().toLowerCase();
   const filteredPatients = useMemo(() => {
@@ -83,13 +84,22 @@ export function PatientDirectory({ initialPatients }: PatientDirectoryProps) {
     return () => window.clearTimeout(timeout);
   }, [filteredPatients.length]);
 
+  useEffect(() => {
+    const patientId = pendingFocusPatientId.current;
+
+    if (!patientId) {
+      return;
+    }
+
+    document.getElementById(`patient-${patientId}`)?.focus();
+    pendingFocusPatientId.current = null;
+  }, [patients]);
+
   function handlePatientCreated(patient: EditablePatient) {
     const directoryPatient = toDirectoryItem(patient);
+    pendingFocusPatientId.current = patient.id;
     setPatients((current) => [directoryPatient, ...current]);
     setQuery("");
-    window.requestAnimationFrame(() => {
-      document.getElementById(`patient-${patient.id}`)?.focus();
-    });
   }
 
   return (
