@@ -98,6 +98,35 @@ test("keeps a failed patient save open and announces its error", async ({
   );
 });
 
+test("keeps archive confirmation open when archiving fails", async ({
+  page,
+}) => {
+  await openResetDemoWorkspace(page);
+  await page.getByRole("link", { name: "Patients" }).click();
+  await addPatient(page);
+  await page.getByRole("link", { name: "E2E Patient", exact: true }).click();
+  await page.route("**/api/demo/patients/*/archive", async (route) => {
+    await route.fulfill({
+      body: JSON.stringify({
+        error: { message: "The patient could not be archived." },
+      }),
+      contentType: "application/json",
+      status: 503,
+    });
+  });
+
+  await page.getByRole("button", { name: "Archive" }).click();
+  const confirmation = page.getByRole("alertdialog", {
+    name: "Archive E2E Patient?",
+  });
+  await confirmation.getByRole("button", { name: "Archive patient" }).click();
+
+  await expect(confirmation).toBeVisible();
+  await expect(confirmation.getByRole("alert")).toHaveText(
+    "The patient could not be archived.",
+  );
+});
+
 test("confirms before discarding an edited appointment and restores focus", async ({
   page,
 }) => {

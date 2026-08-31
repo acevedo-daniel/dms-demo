@@ -44,7 +44,7 @@ export default async function DashboardPage() {
             The workspace data could not be loaded.
           </h1>
           <p className="mt-3 leading-7 text-muted-foreground">
-            Check the demo database connection and try again.
+            The sample data is temporarily unavailable. Try again.
           </p>
           <Button asChild className="mt-6" variant="outline">
             <Link href="/demo/dashboard">Try again</Link>
@@ -82,6 +82,7 @@ export default async function DashboardPage() {
             <h2
               className="text-xl font-semibold tracking-tight"
               id="today-title"
+              tabIndex={-1}
             >
               Today
             </h2>

@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -99,13 +98,14 @@ export function ArchivePatientButton({
         ) : null}
         <AlertDialogFooter>
           <AlertDialogCancel autoFocus>Keep patient active</AlertDialogCancel>
-          <AlertDialogAction
+          <Button
             className="bg-destructive text-white hover:bg-destructive/90"
             disabled={isPending}
             onClick={archivePatient}
+            type="button"
           >
             {isPending ? "Archiving…" : "Archive patient"}
-          </AlertDialogAction>
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

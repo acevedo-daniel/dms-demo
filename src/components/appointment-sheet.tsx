@@ -132,7 +132,9 @@ export function AppointmentSheet({
   const isDirty = JSON.stringify(values) !== JSON.stringify(initialFormValues);
   const dateTimeError =
     error &&
-    /(overlaps|Monday through Friday|30-minute slot|fit within)/i.test(error)
+    /(overlaps|Monday through Friday|30-minute slot|fit within|valid appointment date and time)/i.test(
+      error,
+    )
       ? error
       : null;
   const durationError =

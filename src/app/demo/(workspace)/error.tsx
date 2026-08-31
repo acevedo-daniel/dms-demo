@@ -25,7 +25,8 @@ export default function WorkspaceError({ retry }: WorkspaceErrorProps) {
           This workspace view could not be loaded.
         </h1>
         <p className="mt-3 leading-7 text-muted-foreground">
-          Try again to reload the current workspace view.
+          The sample data is temporarily unavailable. Try again to reload this
+          workspace view.
         </p>
         <Button className="mt-6" onClick={retry} variant="outline">
           <RefreshCw aria-hidden className="size-4" />
