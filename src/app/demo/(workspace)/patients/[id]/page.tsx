@@ -118,7 +118,7 @@ export default async function PatientPage({ params }: PatientPageProps) {
             </p>
           ) : null}
         </div>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 xl:justify-end">
           <Button asChild>
             <Link href={`/demo/schedule?create=1&patient=${patient.id}`}>
               <CalendarPlus aria-hidden className="size-4" />
@@ -186,7 +186,39 @@ export default async function PatientPage({ params }: PatientPageProps) {
       </section>
 
       <div className="mt-8 grid gap-10 xl:grid-cols-[minmax(0,1fr)_18rem]">
-        <section aria-labelledby="activity-title">
+        {patient.relevantTreatment ? (
+          <aside
+            aria-labelledby="relevant-treatment-title"
+            className="order-1 border-y border-border py-5 xl:order-2 xl:self-start"
+          >
+            <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-primary">
+              Catalog context
+            </p>
+            <h2
+              className="mt-3 text-lg font-semibold"
+              id="relevant-treatment-title"
+            >
+              Relevant treatment
+            </h2>
+            <p className="mt-3 font-medium">{patient.relevantTreatment.name}</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {patient.relevantTreatment.category} ·{" "}
+              {patient.relevantTreatment.defaultDurationMinutes} minutes
+            </p>
+            <p className="mt-4 text-sm leading-6 text-muted-foreground">
+              {patient.relevantTreatment.description}
+            </p>
+            <div className="mt-5 flex items-center gap-2 text-sm text-muted-foreground">
+              <ClipboardList aria-hidden className="size-4" />
+              Catalog reference
+            </div>
+          </aside>
+        ) : null}
+
+        <section
+          aria-labelledby="activity-title"
+          className="order-2 xl:order-1"
+        >
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-primary">
@@ -272,35 +304,6 @@ export default async function PatientPage({ params }: PatientPageProps) {
             </div>
           )}
         </section>
-
-        {patient.relevantTreatment ? (
-          <aside
-            aria-labelledby="relevant-treatment-title"
-            className="border-y border-border py-5 xl:self-start"
-          >
-            <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-primary">
-              Catalog context
-            </p>
-            <h2
-              className="mt-3 text-lg font-semibold"
-              id="relevant-treatment-title"
-            >
-              Relevant treatment
-            </h2>
-            <p className="mt-3 font-medium">{patient.relevantTreatment.name}</p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {patient.relevantTreatment.category} ·{" "}
-              {patient.relevantTreatment.defaultDurationMinutes} minutes
-            </p>
-            <p className="mt-4 text-sm leading-6 text-muted-foreground">
-              {patient.relevantTreatment.description}
-            </p>
-            <div className="mt-5 flex items-center gap-2 text-sm text-muted-foreground">
-              <ClipboardList aria-hidden className="size-4" />
-              Catalog reference
-            </div>
-          </aside>
-        ) : null}
       </div>
     </main>
   );

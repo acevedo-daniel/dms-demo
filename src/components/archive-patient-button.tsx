@@ -67,7 +67,7 @@ export function ArchivePatientButton({
 
   if (isBlocked) {
     return (
-      <p className="text-sm text-muted-foreground">
+      <p className="max-w-sm border-l border-border pl-3 text-sm leading-6 text-muted-foreground">
         Cancel or complete active appointments before archiving this patient.
       </p>
     );

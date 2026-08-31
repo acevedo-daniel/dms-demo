@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Search, UserPlus, X } from "lucide-react";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   PatientFormDialog,
   type EditablePatient,
@@ -46,10 +46,15 @@ function AppointmentSummary({ patient }: { patient: PatientDirectoryItem }) {
   );
 }
 
+function resultLabel(count: number) {
+  return `${count} ${count === 1 ? "patient" : "patients"}`;
+}
+
 export function PatientDirectory({ initialPatients }: PatientDirectoryProps) {
   const [patients, setPatients] = useState(initialPatients);
   const [query, setQuery] = useState("");
-  const resultCountRef = useRef<HTMLParagraphElement>(null);
+  const [resultAnnouncement, setResultAnnouncement] = useState("");
+  const previousResultCount = useRef(initialPatients.length);
   const normalizedQuery = query.trim().toLowerCase();
   const filteredPatients = useMemo(() => {
     if (!normalizedQuery) {
@@ -62,6 +67,21 @@ export function PatientDirectory({ initialPatients }: PatientDirectoryProps) {
         .includes(normalizedQuery),
     );
   }, [normalizedQuery, patients]);
+
+  useEffect(() => {
+    const nextCount = filteredPatients.length;
+
+    if (previousResultCount.current === nextCount) {
+      return;
+    }
+
+    const timeout = window.setTimeout(() => {
+      setResultAnnouncement(resultLabel(nextCount));
+      previousResultCount.current = nextCount;
+    }, 250);
+
+    return () => window.clearTimeout(timeout);
+  }, [filteredPatients.length]);
 
   function handlePatientCreated(patient: EditablePatient) {
     const directoryPatient = toDirectoryItem(patient);
@@ -86,14 +106,6 @@ export function PatientDirectory({ initialPatients }: PatientDirectoryProps) {
           >
             Patients
           </h1>
-          <p
-            aria-live="polite"
-            className="mt-2 text-sm text-muted-foreground"
-            ref={resultCountRef}
-          >
-            {filteredPatients.length}{" "}
-            {filteredPatients.length === 1 ? "patient" : "patients"}
-          </p>
         </div>
         <PatientFormDialog
           onSaved={handlePatientCreated}
@@ -119,6 +131,7 @@ export function PatientDirectory({ initialPatients }: PatientDirectoryProps) {
             className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground"
           />
           <Input
+            aria-describedby="patient-directory-result-count"
             className="pl-10 pr-11"
             id="patient-directory-search"
             onChange={(event) => setQuery(event.target.value)}
@@ -138,6 +151,15 @@ export function PatientDirectory({ initialPatients }: PatientDirectoryProps) {
             </Button>
           ) : null}
         </div>
+        <p
+          className="mt-3 text-sm text-muted-foreground"
+          id="patient-directory-result-count"
+        >
+          {resultLabel(filteredPatients.length)}
+        </p>
+        <p aria-atomic="true" aria-live="polite" className="sr-only">
+          {resultAnnouncement}
+        </p>
       </div>
 
       {filteredPatients.length ? (
@@ -146,10 +168,10 @@ export function PatientDirectory({ initialPatients }: PatientDirectoryProps) {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Patient</TableHead>
-                  <TableHead>Identifier</TableHead>
-                  <TableHead>Next appointment</TableHead>
-                  <TableHead>Treatment</TableHead>
+                  <TableHead scope="col">Patient</TableHead>
+                  <TableHead scope="col">Identifier</TableHead>
+                  <TableHead scope="col">Next appointment</TableHead>
+                  <TableHead scope="col">Treatment</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
