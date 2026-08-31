@@ -91,7 +91,7 @@ test("creates an appointment from the weekly schedule", async ({ page }) => {
   await expect(page.getByText("Appointment created.")).toBeAttached();
   await expect(
     page.getByRole("button", {
-      name: "Open appointment for Alex Quinn · Routine consultation at 09:00",
+      name: "Open scheduled appointment for Alex Quinn · Routine consultation at 09:00",
     }),
   ).toBeVisible();
 });

@@ -7,7 +7,7 @@ export default function NotFound() {
     <main className="flex min-h-screen items-center bg-background px-4 py-10 sm:px-6">
       <section
         aria-labelledby="not-found-title"
-        className="mx-auto w-full max-w-xl border-y border-border py-10 sm:border sm:bg-card sm:p-10 sm:shadow-sm"
+        className="mx-auto w-full max-w-xl border-y border-border py-10 sm:border sm:bg-card sm:p-10"
       >
         <SearchX aria-hidden className="size-5 text-primary" />
         <p className="mt-6 font-mono text-xs font-medium uppercase tracking-[0.16em] text-primary">

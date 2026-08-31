@@ -4,9 +4,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CalendarPlus, ChevronLeft, ChevronRight, Clock3 } from "lucide-react";
 import { useMemo, useState } from "react";
+import { AppointmentStatusBadge } from "@/components/appointment-status-badge";
 import { AppointmentSheet } from "@/components/appointment-sheet";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Select } from "@/components/ui/select";
 import { formatDemoDate, formatDemoTime } from "@/lib/demo/format";
 import {
   addPracticeDays,
@@ -39,11 +40,6 @@ type SheetState =
   | { appointment?: never; patientId?: string; startsAt?: string };
 
 type StatusFilter = "ALL" | "CONFIRMED" | "SCHEDULED";
-
-const statusAppearance = {
-  CONFIRMED: "border-primary/25 bg-accent text-primary",
-  SCHEDULED: "border-[#7a8e86] bg-card text-muted-foreground",
-} as const;
 
 function dayLabel(date: Date) {
   return new Intl.DateTimeFormat("en-GB", {
@@ -83,6 +79,10 @@ function slotIndex(appointment: ScheduleAppointment) {
 
 function appointmentName(appointment: ScheduleAppointment) {
   return `${appointment.patientName} · ${appointment.treatmentName}`;
+}
+
+function appointmentStatusLabel(appointment: ScheduleAppointment) {
+  return appointment.status === "CONFIRMED" ? "Confirmed" : "Scheduled";
 }
 
 export function ScheduleBoard({
@@ -159,7 +159,10 @@ export function ScheduleBoard({
               {weekRange(days)} · Monday–Friday
             </p>
           </div>
-          <Button onClick={() => openCreate()}>
+          <Button
+            className="hidden md:inline-flex"
+            onClick={() => openCreate()}
+          >
             <CalendarPlus aria-hidden className="size-4" />
             Create appointment
           </Button>
@@ -176,7 +179,7 @@ export function ScheduleBoard({
                 <ChevronLeft aria-hidden className="size-4" />
               </Link>
             </Button>
-            <Button asChild size="sm" variant="ghost">
+            <Button asChild variant="ghost">
               <Link href="/demo/schedule">Today</Link>
             </Button>
             <Button asChild aria-label="Next week" size="icon" variant="ghost">
@@ -187,8 +190,8 @@ export function ScheduleBoard({
           </nav>
           <label className="flex items-center gap-2 text-sm text-muted-foreground">
             <span>Status</span>
-            <select
-              className="h-10 rounded-md border border-input bg-background px-2 text-sm text-foreground outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+            <Select
+              className="w-auto px-2"
               onChange={(event) =>
                 setFilter(event.target.value as StatusFilter)
               }
@@ -197,7 +200,7 @@ export function ScheduleBoard({
               <option value="ALL">All active</option>
               <option value="SCHEDULED">Scheduled</option>
               <option value="CONFIRMED">Confirmed</option>
-            </select>
+            </Select>
           </label>
         </div>
       </header>
@@ -207,10 +210,15 @@ export function ScheduleBoard({
       </p>
 
       <section aria-label="Week schedule" className="mt-8 hidden md:block">
-        <div className="overflow-x-auto border border-border">
+        <div
+          aria-label="Scrollable week schedule"
+          className="overflow-x-auto border border-border pb-2 focus-visible:outline-none"
+          role="region"
+          tabIndex={0}
+        >
           <div className="min-w-[62rem]">
             <div className="relative z-10 grid grid-cols-[4.5rem_repeat(5,minmax(10.5rem,1fr))] border-b border-border bg-background">
-              <div className="border-r border-border px-3 py-4 font-mono text-xs text-muted-foreground">
+              <div className="sticky left-0 z-20 border-r border-border bg-background px-3 py-4 font-mono text-xs text-muted-foreground">
                 Time
               </div>
               {days.map((day) => (
@@ -223,10 +231,10 @@ export function ScheduleBoard({
               ))}
             </div>
             <div className="grid grid-cols-[4.5rem_repeat(5,minmax(10.5rem,1fr))]">
-              <div className="border-r border-border">
+              <div className="sticky left-0 z-10 border-r border-border bg-background">
                 {Array.from({ length: scheduleSlotsPerDay }, (_, index) => (
                   <div
-                    className="h-12 border-b border-border px-3 pt-1 font-mono text-xs text-muted-foreground"
+                    className="h-12 border-b border-border bg-background px-3 pt-1 font-mono text-xs text-muted-foreground"
                     key={index}
                   >
                     {String(scheduleStartHour + Math.floor(index / 2)).padStart(
@@ -258,7 +266,7 @@ export function ScheduleBoard({
                       return (
                         <button
                           aria-label={`Create appointment for ${dayLabel(day)} at ${slotTime}`}
-                          className="block h-12 w-full border-b border-border text-left transition-colors hover:bg-secondary focus-visible:relative focus-visible:z-20 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                          className="block h-12 w-full border-b border-border text-left transition-colors hover:bg-secondary/70 focus-visible:relative focus-visible:z-20 focus-visible:outline-none"
                           key={startsAt}
                           onClick={() => openCreate(startsAt)}
                           type="button"
@@ -275,11 +283,12 @@ export function ScheduleBoard({
                     {dayAppointments.map((appointment) => {
                       const index = slotIndex(appointment);
                       const height = (appointment.durationMinutes / 30) * 3;
+                      const isCompact = appointment.durationMinutes <= 30;
 
                       return (
                         <button
-                          aria-label={`Open appointment for ${appointmentName(appointment)} at ${formatDemoTime(new Date(appointment.startsAt))}`}
-                          className="absolute right-1 left-1 z-10 overflow-hidden rounded-md border px-2 py-1.5 text-left shadow-xs transition-colors hover:brightness-95 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                          aria-label={`Open ${appointment.status.toLowerCase()} appointment for ${appointmentName(appointment)} at ${formatDemoTime(new Date(appointment.startsAt))}`}
+                          className={`absolute right-1 left-1 z-10 overflow-hidden rounded-md border bg-card text-left transition-colors hover:border-primary/35 hover:bg-accent/40 focus-visible:outline-none ${isCompact ? "px-1 py-1" : "px-2 py-1.5"}`}
                           key={appointment.id}
                           onClick={() => setSheetState({ appointment })}
                           style={{
@@ -288,24 +297,36 @@ export function ScheduleBoard({
                           }}
                           type="button"
                         >
-                          <span className="block truncate text-xs font-semibold">
+                          <span className="block truncate text-xs leading-3 font-semibold">
                             {formatDemoTime(new Date(appointment.startsAt))} ·{" "}
                             {appointment.patientName}
                           </span>
-                          <span className="mt-1 block truncate text-xs text-muted-foreground">
-                            {appointment.treatmentName}
-                          </span>
-                          <span
-                            className={
-                              appointment.status === "CONFIRMED"
-                                ? "mt-1 block text-[10px] font-medium text-primary"
-                                : "mt-1 block text-[10px] font-medium text-muted-foreground"
-                            }
-                          >
-                            {appointment.status === "CONFIRMED"
-                              ? "Confirmed"
-                              : "Scheduled"}
-                          </span>
+                          {isCompact ? (
+                            <span
+                              className={
+                                appointment.status === "CONFIRMED"
+                                  ? "mt-0.5 block truncate text-[10px] leading-3 font-medium text-primary"
+                                  : "mt-0.5 block truncate text-[10px] leading-3 font-medium text-muted-foreground"
+                              }
+                            >
+                              {appointmentStatusLabel(appointment)}
+                            </span>
+                          ) : (
+                            <>
+                              <span className="mt-0.5 block truncate text-xs leading-3 text-muted-foreground">
+                                {appointment.treatmentName}
+                              </span>
+                              <span
+                                className={
+                                  appointment.status === "CONFIRMED"
+                                    ? "mt-0.5 block text-[10px] leading-3 font-medium text-primary"
+                                    : "mt-0.5 block text-[10px] leading-3 font-medium text-muted-foreground"
+                                }
+                              >
+                                {appointmentStatusLabel(appointment)}
+                              </span>
+                            </>
+                          )}
                         </button>
                       );
                     })}
@@ -328,7 +349,7 @@ export function ScheduleBoard({
           >
             <ChevronLeft aria-hidden className="size-4" />
           </Button>
-          <p className="text-sm font-medium">
+          <p aria-live="polite" className="text-sm font-medium">
             {formatDemoDate(selectedMobileDay)}
           </p>
           <Button
@@ -359,7 +380,8 @@ export function ScheduleBoard({
                 {slotAppointments.length ? (
                   slotAppointments.map((appointment) => (
                     <button
-                      className="min-w-0 flex-1 rounded-md border border-border px-3 py-2 text-left focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                      aria-label={`Open ${appointment.status.toLowerCase()} appointment for ${appointmentName(appointment)} at ${formatDemoTime(new Date(appointment.startsAt))}`}
+                      className="min-w-0 flex-1 rounded-md border border-border bg-card px-3 py-2 text-left transition-colors hover:border-primary/35 hover:bg-accent/40 focus-visible:outline-none"
                       key={appointment.id}
                       onClick={() => setSheetState({ appointment })}
                       type="button"
@@ -371,14 +393,9 @@ export function ScheduleBoard({
                         {appointment.treatmentName} ·{" "}
                         {formatDemoTime(appointmentEnd(appointment))}
                       </p>
-                      <Badge
-                        className={`mt-2 ${statusAppearance[appointment.status]}`}
-                        variant="outline"
-                      >
-                        {appointment.status === "CONFIRMED"
-                          ? "Confirmed"
-                          : "Scheduled"}
-                      </Badge>
+                      <div className="mt-2">
+                        <AppointmentStatusBadge status={appointment.status} />
+                      </div>
                     </button>
                   ))
                 ) : (

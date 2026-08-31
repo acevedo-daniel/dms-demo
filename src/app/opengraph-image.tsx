@@ -1,5 +1,3 @@
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
 import { ImageResponse } from "next/og";
 
 export const alt = "DMS practice operations workspace";
@@ -9,12 +7,6 @@ export const size = {
   width: 1200,
   height: 630,
 };
-
-const logoData = await readFile(
-  join(process.cwd(), "public", "dms-logo.png"),
-  "base64",
-);
-const logoSrc = `data:image/png;base64,${logoData}`;
 
 export default function OpenGraphImage() {
   return new ImageResponse(
@@ -35,7 +27,7 @@ export default function OpenGraphImage() {
         <div
           style={{
             alignItems: "center",
-            background: "#d9eee8",
+            background: "#0f6b62",
             borderRadius: "18px",
             display: "flex",
             height: "92px",
@@ -44,8 +36,19 @@ export default function OpenGraphImage() {
             width: "92px",
           }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element -- ImageResponse renders standard image elements. */}
-          <img alt="" height={158} src={logoSrc} width={158} />
+          <span
+            style={{
+              color: "#ffffff",
+              display: "flex",
+              fontFamily: "sans-serif",
+              fontSize: "52px",
+              fontWeight: 700,
+              letterSpacing: "-6px",
+              marginLeft: "-5px",
+            }}
+          >
+            D
+          </span>
         </div>
         <div
           style={{

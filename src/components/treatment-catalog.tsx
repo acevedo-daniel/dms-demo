@@ -35,10 +35,10 @@ export function TreatmentCatalog({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Treatment</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead>Default duration</TableHead>
-              <TableHead>
+              <TableHead scope="col">Treatment</TableHead>
+              <TableHead scope="col">Category</TableHead>
+              <TableHead scope="col">Default duration</TableHead>
+              <TableHead scope="col">
                 <span className="sr-only">Details</span>
               </TableHead>
             </TableRow>
@@ -56,14 +56,15 @@ export function TreatmentCatalog({
                     <TableCell className="text-muted-foreground">
                       {treatment.category}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="font-mono text-xs text-muted-foreground">
                       {treatment.defaultDurationMinutes} minutes
                     </TableCell>
                     <TableCell className="text-right">
                       <button
+                        aria-controls={`treatment-details-${treatment.id}`}
                         aria-expanded={expanded}
                         aria-label={`${expanded ? "Hide" : "Show"} details for ${treatment.name}`}
-                        className="inline-flex min-h-11 items-center gap-2 rounded-md px-3 text-sm font-medium text-primary hover:bg-accent focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                        className="inline-flex min-h-11 items-center gap-2 rounded-md px-3 text-sm font-medium text-primary hover:bg-accent focus-visible:outline-none"
                         onClick={() =>
                           setExpandedId(expanded ? null : treatment.id)
                         }
@@ -72,7 +73,7 @@ export function TreatmentCatalog({
                         Details
                         <ChevronDown
                           aria-hidden
-                          className={`size-4 transition-transform ${expanded ? "rotate-180" : ""}`}
+                          className={`size-4 transition-transform motion-reduce:transition-none ${expanded ? "rotate-180" : ""}`}
                         />
                       </button>
                     </TableCell>
@@ -80,6 +81,7 @@ export function TreatmentCatalog({
                   {expanded ? (
                     <TableRow>
                       <TableCell
+                        id={`treatment-details-${treatment.id}`}
                         className="bg-secondary/50 py-5 text-sm leading-6 text-muted-foreground"
                         colSpan={4}
                       >
@@ -101,25 +103,29 @@ export function TreatmentCatalog({
           return (
             <li key={treatment.id}>
               <button
+                aria-controls={`treatment-details-${treatment.id}`}
                 aria-expanded={expanded}
-                className="flex min-h-16 w-full items-center justify-between gap-4 py-4 text-left focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                className="flex min-h-16 w-full items-center justify-between gap-4 py-4 text-left focus-visible:outline-none"
                 onClick={() => setExpandedId(expanded ? null : treatment.id)}
                 type="button"
               >
                 <span>
                   <span className="block font-medium">{treatment.name}</span>
                   <span className="mt-1 block text-sm text-muted-foreground">
-                    {treatment.category} / {treatment.defaultDurationMinutes}{" "}
+                    {treatment.category} · {treatment.defaultDurationMinutes}{" "}
                     minutes
                   </span>
                 </span>
                 <ChevronDown
                   aria-hidden
-                  className={`size-4 shrink-0 text-primary transition-transform ${expanded ? "rotate-180" : ""}`}
+                  className={`size-4 shrink-0 text-primary transition-transform motion-reduce:transition-none ${expanded ? "rotate-180" : ""}`}
                 />
               </button>
               {expanded ? (
-                <p className="pb-5 text-sm leading-6 text-muted-foreground">
+                <p
+                  className="pb-5 text-sm leading-6 text-muted-foreground"
+                  id={`treatment-details-${treatment.id}`}
+                >
                   {treatment.description}
                 </p>
               ) : null}
