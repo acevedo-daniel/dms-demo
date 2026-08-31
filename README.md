@@ -4,7 +4,7 @@
 
 > A public portfolio demo of a dental practice operations workspace.
 
-DMS brings appointments, patient records, a treatment catalog, and operational notes into one calm workspace for a single dental practice. This independent public portfolio demo is informed by a system delivered with a small team for a dental client; every practice, person, and record shown here is fictional.
+DMS brings appointments, patient records, a treatment catalog, and operational notes into one workspace for a single dental practice. This independent public portfolio demo is informed by a system delivered with a small team for a dental client. Every practice, person, and record here is fictional.
 
 **[Explore the live demo](https://dms-showcase.vercel.app)**
 
@@ -35,7 +35,7 @@ DMS brings appointments, patient records, a treatment catalog, and operational n
 
 ## Engineering highlights
 
-- **Domain rules remain close to persistence.** Small services and PostgreSQL-backed data protect practice ownership, appointment conflicts, and archive constraints.
+- **Domain rules remain close to persistence.** Focused services enforce practice ownership, appointment overlap checks, and archive constraints through PostgreSQL-backed queries.
 - **The public demo is intentionally bounded.** A deterministic clock and resettable seed keep every walkthrough, screenshot, and test run consistent.
 - **Authentication is purpose-built for exploration.** Better Auth provisions a server-side demo identity and protects workspace routes without exposing credentials in the interface.
 - **Quality checks cover the important boundaries.** Vitest verifies rules and PostgreSQL integration; Playwright covers the main workflow and automated WCAG checks; GitHub Actions runs CI quality checks.
@@ -92,7 +92,7 @@ pnpm db:test:down
 pnpm build
 ```
 
-CI runs formatting, type checking, unit tests, PostgreSQL integration tests, Playwright workflows, accessibility checks, and the production build. The test database is isolated from the local development database.
+CI runs formatting, linting, type checking, unit tests, PostgreSQL integration tests, Playwright workflows, accessibility checks, and the production build. The test database is isolated from the local development database.
 
 ## Documentation
 

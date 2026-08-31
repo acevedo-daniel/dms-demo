@@ -8,7 +8,7 @@ DMS is a dental practice operations workspace designed around the day-to-day coo
 
 ## Problem
 
-Dental practices coordinate connected information throughout the day: who is scheduled, which treatment is planned, what has been recorded, and which appointment needs confirmation. DMS keeps these operational workflows in one clear workspace.
+Dental practices coordinate connected information throughout the day: who is scheduled, which treatment is planned, what has been recorded, and which appointment needs confirmation. DMS keeps these operational workflows in one workspace.
 
 ## Actors
 
