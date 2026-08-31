@@ -93,7 +93,7 @@ export function ArchivePatientButton({
           </AlertDialogDescription>
         </AlertDialogHeader>
         {error ? (
-          <p aria-live="polite" className="text-sm text-destructive">
+          <p className="text-sm text-destructive" role="alert">
             {error}
           </p>
         ) : null}

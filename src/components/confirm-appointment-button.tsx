@@ -65,8 +65,8 @@ export function ConfirmAppointmentButton({
       </Button>
       {error ? (
         <p
-          aria-live="polite"
           className="max-w-48 text-right text-xs text-destructive"
+          role="alert"
         >
           {error}
         </p>

@@ -47,6 +47,7 @@ export function WorkspaceFeedback() {
   return (
     <div
       aria-live="polite"
+      aria-atomic="true"
       className="fixed right-4 bottom-4 z-50 flex max-w-sm items-start gap-3 border border-border bg-card px-4 py-3 text-sm shadow-lg sm:right-6 sm:bottom-6"
       role="status"
     >

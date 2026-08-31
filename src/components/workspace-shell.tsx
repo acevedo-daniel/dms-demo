@@ -106,22 +106,46 @@ function WorkspaceNavigation({ onNavigate }: { onNavigate?: () => void }) {
 
 function SignOutButton() {
   const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
+  const [isPending, setIsPending] = useState(false);
 
   async function signOut() {
-    await fetch("/api/demo/logout", { method: "POST" });
-    router.push("/demo/access");
-    router.refresh();
+    setError(null);
+    setIsPending(true);
+
+    try {
+      const response = await fetch("/api/demo/logout", { method: "POST" });
+
+      if (!response.ok) {
+        throw new Error();
+      }
+
+      router.push("/demo/access");
+      router.refresh();
+    } catch {
+      setError("The workspace could not be signed out. Try again.");
+    } finally {
+      setIsPending(false);
+    }
   }
 
   return (
-    <Button
-      className="w-full justify-start text-muted-foreground hover:text-foreground"
-      onClick={signOut}
-      variant="ghost"
-    >
-      <LogOut aria-hidden className="size-4" />
-      Sign out
-    </Button>
+    <div className="space-y-2">
+      <Button
+        className="w-full justify-start text-muted-foreground hover:text-foreground"
+        disabled={isPending}
+        onClick={signOut}
+        variant="ghost"
+      >
+        <LogOut aria-hidden className="size-4" />
+        {isPending ? "Signing out..." : "Sign out"}
+      </Button>
+      {error ? (
+        <p className="px-3 text-xs leading-5 text-destructive" role="alert">
+          {error}
+        </p>
+      ) : null}
+    </div>
   );
 }
 

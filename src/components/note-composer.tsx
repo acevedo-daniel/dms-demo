@@ -25,6 +25,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { announceWorkspaceFeedback } from "@/components/workspace-feedback";
 import type {
   NoteComposerPatient,
   NoteComposerTreatment,
@@ -154,6 +155,9 @@ export function NoteComposer({
       setInitialFormValues(values);
       setIsOpen(false);
       onSaved?.(savedNote);
+      announceWorkspaceFeedback(
+        isEditing ? "Patient note updated." : "Patient note saved.",
+      );
     } catch (cause) {
       setError(
         cause instanceof Error
@@ -246,6 +250,7 @@ export function NoteComposer({
                   <p
                     className="text-sm text-destructive"
                     id={`${formId}-patient-error`}
+                    role="alert"
                   >
                     {patientError}
                   </p>
@@ -288,13 +293,14 @@ export function NoteComposer({
                   <p
                     className="text-sm text-destructive"
                     id={`${formId}-body-error`}
+                    role="alert"
                   >
                     {bodyError}
                   </p>
                 ) : null}
               </div>
               {error && !bodyError && !patientError ? (
-                <p aria-live="polite" className="text-sm text-destructive">
+                <p className="text-sm text-destructive" role="alert">
                   {error}
                 </p>
               ) : null}
