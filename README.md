@@ -68,8 +68,8 @@ The application is a modular monolith: server-rendered routes and route handlers
 
 Prerequisites: Node.js 24, pnpm 10, and Docker Desktop.
 
-```powershell
-Copy-Item .env.example .env
+```bash
+cp .env.example .env
 pnpm install
 docker compose up -d
 pnpm db:reset
@@ -96,5 +96,5 @@ CI runs formatting, linting, type checking, unit tests, PostgreSQL integration t
 
 ## Documentation
 
-- [Project overview](docs/PROJECT.md) — product scope, workflows, and durable domain rules.
-- [Security policy](.github/SECURITY.md) — responsible disclosure guidance.
+- [Project scope](docs/PROJECT.md) — product scope, domain rules, and business constraints.
+- [Security policy](.github/SECURITY.md) — responsible disclosure guidance and demo data privacy.
