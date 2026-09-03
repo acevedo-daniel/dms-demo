@@ -18,17 +18,17 @@ Instead, please use one of these private channels:
 
 ### Response timeline
 
-| Step | Target |
-| --- | --- |
-| Acknowledgment | 48 hours |
-| Initial assessment | 5 business days |
-| Fix or mitigation | Best effort, communicated in the advisory |
+| Step               | Target                                    |
+| ------------------ | ----------------------------------------- |
+| Acknowledgment     | 48 hours                                  |
+| Initial assessment | 5 business days                           |
+| Fix or mitigation  | Best effort, communicated in the advisory |
 
 ## Supported versions
 
-| Version | Status |
-| --- | :---: |
-| `main` | ✅ Supported |
+| Version |    Status    |
+| ------- | :----------: |
+| `main`  | ✅ Supported |
 
 ## Scope
 
