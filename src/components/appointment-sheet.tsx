@@ -132,7 +132,9 @@ export function AppointmentSheet({
   const isDirty = JSON.stringify(values) !== JSON.stringify(initialFormValues);
   const dateTimeError =
     error &&
-    /(overlaps|Monday through Friday|30-minute slot|fit within)/i.test(error)
+    /(overlaps|Monday through Friday|30-minute slot|fit within|valid appointment date and time)/i.test(
+      error,
+    )
       ? error
       : null;
   const durationError =
@@ -408,12 +410,13 @@ export function AppointmentSheet({
                 <p
                   className="text-sm text-destructive"
                   id={`${formId}-date-time-error`}
+                  role="alert"
                 >
                   {dateTimeError}
                   {error?.includes("overlaps") ? (
                     <button
                       className="ml-2 font-medium underline underline-offset-4"
-                      onClick={() => onOpenChange(false)}
+                      onClick={requestClose}
                       type="button"
                     >
                       Return to schedule
@@ -444,6 +447,7 @@ export function AppointmentSheet({
                   <p
                     className="text-sm text-destructive"
                     id={`${formId}-duration-error`}
+                    role="alert"
                   >
                     {durationError}
                   </p>
@@ -463,7 +467,7 @@ export function AppointmentSheet({
                 />
               </div>
               {error && !dateTimeError && !durationError ? (
-                <p aria-live="polite" className="text-sm text-destructive">
+                <p className="text-sm text-destructive" role="alert">
                   {error}
                 </p>
               ) : null}
@@ -496,6 +500,7 @@ export function AppointmentSheet({
                         </AlertDialogCancel>
                         <AlertDialogAction
                           className="bg-destructive text-white hover:bg-destructive/90"
+                          disabled={isStatusPending}
                           onClick={() => updateStatus("CANCELLED")}
                         >
                           Cancel appointment

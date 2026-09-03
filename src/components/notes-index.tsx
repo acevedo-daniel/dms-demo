@@ -32,7 +32,6 @@ type NoteGroup = {
 };
 
 export function NotesIndex({ notes, patients, treatments }: NotesIndexProps) {
-  const [announcement, setAnnouncement] = useState("");
   const [displayNotes, setDisplayNotes] = useState(notes);
   const pendingFocusNoteId = useRef<string | null>(null);
   const noteGroups = useMemo(() => {
@@ -86,8 +85,6 @@ export function NotesIndex({ notes, patients, treatments }: NotesIndexProps) {
     if (isNewNote) {
       pendingFocusNoteId.current = savedNote.id;
     }
-    setAnnouncement("Patient note saved.");
-    window.setTimeout(() => setAnnouncement(""), 4000);
   }
 
   return (
@@ -117,9 +114,6 @@ export function NotesIndex({ notes, patients, treatments }: NotesIndexProps) {
           }
         />
       </header>
-      <p aria-live="polite" className="sr-only">
-        {announcement}
-      </p>
       {displayNotes.length ? (
         <div className="mt-8 border-y border-border">
           {noteGroups.map((group) => (

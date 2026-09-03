@@ -221,6 +221,7 @@ export function PatientFormDialog({
                   <p
                     className="text-sm text-destructive"
                     id={`${formId}-identifier-error`}
+                    role="alert"
                   >
                     {identifierError}
                   </p>
@@ -269,7 +270,7 @@ export function PatientFormDialog({
                 />
               </div>
               {error && !identifierError ? (
-                <p aria-live="polite" className="text-sm text-destructive">
+                <p className="text-sm text-destructive" role="alert">
                   {error}
                 </p>
               ) : null}

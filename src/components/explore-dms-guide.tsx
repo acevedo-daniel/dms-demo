@@ -33,6 +33,13 @@ const guideItems = [
 export function ExploreDmsGuide() {
   const [isVisible, setIsVisible] = useState(true);
 
+  function dismissGuide() {
+    setIsVisible(false);
+    window.requestAnimationFrame(() => {
+      document.getElementById("today-title")?.focus();
+    });
+  }
+
   if (!isVisible) {
     return null;
   }
@@ -57,7 +64,7 @@ export function ExploreDmsGuide() {
         <Button
           aria-label="Dismiss Explore DMS guide"
           className="-mt-2 -mr-2"
-          onClick={() => setIsVisible(false)}
+          onClick={dismissGuide}
           size="icon"
           variant="ghost"
         >

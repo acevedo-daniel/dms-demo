@@ -63,6 +63,99 @@ test("adds a patient through the directory", async ({ page }) => {
   await expect(page.getByRole("status")).toContainText("Patient added.");
 });
 
+test("keeps a failed patient save open and announces its error", async ({
+  page,
+}) => {
+  await openResetDemoWorkspace(page);
+  await page.getByRole("link", { name: "Patients" }).click();
+  await page.route("**/api/demo/patients", async (route) => {
+    if (route.request().method() === "POST") {
+      await route.fulfill({
+        body: JSON.stringify({
+          error: { message: "The patient could not be saved." },
+        }),
+        contentType: "application/json",
+        status: 503,
+      });
+      return;
+    }
+
+    await route.continue();
+  });
+
+  await page.getByRole("button", { name: "Add patient" }).first().click();
+  const dialog = page.getByRole("dialog", { name: "Add patient" });
+  await dialog.getByLabel("Identifier").fill("E2E-ERROR");
+  await dialog.getByLabel("First name").fill("E2E");
+  await dialog.getByLabel("Last name").fill("Error");
+  await dialog
+    .getByRole("button", { name: "Add patient", exact: true })
+    .click();
+
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByRole("alert")).toHaveText(
+    "The patient could not be saved.",
+  );
+});
+
+test("keeps archive confirmation open when archiving fails", async ({
+  page,
+}) => {
+  await openResetDemoWorkspace(page);
+  await page.getByRole("link", { name: "Patients" }).click();
+  await addPatient(page);
+  await page.getByRole("link", { name: "E2E Patient", exact: true }).click();
+  await page.route("**/api/demo/patients/*/archive", async (route) => {
+    await route.fulfill({
+      body: JSON.stringify({
+        error: { message: "The patient could not be archived." },
+      }),
+      contentType: "application/json",
+      status: 503,
+    });
+  });
+
+  await page.getByRole("button", { name: "Archive" }).click();
+  const confirmation = page.getByRole("alertdialog", {
+    name: "Archive E2E Patient?",
+  });
+  await confirmation.getByRole("button", { name: "Archive patient" }).click();
+
+  await expect(confirmation).toBeVisible();
+  await expect(confirmation.getByRole("alert")).toHaveText(
+    "The patient could not be archived.",
+  );
+});
+
+test("confirms before discarding an edited appointment and restores focus", async ({
+  page,
+}) => {
+  await openResetDemoWorkspace(page);
+  await page.getByRole("link", { name: "Schedule", exact: true }).click();
+
+  const createAppointment = page
+    .getByRole("button", { name: "Create appointment" })
+    .first();
+  await createAppointment.focus();
+  await page.keyboard.press("Enter");
+
+  const dialog = page.getByRole("dialog", { name: "Create appointment" });
+  await dialog.getByLabel("Patient").selectOption({ index: 1 });
+  await page.keyboard.press("Escape");
+
+  const discardDialog = page.getByRole("alertdialog", {
+    name: "Discard changes?",
+  });
+  await expect(discardDialog).toBeVisible();
+  await expect(
+    discardDialog.getByRole("button", { name: "Keep editing" }),
+  ).toBeFocused();
+
+  await discardDialog.getByRole("button", { name: "Discard changes" }).click();
+  await expect(dialog).toBeHidden();
+  await expect(createAppointment).toBeFocused();
+});
+
 test("creates an appointment from the weekly schedule", async ({ page }) => {
   await openResetDemoWorkspace(page);
   await page.getByRole("link", { name: "Schedule", exact: true }).click();
@@ -107,6 +200,28 @@ test("adds a note from a patient record", async ({ page }) => {
 
   await expect(dialog).toBeHidden();
   await expect(page.getByText("Created by end-to-end test.")).toBeVisible();
+  await expect(page.getByRole("status")).toContainText("Patient note saved.");
+});
+
+test("keeps the workspace available when sign out fails", async ({ page }) => {
+  await openDemoWorkspace(page);
+  await page.route("**/api/demo/logout", async (route) => {
+    await route.fulfill({
+      body: JSON.stringify({ error: "Unavailable" }),
+      contentType: "application/json",
+      status: 503,
+    });
+  });
+
+  await page.getByRole("button", { name: "Sign out" }).click();
+
+  await expect(page).toHaveURL(/\/demo\/dashboard$/);
+  await expect(
+    page.getByText("The workspace could not be signed out. Try again.", {
+      exact: true,
+    }),
+  ).toBeVisible();
+  await expect(page.getByRole("button", { name: "Sign out" })).toBeEnabled();
 });
 
 test("signs out and protects the workspace route", async ({ page }) => {

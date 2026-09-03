@@ -31,7 +31,7 @@ export default async function NotesPage() {
             Patient notes could not be loaded.
           </h1>
           <p className="mt-3 leading-7 text-muted-foreground">
-            Check the demo database connection and try again.
+            The sample data is temporarily unavailable. Try again.
           </p>
           <Button asChild className="mt-6" variant="outline">
             <Link href="/demo/notes">Try again</Link>

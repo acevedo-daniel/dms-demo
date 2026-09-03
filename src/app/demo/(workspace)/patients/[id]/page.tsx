@@ -57,6 +57,10 @@ export default async function PatientPage({ params }: PatientPageProps) {
           >
             This patient record could not be loaded.
           </h1>
+          <p className="mt-3 leading-7 text-muted-foreground">
+            The sample data is temporarily unavailable. Try again or return to
+            the patient directory.
+          </p>
           <Button asChild className="mt-6" variant="outline">
             <Link href="/demo/patients">Back to patients</Link>
           </Button>

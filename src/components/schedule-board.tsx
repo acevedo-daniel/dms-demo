@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CalendarPlus, ChevronLeft, ChevronRight, Clock3 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { AppointmentStatusBadge } from "@/components/appointment-status-badge";
 import { AppointmentSheet } from "@/components/appointment-sheet";
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
+import { announceWorkspaceFeedback } from "@/components/workspace-feedback";
 import { formatDemoDate, formatDemoTime } from "@/lib/demo/format";
 import {
   addPracticeDays,
@@ -109,7 +110,7 @@ export function ScheduleBoard({
   const [sheetState, setSheetState] = useState<SheetState | null>(
     initialSheetOpen ? { patientId: initialPatientId } : null,
   );
-  const [announcement, setAnnouncement] = useState("");
+  const returnFocusTarget = useRef<HTMLElement | null>(null);
   const filteredAppointments =
     filter === "ALL"
       ? appointments
@@ -129,18 +130,41 @@ export function ScheduleBoard({
   const selectedMobileAppointments =
     appointmentsByDay.get(practiceDateInputValue(selectedMobileDay)) ?? [];
 
-  function openCreate(startsAt?: string) {
+  function rememberFocusTarget(target?: HTMLElement) {
+    returnFocusTarget.current =
+      target ?? document.getElementById("schedule-title");
+  }
+
+  function openCreate(startsAt?: string, trigger?: HTMLElement) {
+    rememberFocusTarget(trigger);
     setSheetState({ patientId: initialPatientId, startsAt });
   }
 
+  function openAppointment(
+    appointment: ScheduleAppointment,
+    trigger: HTMLElement,
+  ) {
+    rememberFocusTarget(trigger);
+    setSheetState({ appointment });
+  }
+
   function closeSheet() {
+    const target = returnFocusTarget.current;
     setSheetState(null);
+
+    window.requestAnimationFrame(() => {
+      if (target?.isConnected) {
+        target.focus();
+        return;
+      }
+
+      document.getElementById("schedule-title")?.focus();
+    });
   }
 
   function handleSaved(message: string) {
-    setAnnouncement(message);
     closeSheet();
-    window.setTimeout(() => setAnnouncement(""), 4000);
+    announceWorkspaceFeedback(message);
     router.refresh();
   }
 
@@ -152,7 +176,11 @@ export function ScheduleBoard({
             <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-primary">
               Appointment coordination
             </p>
-            <h1 className="mt-3 text-3xl font-semibold tracking-[-0.03em]">
+            <h1
+              className="mt-3 text-3xl font-semibold tracking-[-0.03em]"
+              id="schedule-title"
+              tabIndex={-1}
+            >
               Schedule
             </h1>
             <p className="mt-2 text-sm text-muted-foreground">
@@ -161,7 +189,7 @@ export function ScheduleBoard({
           </div>
           <Button
             className="hidden md:inline-flex"
-            onClick={() => openCreate()}
+            onClick={(event) => openCreate(undefined, event.currentTarget)}
           >
             <CalendarPlus aria-hidden className="size-4" />
             Create appointment
@@ -204,10 +232,6 @@ export function ScheduleBoard({
           </label>
         </div>
       </header>
-
-      <p aria-live="polite" className="sr-only">
-        {announcement}
-      </p>
 
       <section aria-label="Week schedule" className="mt-8 hidden md:block">
         <div
@@ -268,7 +292,9 @@ export function ScheduleBoard({
                           aria-label={`Create appointment for ${dayLabel(day)} at ${slotTime}`}
                           className="block h-12 w-full border-b border-border text-left transition-colors hover:bg-secondary/70 focus-visible:relative focus-visible:z-20 focus-visible:outline-none"
                           key={startsAt}
-                          onClick={() => openCreate(startsAt)}
+                          onClick={(event) =>
+                            openCreate(startsAt, event.currentTarget)
+                          }
                           type="button"
                         />
                       );
@@ -290,7 +316,9 @@ export function ScheduleBoard({
                           aria-label={`Open ${appointment.status.toLowerCase()} appointment for ${appointmentName(appointment)} at ${formatDemoTime(new Date(appointment.startsAt))}`}
                           className={`absolute right-1 left-1 z-10 overflow-hidden rounded-md border bg-card text-left transition-colors hover:border-primary/35 hover:bg-accent/40 focus-visible:outline-none ${isCompact ? "px-1 py-1" : "px-2 py-1.5"}`}
                           key={appointment.id}
-                          onClick={() => setSheetState({ appointment })}
+                          onClick={(event) =>
+                            openAppointment(appointment, event.currentTarget)
+                          }
                           style={{
                             height: `${height}rem`,
                             top: `${index * 3}rem`,
@@ -383,7 +411,9 @@ export function ScheduleBoard({
                       aria-label={`Open ${appointment.status.toLowerCase()} appointment for ${appointmentName(appointment)} at ${formatDemoTime(new Date(appointment.startsAt))}`}
                       className="min-w-0 flex-1 rounded-md border border-border bg-card px-3 py-2 text-left transition-colors hover:border-primary/35 hover:bg-accent/40 focus-visible:outline-none"
                       key={appointment.id}
-                      onClick={() => setSheetState({ appointment })}
+                      onClick={(event) =>
+                        openAppointment(appointment, event.currentTarget)
+                      }
                       type="button"
                     >
                       <p className="truncate text-sm font-medium">
@@ -401,7 +431,9 @@ export function ScheduleBoard({
                 ) : (
                   <Button
                     className="justify-start text-muted-foreground"
-                    onClick={() => openCreate(startsAt.toISOString())}
+                    onClick={(event) =>
+                      openCreate(startsAt.toISOString(), event.currentTarget)
+                    }
                     variant="ghost"
                   >
                     <CalendarPlus aria-hidden className="size-4" />
@@ -432,7 +464,10 @@ export function ScheduleBoard({
               Clear filter
             </Button>
           ) : (
-            <Button className="mt-4" onClick={() => openCreate()}>
+            <Button
+              className="mt-4"
+              onClick={(event) => openCreate(undefined, event.currentTarget)}
+            >
               <CalendarPlus aria-hidden className="size-4" />
               Create appointment
             </Button>

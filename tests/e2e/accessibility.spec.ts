@@ -94,3 +94,18 @@ test("uses a visible focus indicator and honors reduced motion", async ({
   );
   expect(transitionDuration).toBeLessThanOrEqual(0.001);
 });
+
+test("moves focus to the dashboard content when the walkthrough is dismissed", async ({
+  page,
+}) => {
+  await openResetDemoWorkspace(page);
+
+  const dismissGuide = page.getByRole("button", {
+    name: "Dismiss Explore DMS guide",
+  });
+  await dismissGuide.focus();
+  await dismissGuide.press("Enter");
+
+  await expect(dismissGuide).toBeHidden();
+  await expect(page.getByRole("heading", { name: "Today" })).toBeFocused();
+});
