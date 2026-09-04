@@ -124,7 +124,7 @@ test("uses the intended navigation, directory, and schedule compositions", async
 
     await page.goto(`/demo/patients/${alexQuinnId}`);
     await expect(
-      page.getByRole("heading", { name: "Related treatment" }),
+      page.getByText("Related treatment", { exact: true }),
     ).toBeVisible();
     await expectViewportFit(page);
   }

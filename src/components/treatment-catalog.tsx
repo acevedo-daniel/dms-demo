@@ -1,138 +1,184 @@
 "use client";
 
-import { ChevronDown } from "lucide-react";
-import { Fragment, useState } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import Link from "next/link";
+import { CalendarPlus, ChevronDown } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import type { TreatmentCatalogItem } from "@/lib/treatments";
+import { cn } from "@/lib/utils";
+
+type TreatmentCatalogProps = {
+  initialTreatmentId?: string;
+  treatments: TreatmentCatalogItem[];
+};
+
+type TreatmentGroup = {
+  category: string;
+  treatments: TreatmentCatalogItem[];
+};
 
 export function TreatmentCatalog({
+  initialTreatmentId,
   treatments,
-}: {
-  treatments: TreatmentCatalogItem[];
-}) {
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+}: TreatmentCatalogProps) {
+  const selectedTreatmentId = treatments.some(
+    (treatment) => treatment.id === initialTreatmentId,
+  )
+    ? initialTreatmentId
+    : undefined;
+  const [expandedId, setExpandedId] = useState<string | null>(
+    selectedTreatmentId ?? null,
+  );
+  const groups = useMemo(() => {
+    const grouped = new Map<string, TreatmentCatalogItem[]>();
+
+    for (const treatment of treatments) {
+      grouped.set(treatment.category, [
+        ...(grouped.get(treatment.category) ?? []),
+        treatment,
+      ]);
+    }
+
+    return [...grouped.entries()]
+      .sort(([left], [right]) => left.localeCompare(right))
+      .map(([category, catalogTreatments]) => ({
+        category,
+        treatments: catalogTreatments,
+      }));
+  }, [treatments]);
+
+  useEffect(() => {
+    if (!selectedTreatmentId) {
+      return;
+    }
+
+    const target = document.getElementById(`treatment-${selectedTreatmentId}`);
+
+    if (!target) {
+      return;
+    }
+
+    window.requestAnimationFrame(() => {
+      target.focus({ preventScroll: true });
+      target.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+  }, [selectedTreatmentId]);
 
   if (!treatments.length) {
     return (
       <section className="mt-8 border-y border-border py-12 text-center">
-        <p className="font-medium">
-          No treatments are available in this demo workspace.
-        </p>
+        <p className="font-medium">No treatment references are available.</p>
       </section>
     );
   }
 
   return (
-    <>
-      <div className="mt-8 hidden overflow-hidden border-y border-border md:block">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead scope="col">Treatment</TableHead>
-              <TableHead scope="col">Category</TableHead>
-              <TableHead scope="col">Default duration</TableHead>
-              <TableHead scope="col">
-                <span className="sr-only">Details</span>
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {treatments.map((treatment) => {
-              const expanded = expandedId === treatment.id;
+    <div className="mt-8 space-y-10">
+      {groups.map((group) => (
+        <TreatmentCatalogGroup
+          expandedId={expandedId}
+          group={group}
+          key={group.category}
+          onExpandedChange={setExpandedId}
+          selectedTreatmentId={selectedTreatmentId}
+        />
+      ))}
+    </div>
+  );
+}
 
-              return (
-                <Fragment key={treatment.id}>
-                  <TableRow>
-                    <TableCell className="font-medium">
-                      {treatment.name}
-                    </TableCell>
-                    <TableCell className="text-muted-foreground">
-                      {treatment.category}
-                    </TableCell>
-                    <TableCell className="font-mono text-xs text-muted-foreground">
-                      {treatment.defaultDurationMinutes} minutes
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <button
-                        aria-controls={`treatment-details-${treatment.id}`}
-                        aria-expanded={expanded}
-                        aria-label={`${expanded ? "Hide" : "Show"} details for ${treatment.name}`}
-                        className="dms-pressable inline-flex min-h-11 items-center gap-2 rounded-[var(--radius-sm)] px-3 text-sm font-medium text-primary hover:bg-accent-soft focus-visible:outline-none"
-                        onClick={() =>
-                          setExpandedId(expanded ? null : treatment.id)
-                        }
-                        type="button"
-                      >
-                        Details
-                        <ChevronDown
-                          aria-hidden
-                          className={`size-4 transition-transform motion-reduce:transition-none ${expanded ? "rotate-180" : ""}`}
-                        />
-                      </button>
-                    </TableCell>
-                  </TableRow>
-                  {expanded ? (
-                    <TableRow>
-                      <TableCell
-                        id={`treatment-details-${treatment.id}`}
-                        className="bg-secondary/50 py-5 text-sm leading-6 text-muted-foreground"
-                        colSpan={4}
-                      >
-                        {treatment.description}
-                      </TableCell>
-                    </TableRow>
-                  ) : null}
-                </Fragment>
-              );
-            })}
-          </TableBody>
-        </Table>
+function TreatmentCatalogGroup({
+  expandedId,
+  group,
+  onExpandedChange,
+  selectedTreatmentId,
+}: {
+  expandedId: string | null;
+  group: TreatmentGroup;
+  onExpandedChange: (id: string | null) => void;
+  selectedTreatmentId?: string;
+}) {
+  const headingId = `treatment-category-${group.category.toLowerCase().replaceAll(/[^a-z0-9]+/g, "-")}`;
+
+  return (
+    <section aria-labelledby={headingId}>
+      <div className="flex items-center gap-3">
+        <h2 className="text-xl font-semibold tracking-tight" id={headingId}>
+          {group.category}
+        </h2>
+        <Badge className="font-mono tabular-nums" variant="secondary">
+          {group.treatments.length}
+        </Badge>
       </div>
-
-      <ol className="mt-8 divide-y divide-border border-y border-border md:hidden">
-        {treatments.map((treatment) => {
-          const expanded = expandedId === treatment.id;
+      <ol className="mt-4 divide-y divide-border border-y border-border">
+        {group.treatments.map((treatment) => {
+          const selected = selectedTreatmentId === treatment.id;
+          const expanded = selected || expandedId === treatment.id;
 
           return (
-            <li key={treatment.id}>
-              <button
-                aria-controls={`treatment-details-${treatment.id}`}
-                aria-expanded={expanded}
-                className="dms-pressable flex min-h-16 w-full items-center justify-between gap-4 rounded-[var(--radius-sm)] py-4 text-left hover:bg-secondary/70 focus-visible:outline-none"
-                onClick={() => setExpandedId(expanded ? null : treatment.id)}
-                type="button"
-              >
-                <span>
-                  <span className="block font-medium">{treatment.name}</span>
-                  <span className="mt-1 block text-sm text-muted-foreground">
-                    {treatment.category} · {treatment.defaultDurationMinutes}{" "}
-                    minutes
-                  </span>
-                </span>
-                <ChevronDown
-                  aria-hidden
-                  className={`size-4 shrink-0 text-primary transition-transform motion-reduce:transition-none ${expanded ? "rotate-180" : ""}`}
-                />
-              </button>
+            <li
+              className={cn(
+                "scroll-mt-28 px-0 py-5 transition-colors",
+                selected && "bg-accent-soft/60 ring-1 ring-primary/40",
+              )}
+              id={`treatment-${treatment.id}`}
+              key={treatment.id}
+              tabIndex={selected ? -1 : undefined}
+            >
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="min-w-0">
+                  <button
+                    aria-controls={`treatment-details-${treatment.id}`}
+                    aria-expanded={expanded}
+                    className="dms-pressable inline-flex min-h-11 items-center gap-2 rounded-[var(--radius-sm)] -ml-2 px-2 text-left text-lg font-semibold tracking-tight hover:text-primary focus-visible:outline-none"
+                    onClick={() =>
+                      onExpandedChange(expanded ? null : treatment.id)
+                    }
+                    type="button"
+                  >
+                    {treatment.name}
+                    <ChevronDown
+                      aria-hidden
+                      className={cn(
+                        "size-4 text-primary transition-transform motion-reduce:transition-none",
+                        expanded && "rotate-180",
+                      )}
+                    />
+                  </button>
+                  <p className="mt-1 max-w-3xl text-sm leading-6 text-muted-foreground">
+                    {treatment.description}
+                  </p>
+                </div>
+                <div className="flex shrink-0 flex-wrap items-center gap-2 sm:justify-end">
+                  <Badge className="font-mono tabular-nums" variant="outline">
+                    {treatment.defaultDurationMinutes} min
+                  </Badge>
+                  <Button asChild size="sm" variant="outline">
+                    <Link
+                      aria-label={`Schedule ${treatment.name}`}
+                      href={`/demo/schedule?create=1&treatment=${treatment.id}`}
+                    >
+                      <CalendarPlus aria-hidden className="size-4" />
+                      Schedule
+                    </Link>
+                  </Button>
+                </div>
+              </div>
               {expanded ? (
-                <p
-                  className="pb-5 text-sm leading-6 text-muted-foreground"
+                <div
+                  className="mt-4 border-l-2 border-primary/35 pl-4 text-sm leading-6 text-muted-foreground"
                   id={`treatment-details-${treatment.id}`}
                 >
-                  {treatment.description}
-                </p>
+                  This reference uses the default{" "}
+                  {treatment.defaultDurationMinutes}-minute scheduling duration.
+                  Confirm the patient and appointment time in Schedule.
+                </div>
               ) : null}
             </li>
           );
         })}
       </ol>
-    </>
+    </section>
   );
 }

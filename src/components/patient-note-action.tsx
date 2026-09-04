@@ -2,7 +2,7 @@
 
 import { FilePenLine } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { NoteComposer } from "@/components/note-composer";
+import { NoteComposerPanel } from "@/components/note-composer-panel";
 import { Button } from "@/components/ui/button";
 import type { NoteComposerPatient, NoteComposerTreatment } from "@/lib/notes";
 
@@ -20,7 +20,7 @@ export function PatientNoteAction({
   const router = useRouter();
 
   return (
-    <NoteComposer
+    <NoteComposerPanel
       fixedPatientId={patientId}
       onSaved={() => router.refresh()}
       patients={patients}

@@ -11,8 +11,15 @@ async function loadTreatmentCatalog() {
   }
 }
 
-export default async function TreatmentsPage() {
+type TreatmentsPageProps = {
+  searchParams: Promise<{ treatment?: string }>;
+};
+
+export default async function TreatmentsPage({
+  searchParams,
+}: TreatmentsPageProps) {
   const treatments = await loadTreatmentCatalog();
+  const parameters = await searchParams;
 
   if (!treatments) {
     return (
@@ -54,7 +61,10 @@ export default async function TreatmentsPage() {
           Available treatments and default appointment durations.
         </p>
       </header>
-      <TreatmentCatalog treatments={treatments} />
+      <TreatmentCatalog
+        initialTreatmentId={parameters.treatment}
+        treatments={treatments}
+      />
     </main>
   );
 }

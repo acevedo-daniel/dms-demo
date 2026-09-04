@@ -37,6 +37,7 @@ type ScheduleBoardProps = {
   initialAppointmentId?: string;
   initialCreate?: boolean;
   initialPatientId?: string;
+  initialTreatmentId?: string;
   patients: SchedulePatient[];
   treatments: ScheduleTreatment[];
   weekStart: string;
@@ -49,6 +50,7 @@ type ContextState =
       kind: "create";
       patientId?: string;
       startsAt?: string;
+      treatmentId?: string;
     };
 
 type StatusFilter = "ALL" | "CONFIRMED" | "SCHEDULED";
@@ -100,6 +102,7 @@ function initialContext({
   initialAppointmentId,
   initialCreate,
   initialPatientId,
+  initialTreatmentId,
   treatments,
 }: Pick<
   ScheduleBoardProps,
@@ -107,6 +110,7 @@ function initialContext({
   | "initialAppointmentId"
   | "initialCreate"
   | "initialPatientId"
+  | "initialTreatmentId"
   | "treatments"
 >): ContextState | null {
   const appointment = appointments.find(
@@ -118,10 +122,16 @@ function initialContext({
   }
 
   if (initialCreate) {
+    const treatment = treatments.find((item) => item.id === initialTreatmentId);
+
     return {
-      durationMinutes: treatments[0]?.defaultDurationMinutes ?? 30,
+      durationMinutes:
+        treatment?.defaultDurationMinutes ??
+        treatments[0]?.defaultDurationMinutes ??
+        30,
       kind: "create",
       patientId: initialPatientId,
+      treatmentId: treatment?.id,
     };
   }
 
@@ -149,6 +159,7 @@ export function ScheduleBoard({
   initialAppointmentId,
   initialCreate = false,
   initialPatientId,
+  initialTreatmentId,
   patients,
   treatments,
   weekStart,
@@ -172,6 +183,7 @@ export function ScheduleBoard({
       initialAppointmentId,
       initialCreate,
       initialPatientId,
+      initialTreatmentId,
       treatments,
     }),
   );
@@ -221,6 +233,9 @@ export function ScheduleBoard({
         if (nextContext.patientId) {
           parameters.set("patient", nextContext.patientId);
         }
+        if (nextContext.treatmentId) {
+          parameters.set("treatment", nextContext.treatmentId);
+        }
       }
 
       window.history.pushState(null, "", `/demo/schedule?${parameters}`);
@@ -231,16 +246,23 @@ export function ScheduleBoard({
   const openCreate = useCallback(
     (startsAt?: string, trigger?: HTMLElement) => {
       rememberFocusTarget(trigger);
+      const treatment = treatments.find(
+        (item) => item.id === initialTreatmentId,
+      );
       const nextContext: ContextState = {
-        durationMinutes: treatments[0]?.defaultDurationMinutes ?? 30,
+        durationMinutes:
+          treatment?.defaultDurationMinutes ??
+          treatments[0]?.defaultDurationMinutes ??
+          30,
         kind: "create",
         patientId: initialPatientId,
         startsAt,
+        treatmentId: initialTreatmentId,
       };
       setContext(nextContext);
       writeContextHistory(nextContext);
     },
-    [initialPatientId, treatments, writeContextHistory],
+    [initialPatientId, initialTreatmentId, treatments, writeContextHistory],
   );
 
   function openAppointment(
@@ -352,13 +374,16 @@ export function ScheduleBoard({
         initialPatientId={
           context.kind === "create" ? context.patientId : undefined
         }
+        initialTreatmentId={
+          context.kind === "create" ? context.treatmentId : undefined
+        }
         initialStartsAt={
           context.kind === "create" ? context.startsAt : undefined
         }
         key={
           context.kind === "appointment"
             ? context.appointment.id
-            : (context.startsAt ?? "new")
+            : `${context.startsAt ?? "new"}:${context.treatmentId ?? ""}`
         }
         onDurationChange={(durationMinutes) => {
           if (context.kind === "create" && Number.isFinite(durationMinutes)) {

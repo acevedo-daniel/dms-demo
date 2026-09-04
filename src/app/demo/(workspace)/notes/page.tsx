@@ -22,13 +22,13 @@ export default async function NotesPage() {
           className="max-w-lg border-y border-border py-10"
         >
           <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-primary">
-            Patient notes
+            Notes
           </p>
           <h1
             className="mt-3 text-3xl font-semibold tracking-[-0.03em]"
             id="notes-error-title"
           >
-            Patient notes could not be loaded.
+            Notes could not be loaded.
           </h1>
           <p className="mt-3 leading-7 text-muted-foreground">
             The sample data is temporarily unavailable. Try again.

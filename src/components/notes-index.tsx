@@ -4,9 +4,9 @@ import Link from "next/link";
 import { FilePenLine, Pencil } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  NoteComposer,
+  NoteComposerPanel,
   type SavedPatientNote,
-} from "@/components/note-composer";
+} from "@/components/note-composer-panel";
 import { Button } from "@/components/ui/button";
 import { formatDemoDate, formatDemoTime } from "@/lib/demo/format";
 import type {
@@ -95,14 +95,13 @@ export function NotesIndex({ notes, patients, treatments }: NotesIndexProps) {
             Operational annotations
           </p>
           <h1 className="mt-3 text-3xl font-semibold tracking-[-0.03em]">
-            Patient notes
+            Notes
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            {displayNotes.length} {displayNotes.length === 1 ? "note" : "notes"}{" "}
-            in this workspace
+            Concise operational context connected to patient records.
           </p>
         </div>
-        <NoteComposer
+        <NoteComposerPanel
           onSaved={handleSaved}
           patients={patients}
           treatments={treatments}
@@ -146,10 +145,13 @@ export function NotesIndex({ notes, patients, treatments }: NotesIndexProps) {
                           >
                             {note.patientName}
                           </Link>
-                          {note.treatmentName ? (
-                            <span className="text-muted-foreground">
+                          {note.treatmentName && note.treatmentId ? (
+                            <Link
+                              className="text-muted-foreground hover:text-primary"
+                              href={`/demo/treatments?treatment=${note.treatmentId}`}
+                            >
                               · {note.treatmentName}
-                            </span>
+                            </Link>
                           ) : null}
                         </div>
                         <time
@@ -162,7 +164,7 @@ export function NotesIndex({ notes, patients, treatments }: NotesIndexProps) {
                           {note.body}
                         </p>
                       </div>
-                      <NoteComposer
+                      <NoteComposerPanel
                         note={note}
                         onSaved={handleSaved}
                         patients={patients}
@@ -186,7 +188,9 @@ export function NotesIndex({ notes, patients, treatments }: NotesIndexProps) {
         </div>
       ) : (
         <section className="mt-8 border-y border-border py-12 text-center">
-          <p className="font-medium">No patient notes have been recorded.</p>
+          <p className="font-medium">
+            No operational notes have been recorded yet.
+          </p>
         </section>
       )}
     </div>

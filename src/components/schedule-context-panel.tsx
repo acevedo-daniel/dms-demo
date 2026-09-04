@@ -37,6 +37,7 @@ export type ScheduleContextPanelProps = {
   appointment?: ScheduleAppointment;
   initialPatientId?: string;
   initialStartsAt?: string;
+  initialTreatmentId?: string;
   onOpenChange: (open: boolean) => void;
   onDurationChange?: (durationMinutes: number) => void;
   onSaved: (result: ScheduleMutationResult) => void;
@@ -55,16 +56,21 @@ function initialValues({
   appointment,
   initialPatientId,
   initialStartsAt,
+  initialTreatmentId,
   treatments,
 }: Pick<
   ScheduleContextPanelProps,
-  "appointment" | "initialPatientId" | "initialStartsAt" | "treatments"
+  | "appointment"
+  | "initialPatientId"
+  | "initialStartsAt"
+  | "initialTreatmentId"
+  | "treatments"
 >): AppointmentFormState {
   const startsAt = new Date(
     initialStartsAt ?? appointment?.startsAt ?? "2026-05-12T12:00:00.000Z",
   );
   const treatment = treatments.find(
-    (item) => item.id === appointment?.treatmentId,
+    (item) => item.id === (appointment?.treatmentId ?? initialTreatmentId),
   );
 
   return {
@@ -75,7 +81,7 @@ function initialValues({
     note: appointment?.note ?? "",
     patientId: appointment?.patientId ?? initialPatientId ?? "",
     time: practiceTimeInputValue(startsAt),
-    treatmentId: appointment?.treatmentId ?? "",
+    treatmentId: appointment?.treatmentId ?? initialTreatmentId ?? "",
   };
 }
 
@@ -160,6 +166,7 @@ export function ScheduleContextPanel({
   appointment,
   initialPatientId,
   initialStartsAt,
+  initialTreatmentId,
   onOpenChange,
   onDurationChange,
   onSaved,
@@ -175,6 +182,7 @@ export function ScheduleContextPanel({
       appointment,
       initialPatientId,
       initialStartsAt,
+      initialTreatmentId,
       treatments,
     }),
   );

@@ -1,6 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 
 const alexQuinnId = "30000000-0000-4000-8000-000000000001";
+const hygieneVisitId = "20000000-0000-4000-8000-000000000002";
 const testPatient = {
   firstName: "E2E",
   identifier: "E2E-9001",
@@ -277,7 +278,65 @@ test("adds a note from a patient record", async ({ page }) => {
 
   await expect(dialog).toBeHidden();
   await expect(page.getByText("Created by end-to-end test.")).toBeVisible();
-  await expect(page.getByRole("status")).toContainText("Patient note saved.");
+  await expect(page.getByRole("status")).toContainText("Note added.");
+});
+
+test("uses Today as an immediate, connected operating view", async ({
+  page,
+}) => {
+  await openResetDemoWorkspace(page);
+
+  await expect(page.getByRole("heading", { name: "Alex Quinn" })).toBeVisible();
+  await expect(page.getByText("Room assignment pending")).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Today's agenda" }),
+  ).toBeVisible();
+
+  const recentTreatment = page
+    .getByRole("link", { name: /Hygiene visit/ })
+    .last();
+  await expect(recentTreatment).toHaveAttribute(
+    "href",
+    `/demo/treatments?treatment=${hygieneVisitId}`,
+  );
+  await expect(page.getByRole("link", { name: "Open notes" })).toBeVisible();
+});
+
+test("opens treatment context from Notes and pre-fills Schedule", async ({
+  page,
+}) => {
+  await openResetDemoWorkspace(page);
+  await page.goto("/demo/notes");
+
+  const treatmentLink = page
+    .getByRole("link", { name: /Hygiene visit/ })
+    .first();
+  await expect(treatmentLink).toHaveAttribute(
+    "href",
+    `/demo/treatments?treatment=${hygieneVisitId}`,
+  );
+
+  await page.goto(`/demo/treatments?treatment=${hygieneVisitId}`);
+  const selectedTreatment = page.locator(`#treatment-${hygieneVisitId}`);
+  await expect(selectedTreatment).toBeFocused();
+  await expect(selectedTreatment).toContainText("Hygiene visit");
+  await expect(
+    selectedTreatment.getByRole("link", { name: "Schedule Hygiene visit" }),
+  ).toBeVisible();
+
+  await selectedTreatment
+    .getByRole("link", { name: "Schedule Hygiene visit" })
+    .click();
+  const appointmentDialog = page.getByRole("dialog", {
+    name: "Create appointment",
+  });
+  await expect(appointmentDialog).toBeVisible();
+  await expect(appointmentDialog.getByLabel("Treatment")).toHaveValue(
+    hygieneVisitId,
+  );
+  await expect(appointmentDialog.getByLabel("Duration (minutes)")).toHaveValue(
+    "45",
+  );
 });
 
 test("connects patient summary, historical activity, and schedule context", async ({
@@ -424,6 +483,6 @@ test("resets the demo workspace to its seeded dataset", async ({ page }) => {
   await page.getByLabel("Find a patient").fill(testPatient.identifier);
 
   await expect(
-    page.getByText(`No patients match “${testPatient.identifier}”.`),
+    page.getByRole("heading", { name: "No patients match this search." }),
   ).toBeVisible();
 });

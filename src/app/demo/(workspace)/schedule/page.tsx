@@ -13,6 +13,7 @@ type SchedulePageProps = {
     appointment?: string;
     create?: string;
     patient?: string;
+    treatment?: string;
     week?: string;
   }>;
 };
@@ -67,6 +68,9 @@ export default async function SchedulePage({
   const patientIsAvailable = schedule.patients.some(
     (patient) => patient.id === parameters.patient,
   );
+  const treatmentIsAvailable = schedule.treatments.some(
+    (treatment) => treatment.id === parameters.treatment,
+  );
 
   return (
     <main className="mx-auto w-full max-w-[var(--schedule-workspace-max)] px-4 py-8 sm:px-6 lg:px-8">
@@ -81,7 +85,14 @@ export default async function SchedulePage({
             ? parameters.patient
             : undefined
         }
-        key={`${weekStart.toISOString()}:${selectedAppointment?.id ?? ""}:${parameters.create ?? ""}:${parameters.patient ?? ""}`}
+        initialTreatmentId={
+          parameters.create === "1" &&
+          treatmentIsAvailable &&
+          !selectedAppointment
+            ? parameters.treatment
+            : undefined
+        }
+        key={`${weekStart.toISOString()}:${selectedAppointment?.id ?? ""}:${parameters.create ?? ""}:${parameters.patient ?? ""}:${parameters.treatment ?? ""}`}
         patients={schedule.patients}
         treatments={schedule.treatments}
         weekStart={weekStart.toISOString()}

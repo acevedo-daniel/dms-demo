@@ -36,7 +36,7 @@ export function ExploreDmsGuide() {
   function dismissGuide() {
     setIsVisible(false);
     window.requestAnimationFrame(() => {
-      document.getElementById("today-title")?.focus();
+      document.getElementById("today-agenda-title")?.focus();
     });
   }
 

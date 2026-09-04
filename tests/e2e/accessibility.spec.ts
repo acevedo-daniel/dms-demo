@@ -110,7 +110,7 @@ test("moves focus to the dashboard content when the walkthrough is dismissed", a
 
   await expect(dismissGuide).toBeHidden();
   await expect(
-    page.getByRole("heading", { level: 2, name: "Today" }),
+    page.getByRole("heading", { level: 2, name: "Today's agenda" }),
   ).toBeFocused();
 });
 
