@@ -124,16 +124,10 @@ export function PatientDirectory({ initialPatients }: PatientDirectoryProps) {
     <div>
       <header className="flex flex-col gap-6 border-b border-border/80 pb-8 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <div className="flex items-center gap-2.5">
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
-              Patient directory
-            </span>
-            <span className="font-mono text-xs text-muted-foreground/50">
-              /
-            </span>
-            <span className="font-mono text-xs text-muted-foreground">
-              Atelier Dental
-            </span>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <span className="font-medium text-primary">Patient Directory</span>
+            <span className="text-muted-foreground/40">·</span>
+            <span>Atelier Dental</span>
           </div>
           <h1
             className="mt-3 text-3xl font-semibold tracking-[-0.035em] sm:text-4xl text-foreground"
@@ -170,7 +164,7 @@ export function PatientDirectory({ initialPatients }: PatientDirectoryProps) {
             Find a patient
           </label>
           <span
-            className="font-mono text-xs text-muted-foreground"
+            className="text-xs text-muted-foreground"
             id="patient-directory-result-count"
           >
             {resultLabel(filteredPatients.length)}
@@ -228,7 +222,7 @@ export function PatientDirectory({ initialPatients }: PatientDirectoryProps) {
                     <div className="flex min-w-0 items-center gap-3.5">
                       <div
                         aria-hidden
-                        className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10 font-mono text-xs font-bold text-primary"
+                        className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary"
                       >
                         {patientInitials(patient)}
                       </div>
@@ -237,25 +231,25 @@ export function PatientDirectory({ initialPatients }: PatientDirectoryProps) {
                           <p className="truncate text-base font-semibold tracking-tight text-foreground transition-colors group-hover:text-primary">
                             {patientName(patient)}
                           </p>
-                          <span className="shrink-0 rounded-full border border-border/70 bg-secondary/60 px-2 py-0.5 font-mono text-[11px] font-semibold text-muted-foreground">
+                          <span className="shrink-0 rounded-full border border-border/70 bg-secondary/60 px-2 py-0.5 font-mono text-[11px] font-medium text-muted-foreground">
                             {patient.identifier}
                           </span>
                         </div>
                         {patient.email || patient.phone ? (
-                          <p className="mt-0.5 truncate font-mono text-xs text-muted-foreground">
+                          <p className="mt-0.5 truncate text-xs text-muted-foreground">
                             {patient.email ?? patient.phone}
                           </p>
                         ) : null}
                       </div>
                     </div>
                     <div className="text-sm">
-                      <p className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+                      <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                         Next appointment
                       </p>
                       <p
                         className={
                           patient.nextAppointment
-                            ? "mt-1 truncate font-mono text-xs font-semibold text-foreground sm:text-sm"
+                            ? "mt-1 truncate text-xs font-medium text-foreground sm:text-sm"
                             : "mt-1 truncate text-xs text-muted-foreground sm:text-sm"
                         }
                       >
@@ -263,7 +257,7 @@ export function PatientDirectory({ initialPatients }: PatientDirectoryProps) {
                       </p>
                     </div>
                     <div className="text-sm">
-                      <p className="font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+                      <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                         Treatment
                       </p>
                       <p className="mt-1 truncate text-xs text-muted-foreground sm:text-sm">

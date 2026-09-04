@@ -28,16 +28,10 @@ export default async function TreatmentsPage({
           aria-labelledby="treatments-error-title"
           className="max-w-lg rounded-[var(--radius-lg)] border border-border/80 bg-card/40 p-8 shadow-xs"
         >
-          <div className="flex items-center gap-2">
-            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
-              Treatment catalog
-            </span>
-            <span className="font-mono text-xs text-muted-foreground/40">
-              /
-            </span>
-            <span className="font-mono text-xs text-muted-foreground">
-              Atelier Dental
-            </span>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <span className="font-medium text-primary">Treatment Catalog</span>
+            <span className="text-muted-foreground/40">·</span>
+            <span>Atelier Dental</span>
           </div>
           <h1
             className="mt-3 text-2xl font-semibold tracking-tight text-foreground"
@@ -65,16 +59,10 @@ export default async function TreatmentsPage({
     <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <header className="flex flex-col gap-6 border-b border-border/80 pb-8 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <div className="flex items-center gap-2.5">
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
-              Treatment catalog
-            </span>
-            <span className="font-mono text-xs text-muted-foreground/50">
-              /
-            </span>
-            <span className="font-mono text-xs text-muted-foreground">
-              Atelier Dental
-            </span>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <span className="font-medium text-primary">Treatment Catalog</span>
+            <span className="text-muted-foreground/40">·</span>
+            <span>Atelier Dental</span>
           </div>
           <h1 className="mt-3 text-3xl font-semibold tracking-[-0.035em] sm:text-4xl text-foreground">
             Treatments

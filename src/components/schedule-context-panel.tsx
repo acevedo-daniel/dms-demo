@@ -367,7 +367,7 @@ export function ScheduleContextPanel({
             {isOverlay ? (
               <DialogHeader className="border-b border-border/80 px-6 py-6 text-left">
                 <div className="flex items-center gap-2">
-                  <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-primary">
                     {isEditing && appointment
                       ? `${practiceTimeInputValue(new Date(appointment.startsAt))} · ${appointment.patientName}`
                       : "New appointment"}
@@ -384,7 +384,7 @@ export function ScheduleContextPanel({
               </DialogHeader>
             ) : (
               <header className="border-b border-border/80 px-6 py-6">
-                <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
+                <p className="text-xs font-semibold uppercase tracking-wider text-primary">
                   {isEditing && appointment
                     ? `${practiceTimeInputValue(new Date(appointment.startsAt))} · ${appointment.patientName}`
                     : "Draft appointment"}
@@ -432,14 +432,13 @@ export function ScheduleContextPanel({
               <div className="flex size-11 items-center justify-center rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 ring-8 ring-amber-500/5">
                 <AlertTriangle aria-hidden className="size-5" />
               </div>
-              <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                Schedule · Unsaved
+              <span className="text-xs font-medium text-muted-foreground">
+                Unsaved Changes
               </span>
             </div>
             <AlertDialogTitle>Discard changes?</AlertDialogTitle>
             <AlertDialogDescription>
-              Your unsaved appointment changes will be lost and not saved to the
-              practice calendar.
+              Your unsaved appointment changes will be discarded.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

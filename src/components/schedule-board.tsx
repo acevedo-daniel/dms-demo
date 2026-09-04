@@ -411,16 +411,12 @@ export function ScheduleBoard({
       <header className="flex flex-col gap-6 border-b border-border/80 pb-8">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <div className="flex items-center gap-2.5">
-              <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
-                Appointment coordination
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <span className="font-medium text-primary">
+                Appointment Coordination
               </span>
-              <span className="font-mono text-xs text-muted-foreground/50">
-                /
-              </span>
-              <span className="font-mono text-xs text-muted-foreground">
-                Atelier Dental
-              </span>
+              <span className="text-muted-foreground/40">·</span>
+              <span>Atelier Dental</span>
             </div>
             <h1
               className="mt-3 text-3xl font-semibold tracking-[-0.035em] sm:text-4xl text-foreground"
@@ -436,29 +432,7 @@ export function ScheduleBoard({
               <span aria-hidden className="text-muted-foreground/40">
                 ·
               </span>
-              <span className="font-mono text-xs text-muted-foreground">
-                Monday–Friday
-              </span>
-              <span
-                aria-hidden
-                className="hidden sm:inline text-muted-foreground/40"
-              >
-                ·
-              </span>
-              <span className="hidden sm:inline-flex items-center gap-1.5 font-mono text-[11px] text-muted-foreground/80">
-                <span className="rounded bg-secondary px-1.5 py-0.5 border border-border/60">
-                  C
-                </span>
-                <span>create</span>
-                <span className="rounded bg-secondary px-1.5 py-0.5 border border-border/60 ml-1">
-                  T
-                </span>
-                <span>today</span>
-                <span className="rounded bg-secondary px-1.5 py-0.5 border border-border/60 ml-1">
-                  ←/→
-                </span>
-                <span>week</span>
-              </span>
+              <span>Monday–Friday clinical hours</span>
             </p>
           </div>
           <Button
@@ -543,7 +517,7 @@ export function ScheduleBoard({
           >
             <div className="min-w-[62rem]">
               <div className="sticky top-0 z-20 grid grid-cols-[4.5rem_repeat(5,minmax(10.5rem,1fr))] border-b border-border/80 bg-surface/95 backdrop-blur-sm">
-                <div className="sticky left-0 z-30 border-r border-border/80 bg-surface/95 px-3 py-4 font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+                <div className="sticky left-0 z-30 border-r border-border/80 bg-surface/95 px-3 py-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                   Time
                 </div>
                 {days.map((day) => {
@@ -567,7 +541,7 @@ export function ScheduleBoard({
                           {dayLabel(day)}
                         </span>
                         {isDemoDay ? (
-                          <span className="rounded-full bg-primary/10 px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-primary">
+                          <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary">
                             Today
                           </span>
                         ) : null}
@@ -638,7 +612,7 @@ export function ScheduleBoard({
                           className="pointer-events-none absolute z-20 h-px w-full bg-accent"
                           style={{ top: `${demoMarkerSlot * 3}rem` }}
                         >
-                          <span className="absolute -top-2.5 left-1.5 rounded-full bg-accent px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wider text-accent-foreground shadow-xs">
+                          <span className="absolute -top-2.5 left-1.5 rounded-full bg-accent px-2 py-0.5 text-[10px] font-semibold tracking-wide text-accent-foreground shadow-xs">
                             Now 08:30
                           </span>
                         </div>
@@ -657,10 +631,10 @@ export function ScheduleBoard({
                           }}
                         >
                           <div className="flex items-center justify-between gap-1">
-                            <span className="block truncate text-xs font-bold text-accent-soft-foreground">
+                            <span className="block truncate text-xs font-semibold text-accent-soft-foreground">
                               Draft appointment
                             </span>
-                            <span className="rounded bg-accent/20 px-1 py-0.2 font-mono text-[10px] font-bold text-accent-soft-foreground shrink-0">
+                            <span className="rounded bg-accent/20 px-1.5 py-0.5 text-[10px] font-medium text-accent-soft-foreground shrink-0">
                               {draft.durationMinutes} min
                             </span>
                           </div>
@@ -696,10 +670,10 @@ export function ScheduleBoard({
                             type="button"
                           >
                             <div className="flex items-center justify-between gap-1">
-                              <span className="font-mono text-[11px] font-bold tabular-nums">
+                              <span className="text-xs font-semibold tabular-nums">
                                 {formatDemoTime(new Date(appointment.startsAt))}
                               </span>
-                              <span className="font-mono text-[10px] opacity-70">
+                              <span className="text-[10px] opacity-75 tabular-nums">
                                 {appointment.durationMinutes}m
                               </span>
                             </div>
@@ -714,7 +688,7 @@ export function ScheduleBoard({
                               ) : (
                                 <span />
                               )}
-                              <span className="font-mono text-[9px] uppercase tracking-wider opacity-70 shrink-0">
+                              <span className="text-[10px] font-medium tracking-wide opacity-75 shrink-0">
                                 {appointmentStatusLabel(appointment)}
                               </span>
                             </div>
@@ -783,10 +757,12 @@ export function ScheduleBoard({
                   )}
                   type="button"
                 >
-                  <span className="font-mono text-[10px] uppercase tracking-wider">
+                  <span className="text-[11px] font-medium uppercase tracking-wider">
                     {shortName}
                   </span>
-                  <span className="text-sm font-bold mt-0.5">{dateNum}</span>
+                  <span className="text-sm font-semibold mt-0.5">
+                    {dateNum}
+                  </span>
                 </button>
               );
             })}

@@ -45,7 +45,7 @@ export default async function SchedulePage({
           aria-labelledby="schedule-error-title"
           className="max-w-lg border-y border-border py-10"
         >
-          <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-primary">
+          <p className="text-xs font-semibold uppercase tracking-wider text-primary">
             Schedule
           </p>
           <h1

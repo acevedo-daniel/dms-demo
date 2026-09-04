@@ -228,16 +228,10 @@ export function NoteComposerPanel({
           }}
         >
           <DialogHeader className="border-b border-border/80 bg-secondary/15 px-6 py-5 text-left">
-            <div className="flex items-center gap-2">
-              <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
-                Note composer
-              </span>
-              <span className="font-mono text-xs text-muted-foreground/40">
-                /
-              </span>
-              <span className="font-mono text-xs text-muted-foreground">
-                Atelier Dental
-              </span>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <span className="font-medium text-primary">Note Composer</span>
+              <span className="text-muted-foreground/40">·</span>
+              <span>Atelier Dental</span>
             </div>
             <DialogTitle className="mt-1.5 text-xl font-semibold tracking-tight text-foreground">
               {isEditing ? "Edit patient note" : "Add patient note"}
@@ -265,12 +259,12 @@ export function NoteComposerPanel({
                     Patient
                   </Label>
                   {patientError ? (
-                    <span className="inline-flex items-center gap-1 rounded-full border border-destructive/30 bg-destructive/10 px-2 py-0.5 font-mono text-[10px] font-semibold text-destructive animate-in fade-in-0 duration-150">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive animate-in fade-in-0 duration-150">
                       <AlertCircle aria-hidden className="size-3 shrink-0" />
                       Required
                     </span>
                   ) : (
-                    <span className="font-mono text-[11px] text-muted-foreground">
+                    <span className="text-xs text-muted-foreground">
                       Required association
                     </span>
                   )}
@@ -326,7 +320,7 @@ export function NoteComposerPanel({
                   >
                     Treatment
                   </Label>
-                  <span className="font-mono text-[11px] text-muted-foreground">
+                  <span className="text-xs text-muted-foreground">
                     Optional context
                   </span>
                 </div>
@@ -356,12 +350,12 @@ export function NoteComposerPanel({
                     Note
                   </Label>
                   {bodyError ? (
-                    <span className="inline-flex items-center gap-1 rounded-full border border-destructive/30 bg-destructive/10 px-2 py-0.5 font-mono text-[10px] font-semibold text-destructive animate-in fade-in-0 duration-150">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive animate-in fade-in-0 duration-150">
                       <AlertCircle aria-hidden className="size-3 shrink-0" />
                       Required
                     </span>
                   ) : (
-                    <span className="font-mono text-[11px] text-muted-foreground">
+                    <span className="text-xs text-muted-foreground">
                       Clinical observation
                     </span>
                   )}
@@ -422,14 +416,13 @@ export function NoteComposerPanel({
               <div className="flex size-11 items-center justify-center rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 ring-8 ring-amber-500/5">
                 <AlertTriangle aria-hidden className="size-5" />
               </div>
-              <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                Note composer · Unsaved
+              <span className="text-xs font-medium text-muted-foreground">
+                Unsaved Changes
               </span>
             </div>
             <AlertDialogTitle>Discard changes?</AlertDialogTitle>
             <AlertDialogDescription>
-              Your unsaved note changes will be lost and not saved to the
-              patient record.
+              Your unsaved note changes will be discarded.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

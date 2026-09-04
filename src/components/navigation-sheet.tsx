@@ -32,7 +32,7 @@ export function NavigationSheet({
           <DialogTitle className="flex items-center gap-3">
             <DmsLogo className="size-9" />
             <span>
-              <span className="block text-sm font-bold tracking-[-0.04em]">
+              <span className="block text-sm font-semibold tracking-tight">
                 DMS
               </span>
               <span className="block pt-0.5 text-xs font-normal text-muted-foreground">

@@ -38,7 +38,7 @@ function AppointmentStatusBadge({ status }: { status: AppointmentStatus }) {
 
   return (
     <Badge
-      className={`gap-1.5 font-mono text-[11px] font-semibold tracking-wide ${className}`}
+      className={`gap-1.5 text-xs font-medium ${className}`}
       variant="outline"
     >
       <Icon aria-hidden className="size-3" />

@@ -39,9 +39,14 @@
   --info-foreground: #214f91;
 
   /* Typography */
-  --font-sans: var(--font-manrope), "Avenir Next", "Segoe UI", sans-serif;
-  --font-display: var(--font-sans);
-  --font-mono: var(--font-geist-mono), "SFMono-Regular", Consolas, monospace;
+  --font-sans:
+    var(--font-inter), -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    "Segoe UI", Roboto, sans-serif;
+  --font-display:
+    var(--font-plus-jakarta-sans), -apple-system, BlinkMacSystemFont,
+    "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+  --font-mono:
+    var(--font-geist-mono), "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
 
   /* Geometry */
   --radius-sm: 0.5rem;
@@ -244,8 +249,25 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-sans);
     font-size: 0.9375rem;
     line-height: 1.5;
+    letter-spacing: -0.011em;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    letter-spacing: -0.022em;
+  }
+
+  table,
+  .tabular-nums,
+  [data-slot="time"] {
     font-feature-settings: "tnum" 1;
     font-variant-numeric: tabular-nums;
   }

@@ -170,16 +170,10 @@ export function NotesIndex({ notes, patients, treatments }: NotesIndexProps) {
     <div>
       <header className="flex flex-col gap-6 border-b border-border/80 pb-8 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <div className="flex items-center gap-2.5">
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
-              Clinical notes
-            </span>
-            <span className="font-mono text-xs text-muted-foreground/50">
-              /
-            </span>
-            <span className="font-mono text-xs text-muted-foreground">
-              Atelier Dental
-            </span>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <span className="font-medium text-primary">Clinical Notes</span>
+            <span className="text-muted-foreground/40">·</span>
+            <span>Atelier Dental</span>
           </div>
           <h1 className="mt-3 text-3xl font-semibold tracking-[-0.035em] sm:text-4xl text-foreground">
             Notes
@@ -191,19 +185,19 @@ export function NotesIndex({ notes, patients, treatments }: NotesIndexProps) {
         </div>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="flex flex-wrap items-center gap-2">
-            <div className="rounded-full border border-border/70 bg-secondary/60 px-3 py-1 font-mono text-xs text-muted-foreground">
+            <div className="rounded-full border border-border/70 bg-secondary/60 px-3 py-1 text-xs font-medium text-muted-foreground">
               <span className="font-semibold text-foreground">
                 {displayNotes.length}
               </span>{" "}
               annotations
             </div>
-            <div className="rounded-full border border-border/70 bg-secondary/60 px-3 py-1 font-mono text-xs text-muted-foreground">
+            <div className="rounded-full border border-border/70 bg-secondary/60 px-3 py-1 text-xs font-medium text-muted-foreground">
               <span className="font-semibold text-foreground">
                 {uniquePatientsCount}
               </span>{" "}
               patients
             </div>
-            <div className="hidden sm:block rounded-full border border-border/70 bg-secondary/60 px-3 py-1 font-mono text-xs text-muted-foreground">
+            <div className="hidden sm:block rounded-full border border-border/70 bg-secondary/60 px-3 py-1 text-xs font-medium text-muted-foreground">
               <span className="font-semibold text-foreground">
                 {uniqueTreatmentsCount}
               </span>{" "}
@@ -234,7 +228,7 @@ export function NotesIndex({ notes, patients, treatments }: NotesIndexProps) {
             Find a note
           </label>
           <span
-            className="font-mono text-xs text-muted-foreground"
+            className="text-xs text-muted-foreground"
             id="notes-result-count"
           >
             {resultLabel(filteredNotes.length)}
@@ -284,7 +278,7 @@ export function NotesIndex({ notes, patients, treatments }: NotesIndexProps) {
               <div className="flex items-center gap-3">
                 <div className="h-px flex-1 bg-border/80" />
                 <h2
-                  className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground"
+                  className="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
                   id={group.id}
                 >
                   {group.label}
@@ -304,7 +298,7 @@ export function NotesIndex({ notes, patients, treatments }: NotesIndexProps) {
                       <div className="flex min-w-0 flex-1 items-start gap-3.5">
                         <div
                           aria-hidden
-                          className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 font-mono text-xs font-bold text-primary"
+                          className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary"
                         >
                           {patientInitials(note.patientName)}
                         </div>
@@ -320,7 +314,7 @@ export function NotesIndex({ notes, patients, treatments }: NotesIndexProps) {
 
                             {note.treatmentName && note.treatmentId ? (
                               <Link
-                                className="inline-flex items-center gap-1 rounded-full border border-border/70 bg-secondary/60 px-2.5 py-0.5 font-mono text-[11px] font-semibold text-foreground transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary"
+                                className="inline-flex items-center gap-1 rounded-full border border-border/70 bg-secondary/60 px-2.5 py-0.5 text-xs font-medium text-foreground transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary"
                                 href={`/demo/treatments?treatment=${note.treatmentId}`}
                               >
                                 <Sparkles
@@ -332,7 +326,7 @@ export function NotesIndex({ notes, patients, treatments }: NotesIndexProps) {
                             ) : null}
 
                             <time
-                              className="inline-flex items-center gap-1 font-mono text-xs text-muted-foreground"
+                              className="inline-flex items-center gap-1 text-xs text-muted-foreground"
                               dateTime={note.createdAt}
                             >
                               <Clock

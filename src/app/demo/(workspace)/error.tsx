@@ -15,8 +15,8 @@ export default function WorkspaceError({ retry }: WorkspaceErrorProps) {
         aria-labelledby="workspace-error-title"
         className="max-w-lg border-y border-border py-10"
       >
-        <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-primary">
-          DMS workspace
+        <p className="text-xs font-semibold uppercase tracking-wider text-primary">
+          Atelier Dental
         </p>
         <h1
           className="mt-3 text-3xl font-semibold tracking-[-0.03em]"

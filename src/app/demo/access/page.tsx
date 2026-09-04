@@ -40,7 +40,7 @@ export default async function DemoAccessPage() {
             >
               <DmsLogo className="size-8 sm:size-9" />
               <div>
-                <span className="block text-sm font-bold tracking-tight text-foreground leading-none">
+                <span className="block text-sm font-semibold tracking-tight text-foreground leading-none">
                   DMS
                 </span>
                 <span className="mt-1 block text-[10px] font-medium uppercase tracking-wider text-muted-foreground leading-none">
@@ -72,14 +72,14 @@ export default async function DemoAccessPage() {
           {/* Left Column: Credentials & Provisioning */}
           <div className="max-w-xl lg:col-span-5">
             <div className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-surface px-3.5 py-1.5 shadow-2xs ring-1 ring-black/[0.03]">
-              <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-accent">
+              <span className="text-xs font-semibold uppercase tracking-wider text-accent">
                 Atelier Dental
               </span>
               <span aria-hidden className="text-border">
                 /
               </span>
-              <span className="font-mono text-xs text-muted-foreground">
-                Provisioned Access
+              <span className="text-xs text-muted-foreground">
+                Practice Workspace
               </span>
             </div>
 
@@ -92,31 +92,32 @@ export default async function DemoAccessPage() {
             </h1>
 
             <p className="mt-5 text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
-              No account, password, or personal information is required. Open a
-              provisioned session and explore a complete fictional practice day.
+              No account, password, or personal information is required. Step
+              inside a complete fictional practice day and explore the workspace
+              freely.
             </p>
 
             <div className="mt-8">
               <DemoAccessButton />
-              <div className="mt-3.5 flex items-center gap-2 font-mono text-xs text-muted-foreground">
+              <div className="mt-3.5 flex items-center gap-2 text-xs text-muted-foreground">
                 <ShieldCheck
                   aria-hidden
                   className="size-3.5 text-accent shrink-0"
                 />
                 <span>
-                  Zero credentials · Ephemeral clinical session · Auto-resets
+                  Instant access · Resettable practice preview · No sign-up
                 </span>
               </div>
             </div>
 
-            {/* Clinical Specification Matrix */}
-            <div className="mt-10 rounded-[var(--radius-lg)] border border-border/80 bg-surface/70 p-5 shadow-xs">
-              <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-foreground">
-                Provisioned Session Environment
+            {/* Practice Overview Card */}
+            <div className="mt-10 rounded-[var(--radius-xl)] border border-border/80 bg-surface/70 p-6 shadow-xs backdrop-blur-xs">
+              <p className="text-xs font-semibold uppercase tracking-wider text-foreground">
+                Practice Session Overview
               </p>
               <dl className="mt-4 grid grid-cols-1 gap-3.5 text-xs sm:grid-cols-2">
                 <div className="border-t border-border/60 pt-3">
-                  <dt className="font-mono text-[10px] uppercase text-muted-foreground">
+                  <dt className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
                     Practitioner Role
                   </dt>
                   <dd className="mt-1 font-medium text-foreground">
@@ -124,15 +125,15 @@ export default async function DemoAccessPage() {
                   </dd>
                 </div>
                 <div className="border-t border-border/60 pt-3">
-                  <dt className="font-mono text-[10px] uppercase text-muted-foreground">
-                    Practice Baseline
+                  <dt className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                    Practice Date
                   </dt>
-                  <dd className="mt-1 font-mono text-foreground">
+                  <dd className="mt-1 font-medium text-foreground">
                     Tuesday, 12 May 2026
                   </dd>
                 </div>
                 <div className="border-t border-border/60 pt-3">
-                  <dt className="font-mono text-[10px] uppercase text-muted-foreground">
+                  <dt className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
                     Workspace Routes
                   </dt>
                   <dd className="mt-1 text-muted-foreground">
@@ -140,12 +141,11 @@ export default async function DemoAccessPage() {
                   </dd>
                 </div>
                 <div className="border-t border-border/60 pt-3">
-                  <dt className="font-mono text-[10px] uppercase text-muted-foreground">
-                    Demo Boundary
+                  <dt className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                    Workspace Reset
                   </dt>
                   <dd className="mt-1 text-muted-foreground">
-                    Fictional Atelier Dental data resets to its curated,
-                    deterministic baseline.
+                    Sample data can be restored back to baseline with one click.
                   </dd>
                 </div>
               </dl>
@@ -160,12 +160,15 @@ export default async function DemoAccessPage() {
                 <span className="size-2 rounded-full border border-border bg-surface" />
                 <span className="size-2 rounded-full border border-border bg-surface" />
                 <span className="size-2 rounded-full border border-border bg-surface" />
-                <span className="ml-1.5 font-mono text-[11px] text-muted-foreground">
-                  atelier-dental.internal / today
+                <span className="ml-1.5 text-xs font-medium text-foreground">
+                  Atelier Dental
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  · Today Agenda
                 </span>
               </div>
-              <span className="hidden font-mono text-[10px] uppercase tracking-wider text-muted-foreground sm:inline-block">
-                Daily Operations Agenda
+              <span className="hidden text-xs text-muted-foreground sm:inline-block">
+                Daily Operations View
               </span>
             </div>
             <div className="p-2 sm:p-3">
@@ -181,8 +184,8 @@ export default async function DemoAccessPage() {
               <span className="font-medium text-foreground">
                 Today · Tuesday, 12 May 2026
               </span>
-              <span className="font-mono text-[11px] text-muted-foreground">
-                Fictional, resettable baseline
+              <span className="text-xs text-muted-foreground">
+                Atelier Dental Practice Workspace
               </span>
             </figcaption>
           </figure>

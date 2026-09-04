@@ -47,16 +47,16 @@ export function ExploreDmsGuide() {
   return (
     <section
       aria-labelledby="explore-title"
-      className="mt-12 rounded-[var(--radius-lg)] border border-border/80 bg-gradient-to-b from-card/70 via-card/40 to-card/10 p-6 sm:p-7 shadow-xs"
+      className="mt-12 rounded-[var(--radius-xl)] border border-border/80 bg-card/60 p-6 sm:p-7 shadow-xs backdrop-blur-xs"
     >
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="inline-flex items-center gap-2">
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
-              Suggested walkthrough
+            <span className="text-xs font-semibold uppercase tracking-wider text-primary">
+              Practice walkthrough
             </span>
-            <span className="rounded-[var(--radius-pill)] bg-primary/10 px-2 py-0.5 font-mono text-[10px] font-medium text-primary">
-              4 steps
+            <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-medium text-primary">
+              4 quick steps
             </span>
           </div>
           <h2
@@ -66,7 +66,7 @@ export function ExploreDmsGuide() {
             Explore DMS
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            A short, curated path through the clinical workspace operations.
+            A short, curated path through daily practice operations.
           </p>
         </div>
         <Button
@@ -79,24 +79,24 @@ export function ExploreDmsGuide() {
           <X aria-hidden className="size-4" />
         </Button>
       </div>
-      <ol className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <ol className="mt-6 grid gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
         {guideItems.map((item, index) => (
           <li key={item.label}>
             <Link
-              className="group flex h-full flex-col justify-between rounded-[var(--radius-md)] border border-border/60 bg-background/50 p-4 transition-all duration-150 hover:border-foreground/25 hover:bg-card hover:shadow-xs"
+              className="group flex h-full flex-col justify-between rounded-[var(--radius-lg)] border border-border/70 bg-background/60 p-5 transition-all duration-200 hover:border-foreground/25 hover:bg-card hover:shadow-xs"
               href={item.href}
             >
               <div>
                 <div className="flex items-center justify-between gap-2">
-                  <span className="font-mono text-xs font-semibold text-primary/80">
-                    0{index + 1}
+                  <span className="flex size-6 items-center justify-center rounded-full bg-secondary text-xs font-semibold text-foreground/80 transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                    {index + 1}
                   </span>
                   <ArrowUpRight
                     aria-hidden
-                    className="size-3.5 text-muted-foreground transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-primary"
+                    className="size-4 text-muted-foreground transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-primary"
                   />
                 </div>
-                <p className="mt-2.5 text-sm font-semibold tracking-tight text-foreground transition-colors group-hover:text-primary">
+                <p className="mt-3.5 text-sm font-semibold tracking-tight text-foreground transition-colors group-hover:text-primary">
                   {item.label}
                 </p>
                 <p className="mt-1.5 text-xs leading-5 text-muted-foreground">

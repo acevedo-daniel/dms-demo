@@ -246,16 +246,10 @@ export function PatientFormPanel({
           }}
         >
           <DialogHeader className="border-b border-border/80 bg-secondary/15 px-6 py-5 text-left">
-            <div className="flex items-center gap-2">
-              <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
-                Patient intake
-              </span>
-              <span className="font-mono text-xs text-muted-foreground/40">
-                /
-              </span>
-              <span className="font-mono text-xs text-muted-foreground">
-                Atelier Dental
-              </span>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <span className="font-medium text-primary">Patient Intake</span>
+              <span className="text-muted-foreground/40">·</span>
+              <span>Atelier Dental</span>
             </div>
             <DialogTitle className="mt-1.5 text-xl font-semibold tracking-tight text-foreground">
               {isEditing ? "Edit patient" : "Add patient"}
@@ -276,7 +270,7 @@ export function PatientFormPanel({
             <div className="flex-1 space-y-6 overflow-y-auto px-6 py-6">
               {/* Clinical Identity Section */}
               <div className="space-y-4">
-                <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                   Clinical identity
                 </p>
                 <div className="space-y-2">
@@ -288,12 +282,12 @@ export function PatientFormPanel({
                       Identifier
                     </Label>
                     {identifierError ? (
-                      <span className="inline-flex items-center gap-1 rounded-full border border-destructive/30 bg-destructive/10 px-2 py-0.5 font-mono text-[10px] font-semibold text-destructive animate-in fade-in-0 duration-150">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive animate-in fade-in-0 duration-150">
                         <AlertCircle aria-hidden className="size-3 shrink-0" />
                         Required
                       </span>
                     ) : (
-                      <span className="font-mono text-[11px] text-muted-foreground">
+                      <span className="text-xs text-muted-foreground">
                         Unique chart ID
                       </span>
                     )}
@@ -336,7 +330,7 @@ export function PatientFormPanel({
                         First name
                       </Label>
                       {firstNameError ? (
-                        <span className="inline-flex items-center gap-1 rounded-full border border-destructive/30 bg-destructive/10 px-2 py-0.5 font-mono text-[10px] font-semibold text-destructive animate-in fade-in-0 duration-150">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive animate-in fade-in-0 duration-150">
                           <AlertCircle
                             aria-hidden
                             className="size-3 shrink-0"
@@ -383,7 +377,7 @@ export function PatientFormPanel({
                         Last name
                       </Label>
                       {lastNameError ? (
-                        <span className="inline-flex items-center gap-1 rounded-full border border-destructive/30 bg-destructive/10 px-2 py-0.5 font-mono text-[10px] font-semibold text-destructive animate-in fade-in-0 duration-150">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive animate-in fade-in-0 duration-150">
                           <AlertCircle
                             aria-hidden
                             className="size-3 shrink-0"
@@ -424,7 +418,7 @@ export function PatientFormPanel({
 
               {/* Contact Information Section */}
               <div className="space-y-4 border-t border-border/80 pt-6">
-                <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                   Contact details
                 </p>
                 <div className="space-y-2">
@@ -436,12 +430,12 @@ export function PatientFormPanel({
                       Email
                     </Label>
                     {emailError ? (
-                      <span className="inline-flex items-center gap-1 rounded-full border border-destructive/30 bg-destructive/10 px-2 py-0.5 font-mono text-[10px] font-semibold text-destructive animate-in fade-in-0 duration-150">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive animate-in fade-in-0 duration-150">
                         <AlertCircle aria-hidden className="size-3 shrink-0" />
                         Invalid format
                       </span>
                     ) : (
-                      <span className="font-mono text-[11px] text-muted-foreground">
+                      <span className="text-xs text-muted-foreground">
                         Optional
                       </span>
                     )}
@@ -534,14 +528,13 @@ export function PatientFormPanel({
               <div className="flex size-11 items-center justify-center rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 ring-8 ring-amber-500/5">
                 <AlertTriangle aria-hidden className="size-5" />
               </div>
-              <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                Patient intake · Unsaved
+              <span className="text-xs font-medium text-muted-foreground">
+                Unsaved Changes
               </span>
             </div>
             <AlertDialogTitle>Discard changes?</AlertDialogTitle>
             <AlertDialogDescription>
-              Any changes made to this patient record will be lost and not saved
-              to the practice database.
+              Any changes made to this patient record will be discarded.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

@@ -59,16 +59,10 @@ export default async function PatientPage({ params }: PatientPageProps) {
           aria-labelledby="patient-record-error-title"
           className="max-w-lg rounded-[var(--radius-lg)] border border-border/80 bg-card/40 p-8 shadow-xs"
         >
-          <div className="flex items-center gap-2">
-            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
-              Patient record
-            </span>
-            <span className="font-mono text-xs text-muted-foreground/40">
-              /
-            </span>
-            <span className="font-mono text-xs text-muted-foreground">
-              Atelier Dental
-            </span>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <span className="font-medium text-primary">Patient Record</span>
+            <span className="text-muted-foreground/40">·</span>
+            <span>Atelier Dental</span>
           </div>
           <h1
             className="mt-3 text-2xl font-semibold tracking-tight text-foreground"
@@ -127,22 +121,16 @@ export default async function PatientPage({ params }: PatientPageProps) {
       <header className="mt-4 border-b border-border/80 pb-8">
         <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
           <div>
-            <div className="flex items-center gap-2.5">
-              <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
-                Patient record
-              </span>
-              <span className="font-mono text-xs text-muted-foreground/50">
-                /
-              </span>
-              <span className="font-mono text-xs text-muted-foreground">
-                Atelier Dental
-              </span>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <span className="font-medium text-primary">Patient Record</span>
+              <span className="text-muted-foreground/40">·</span>
+              <span>Atelier Dental</span>
             </div>
 
             <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center">
               <div
                 aria-hidden
-                className="flex size-14 shrink-0 items-center justify-center rounded-full bg-primary/10 font-mono text-lg font-bold text-primary"
+                className="flex size-14 shrink-0 items-center justify-center rounded-full bg-primary/10 text-base font-semibold text-primary"
               >
                 {patientInitials(patient)}
               </div>
@@ -156,7 +144,7 @@ export default async function PatientPage({ params }: PatientPageProps) {
                   </span>
                   {patient.archivedAt ? (
                     <Badge
-                      className="border-destructive/30 bg-destructive/10 font-mono text-xs text-destructive"
+                      className="border-destructive/30 bg-destructive/10 text-xs text-destructive"
                       variant="outline"
                     >
                       Archived
@@ -164,7 +152,7 @@ export default async function PatientPage({ params }: PatientPageProps) {
                   ) : null}
                 </div>
                 {patient.email || patient.phone ? (
-                  <p className="mt-1.5 font-mono text-xs text-muted-foreground">
+                  <p className="mt-1.5 text-xs text-muted-foreground">
                     {[patient.email, patient.phone].filter(Boolean).join(" · ")}
                   </p>
                 ) : null}
@@ -209,7 +197,7 @@ export default async function PatientPage({ params }: PatientPageProps) {
         </div>
 
         {patient.archivedAt ? (
-          <p className="mt-5 rounded-[var(--radius-md)] border border-destructive/20 bg-destructive/5 p-3.5 font-mono text-xs leading-relaxed text-muted-foreground">
+          <p className="mt-5 rounded-[var(--radius-md)] border border-destructive/20 bg-destructive/5 p-3.5 text-xs font-medium leading-relaxed text-muted-foreground">
             Archived {formatDemoDate(new Date(patient.archivedAt))}. This record
             is read-only and remains available for reference.
           </p>
@@ -218,7 +206,7 @@ export default async function PatientPage({ params }: PatientPageProps) {
         {/* Patient Summary Badges */}
         <div aria-label="Patient summary" className="mt-6 flex flex-wrap gap-2">
           <Badge
-            className="font-mono text-xs font-semibold tabular-nums"
+            className="text-xs font-semibold tabular-nums"
             variant="secondary"
           >
             {patient.completedVisitCount}{" "}
@@ -246,7 +234,7 @@ export default async function PatientPage({ params }: PatientPageProps) {
           <div className="grid gap-6 md:grid-cols-2">
             <div className="rounded-[var(--radius-lg)] border border-border/80 bg-card/40 p-6 shadow-xs transition-all hover:border-foreground/20 hover:bg-card">
               <div className="flex items-center justify-between">
-                <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
+                <p className="text-xs font-semibold uppercase tracking-wider text-primary">
                   Upcoming appointment
                 </p>
                 <AppointmentStatusBadge
@@ -254,7 +242,7 @@ export default async function PatientPage({ params }: PatientPageProps) {
                 />
               </div>
               <h2
-                className="mt-3 font-mono text-lg font-semibold tracking-tight text-foreground"
+                className="mt-3 text-lg font-semibold tracking-tight text-foreground"
                 id="next-appointment-title"
               >
                 {formatDemoDate(new Date(patient.nextAppointment.startsAt))} ·{" "}
@@ -284,10 +272,10 @@ export default async function PatientPage({ params }: PatientPageProps) {
             {patient.relevantTreatment ? (
               <div className="rounded-[var(--radius-lg)] border border-border/80 bg-card/40 p-6 shadow-xs transition-all hover:border-foreground/20 hover:bg-card">
                 <div className="flex items-center justify-between">
-                  <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-primary">
                     Related treatment
                   </p>
-                  <span className="rounded-full border border-border/70 bg-secondary/60 px-2.5 py-0.5 font-mono text-[11px] font-semibold text-muted-foreground">
+                  <span className="rounded-full border border-border/70 bg-secondary/60 px-2.5 py-0.5 text-xs font-medium tabular-nums text-muted-foreground">
                     {patient.relevantTreatment.defaultDurationMinutes} min
                   </span>
                 </div>
@@ -297,7 +285,7 @@ export default async function PatientPage({ params }: PatientPageProps) {
                 >
                   {patient.relevantTreatment.name}
                 </h2>
-                <p className="mt-1 font-mono text-xs text-muted-foreground">
+                <p className="mt-1 text-xs text-muted-foreground">
                   {patient.relevantTreatment.category}
                 </p>
                 <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
@@ -329,7 +317,7 @@ export default async function PatientPage({ params }: PatientPageProps) {
         >
           <div className="flex flex-col gap-4 rounded-[var(--radius-lg)] border border-border/80 bg-card/40 p-6 shadow-xs sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-primary">
                 Upcoming care
               </p>
               <h2

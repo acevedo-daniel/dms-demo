@@ -21,16 +21,10 @@ export default async function NotesPage() {
           aria-labelledby="notes-error-title"
           className="max-w-lg rounded-[var(--radius-lg)] border border-border/80 bg-card/40 p-8 shadow-xs"
         >
-          <div className="flex items-center gap-2">
-            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
-              Clinical notes
-            </span>
-            <span className="font-mono text-xs text-muted-foreground/40">
-              /
-            </span>
-            <span className="font-mono text-xs text-muted-foreground">
-              Atelier Dental
-            </span>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <span className="font-medium text-primary">Clinical Notes</span>
+            <span className="text-muted-foreground/40">·</span>
+            <span>Atelier Dental</span>
           </div>
           <h1
             className="mt-3 text-2xl font-semibold tracking-tight text-foreground"

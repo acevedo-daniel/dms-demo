@@ -135,7 +135,7 @@ export function WorkspaceShell({ children, userName }: WorkspaceShellProps) {
             >
               <DmsLogo className="size-8 lg:size-9" />
               <span>
-                <span className="block text-sm font-bold tracking-[-0.04em]">
+                <span className="block text-sm font-semibold tracking-tight">
                   DMS
                 </span>
                 <span className="hidden pt-0.5 text-xs text-muted-foreground lg:block">
@@ -180,7 +180,7 @@ export function WorkspaceShell({ children, userName }: WorkspaceShellProps) {
           />
           <div className="mt-auto space-y-3 border-t border-border pt-4">
             <div className="flex items-center justify-between px-1">
-              <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Preferences
               </span>
               <StudioControls />

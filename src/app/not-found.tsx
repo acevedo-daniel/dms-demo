@@ -10,8 +10,8 @@ export default function NotFound() {
         className="mx-auto w-full max-w-xl border-y border-border py-10 sm:border sm:bg-card sm:p-10"
       >
         <SearchX aria-hidden className="size-5 text-primary" />
-        <p className="mt-6 font-mono text-xs font-medium uppercase tracking-[0.16em] text-primary">
-          DMS
+        <p className="mt-6 text-xs font-semibold uppercase tracking-wider text-primary">
+          Atelier Dental
         </p>
         <h1
           className="mt-3 text-3xl font-semibold tracking-[-0.03em]"

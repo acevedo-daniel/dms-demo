@@ -236,7 +236,7 @@ export function StudioDatePicker({
         >
           {/* Calendar Header */}
           <div className="flex items-center justify-between pb-3 border-b border-border/60">
-            <span className="font-mono text-xs font-bold text-foreground">
+            <span className="text-xs font-semibold text-foreground">
               {MONTH_NAMES[viewMonth]} {viewYear}
             </span>
             <div className="flex items-center gap-1">
@@ -264,7 +264,7 @@ export function StudioDatePicker({
             {WEEKDAY_SHORT.map((day, idx) => (
               <span
                 className={cn(
-                  "py-1 font-mono text-[10px] font-semibold",
+                  "py-1 text-[11px] font-medium",
                   idx >= 5
                     ? "text-muted-foreground/40"
                     : "text-muted-foreground",
@@ -298,9 +298,9 @@ export function StudioDatePicker({
               return (
                 <button
                   className={cn(
-                    "dms-pressable flex size-8 items-center justify-center rounded-full font-mono text-xs transition-all",
+                    "dms-pressable flex size-8 items-center justify-center rounded-full text-xs font-medium transition-all",
                     item.isSelected
-                      ? "border border-primary/20 bg-primary font-bold text-primary-foreground shadow-xs"
+                      ? "border border-primary/20 bg-primary font-semibold text-primary-foreground shadow-xs"
                       : "text-foreground hover:bg-secondary hover:text-foreground",
                   )}
                   key={item.dateString}
@@ -315,26 +315,26 @@ export function StudioDatePicker({
 
           {/* Practice Quick Date Shortcuts */}
           <div className="mt-3 flex items-center justify-between border-t border-border/60 pt-2.5">
-            <span className="font-mono text-[10px] uppercase text-muted-foreground">
-              Shortcuts:
+            <span className="text-xs font-medium text-muted-foreground">
+              Quick pick:
             </span>
             <div className="flex gap-1">
               <button
-                className="rounded px-2 py-0.5 font-mono text-[10px] font-medium text-foreground bg-secondary/60 hover:bg-secondary transition-colors"
+                className="rounded-full px-2.5 py-0.5 text-xs font-medium text-foreground bg-secondary/60 hover:bg-secondary transition-colors"
                 onClick={() => selectDate("2026-05-12")}
                 type="button"
               >
                 Today
               </button>
               <button
-                className="rounded px-2 py-0.5 font-mono text-[10px] font-medium text-foreground bg-secondary/60 hover:bg-secondary transition-colors"
+                className="rounded-full px-2.5 py-0.5 text-xs font-medium text-foreground bg-secondary/60 hover:bg-secondary transition-colors"
                 onClick={() => selectDate("2026-05-13")}
                 type="button"
               >
                 Tomorrow
               </button>
               <button
-                className="rounded px-2 py-0.5 font-mono text-[10px] font-medium text-foreground bg-secondary/60 hover:bg-secondary transition-colors"
+                className="rounded-full px-2.5 py-0.5 text-xs font-medium text-foreground bg-secondary/60 hover:bg-secondary transition-colors"
                 onClick={() => selectDate("2026-05-18")}
                 type="button"
               >
@@ -445,26 +445,26 @@ export function StudioTimePicker({
           role="dialog"
         >
           <div className="flex items-center justify-between pb-2 border-b border-border/60">
-            <span className="font-mono text-xs font-bold text-foreground">
+            <span className="text-xs font-semibold text-foreground">
               Clinical Slots (30 min)
             </span>
-            <span className="font-mono text-[10px] text-muted-foreground">
+            <span className="font-mono text-xs text-muted-foreground">
               09:00 — 17:30
             </span>
           </div>
 
           {/* Morning Slots */}
           <div className="mt-2.5">
-            <p className="font-mono text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5">
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1.5">
               Morning Shift
             </p>
             <div className="grid grid-cols-4 gap-1.5">
               {MORNING_SLOTS.map((slot) => (
                 <button
                   className={cn(
-                    "dms-pressable rounded-[var(--radius-sm)] border py-1.5 font-mono text-xs transition-all",
+                    "dms-pressable rounded-[var(--radius-sm)] border py-1.5 font-mono text-xs tabular-nums transition-all",
                     value === slot
-                      ? "border-primary bg-primary font-bold text-primary-foreground shadow-xs"
+                      ? "border-primary bg-primary font-semibold text-primary-foreground shadow-xs"
                       : "border-border/70 bg-secondary/40 text-foreground hover:border-primary/40 hover:bg-primary/10",
                   )}
                   key={slot}
@@ -479,16 +479,16 @@ export function StudioTimePicker({
 
           {/* Afternoon Slots */}
           <div className="mt-3">
-            <p className="font-mono text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1.5">
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1.5">
               Afternoon Shift
             </p>
             <div className="grid grid-cols-4 gap-1.5">
               {AFTERNOON_SLOTS.map((slot) => (
                 <button
                   className={cn(
-                    "dms-pressable rounded-[var(--radius-sm)] border py-1.5 font-mono text-xs transition-all",
+                    "dms-pressable rounded-[var(--radius-sm)] border py-1.5 font-mono text-xs tabular-nums transition-all",
                     value === slot
-                      ? "border-primary bg-primary font-bold text-primary-foreground shadow-xs"
+                      ? "border-primary bg-primary font-semibold text-primary-foreground shadow-xs"
                       : "border-border/70 bg-secondary/40 text-foreground hover:border-primary/40 hover:bg-primary/10",
                   )}
                   key={slot}

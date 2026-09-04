@@ -56,7 +56,7 @@ export default async function DashboardPage() {
           aria-labelledby="dashboard-error-title"
           className="max-w-lg border-y border-border py-10"
         >
-          <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-primary">
+          <p className="text-xs font-semibold uppercase tracking-wider text-primary">
             Today
           </p>
           <h1
@@ -80,16 +80,12 @@ export default async function DashboardPage() {
     <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <header className="flex flex-col gap-6 border-b border-border/80 pb-8 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <div className="flex items-center gap-2.5">
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
-              Daily operating view
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <span className="font-medium text-primary">
+              Daily Operating View
             </span>
-            <span className="font-mono text-xs text-muted-foreground/50">
-              /
-            </span>
-            <span className="font-mono text-xs text-muted-foreground">
-              Atelier Dental
-            </span>
+            <span className="text-muted-foreground/40">·</span>
+            <span>Atelier Dental</span>
           </div>
           <h1 className="mt-3 text-3xl font-semibold tracking-[-0.035em] sm:text-4xl text-foreground">
             Today
@@ -101,8 +97,11 @@ export default async function DashboardPage() {
             <span aria-hidden className="text-muted-foreground/40">
               ·
             </span>
-            <span className="font-mono text-xs text-muted-foreground">
-              Practice time {formatDemoTime(getDemoClock())}
+            <span className="text-xs text-muted-foreground">
+              Practice time{" "}
+              <span className="font-mono font-medium text-foreground/80">
+                {formatDemoTime(getDemoClock())}
+              </span>
             </span>
           </p>
         </div>
@@ -118,23 +117,23 @@ export default async function DashboardPage() {
 
       <section aria-labelledby="up-next-title" className="pt-8">
         {dashboard.upNext ? (
-          <div className="relative overflow-hidden rounded-[var(--radius-lg)] border border-border/80 border-l-4 border-l-primary bg-gradient-to-r from-card via-card to-card/60 p-6 sm:p-7 shadow-xs sm:flex sm:items-center sm:justify-between sm:gap-6">
+          <div className="relative overflow-hidden rounded-[var(--radius-xl)] border border-border/70 bg-gradient-to-br from-card via-card to-secondary/30 p-6 sm:p-7 shadow-xs sm:flex sm:items-center sm:justify-between sm:gap-6">
             <div className="min-w-0">
               <div className="flex items-center gap-2">
-                <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
+                <span className="text-xs font-semibold uppercase tracking-wider text-primary">
                   Up next
                 </span>
-                <span className="inline-flex size-1.5 rounded-full bg-primary" />
+                <span className="inline-flex size-2 rounded-full bg-emerald-500 ring-4 ring-emerald-500/20" />
               </div>
               <div className="mt-3 flex flex-wrap items-baseline gap-x-3.5 gap-y-2">
                 <time
-                  className="font-mono text-2xl font-bold tabular-nums tracking-tight text-foreground sm:text-3xl"
+                  className="font-mono text-2xl font-semibold tabular-nums tracking-tight text-foreground sm:text-3xl"
                   dateTime={dashboard.upNext.startsAt.toISOString()}
                 >
                   {formatDemoTime(dashboard.upNext.startsAt)}
                 </time>
                 <div className="flex items-center gap-2.5">
-                  <span className="flex size-7 items-center justify-center rounded-full bg-primary/10 font-mono text-xs font-bold text-primary">
+                  <span className="flex size-7 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
                     {getPatientInitials(dashboard.upNext.patientName)}
                   </span>
                   <h2
@@ -212,7 +211,7 @@ export default async function DashboardPage() {
         <section aria-labelledby="today-agenda-title">
           <div className="flex items-end justify-between gap-4 border-b border-border/80 pb-4">
             <div>
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
+              <p className="text-xs font-semibold uppercase tracking-wider text-primary">
                 Operating day
               </p>
               <h2
@@ -223,7 +222,7 @@ export default async function DashboardPage() {
                 Today&apos;s agenda
               </h2>
             </div>
-            <span className="rounded-full border border-border/80 bg-secondary/50 px-2.5 py-0.5 font-mono text-xs text-muted-foreground">
+            <span className="rounded-full border border-border/70 bg-secondary/60 px-3 py-0.5 text-xs font-medium text-muted-foreground">
               {dashboard.today.length} active
             </span>
           </div>
@@ -297,7 +296,7 @@ export default async function DashboardPage() {
           >
             <div className="flex items-center justify-between gap-2 border-b border-border/60 pb-3">
               <div>
-                <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
+                <p className="text-xs font-semibold uppercase tracking-wider text-primary">
                   Follow-up queue
                 </p>
                 <h2
@@ -307,7 +306,7 @@ export default async function DashboardPage() {
                   Needs attention
                 </h2>
               </div>
-              <span className="rounded-full bg-amber-500/10 px-2 py-0.5 font-mono text-xs font-semibold text-amber-600 dark:text-amber-400">
+              <span className="rounded-full bg-amber-500/10 px-2.5 py-0.5 text-xs font-semibold text-amber-600 dark:text-amber-400">
                 {dashboard.needsAttention.length}
               </span>
             </div>
@@ -365,16 +364,10 @@ export default async function DashboardPage() {
       >
         <div className="flex items-end justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2">
-              <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
-                Shared context
-              </span>
-              <span className="font-mono text-xs text-muted-foreground/40">
-                /
-              </span>
-              <span className="font-mono text-xs text-muted-foreground">
-                Clinical handover
-              </span>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <span className="font-medium text-primary">Shared Context</span>
+              <span className="text-muted-foreground/40">·</span>
+              <span>Clinical Handover</span>
             </div>
             <h2
               className="mt-2 text-xl font-semibold tracking-tight text-foreground"
@@ -421,7 +414,7 @@ export default async function DashboardPage() {
                   </p>
                 </div>
                 <time
-                  className="mt-4 block font-mono text-[11px] text-muted-foreground"
+                  className="mt-4 block text-xs text-muted-foreground"
                   dateTime={note.createdAt.toISOString()}
                 >
                   {formatDemoDate(note.createdAt)}

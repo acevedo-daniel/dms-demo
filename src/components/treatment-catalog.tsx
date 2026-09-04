@@ -96,7 +96,7 @@ export function TreatmentCatalog({
       >
         <button
           className={cn(
-            "dms-pressable inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-mono text-xs font-medium transition-all whitespace-nowrap",
+            "dms-pressable inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all whitespace-nowrap",
             selectedCategory === "all"
               ? "border border-primary/20 bg-primary text-primary-foreground font-semibold shadow-xs"
               : "border border-border/70 bg-secondary/50 text-muted-foreground hover:border-foreground/20 hover:bg-secondary hover:text-foreground",
@@ -110,7 +110,7 @@ export function TreatmentCatalog({
         {groups.map((group) => (
           <button
             className={cn(
-              "dms-pressable inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-mono text-xs font-medium transition-all whitespace-nowrap",
+              "dms-pressable inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all whitespace-nowrap",
               selectedCategory === group.category
                 ? "border border-primary/20 bg-primary text-primary-foreground font-semibold shadow-xs"
                 : "border border-border/70 bg-secondary/50 text-muted-foreground hover:border-foreground/20 hover:bg-secondary hover:text-foreground",
@@ -162,10 +162,7 @@ function TreatmentCatalogGroup({
         >
           {group.category}
         </h2>
-        <Badge
-          className="font-mono text-[11px] tabular-nums"
-          variant="secondary"
-        >
+        <Badge className="text-xs font-medium tabular-nums" variant="secondary">
           {group.treatments.length}
         </Badge>
       </div>
@@ -211,7 +208,7 @@ function TreatmentCatalogGroup({
                   </p>
                 </div>
                 <div className="flex shrink-0 flex-wrap items-center gap-2.5 sm:justify-end">
-                  <div className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-secondary/60 px-3 py-1 font-mono text-xs font-semibold tabular-nums text-foreground">
+                  <div className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-secondary/60 px-3 py-1 text-xs font-medium tabular-nums text-foreground">
                     <Clock3 aria-hidden className="size-3.5 text-primary" />
                     <span>{treatment.defaultDurationMinutes} min</span>
                   </div>
@@ -247,7 +244,7 @@ function TreatmentCatalogGroup({
                       time in Schedule.
                     </p>
                     <Link
-                      className="inline-flex items-center font-mono text-xs font-semibold text-primary underline-offset-4 hover:underline"
+                      className="inline-flex items-center text-xs font-semibold text-primary underline-offset-4 hover:underline"
                       href={`/demo/schedule?create=1&treatment=${treatment.id}`}
                     >
                       Open in Schedule &rarr;

@@ -68,7 +68,7 @@ export function PatientRecordActivity({ items }: PatientRecordActivityProps) {
     <section aria-labelledby="activity-title">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
+          <p className="text-xs font-semibold uppercase tracking-wider text-primary">
             Operational history
           </p>
           <h2
@@ -90,7 +90,7 @@ export function PatientRecordActivity({ items }: PatientRecordActivityProps) {
               aria-label={option.label}
               aria-pressed={filter === option.value}
               className={cn(
-                "dms-pressable inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-mono text-xs font-medium transition-all whitespace-nowrap",
+                "dms-pressable inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all whitespace-nowrap",
                 filter === option.value
                   ? "border border-primary/20 bg-primary text-primary-foreground font-semibold shadow-xs"
                   : "border border-border/70 bg-secondary/50 text-muted-foreground hover:border-foreground/20 hover:bg-secondary hover:text-foreground",
@@ -123,7 +123,7 @@ export function PatientRecordActivity({ items }: PatientRecordActivityProps) {
                     <div
                       aria-hidden
                       className={cn(
-                        "flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-bold",
+                        "flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold",
                         item.kind === "appointment"
                           ? "bg-primary/10 text-primary"
                           : "bg-accent-soft text-accent-soft-foreground",
@@ -140,7 +140,7 @@ export function PatientRecordActivity({ items }: PatientRecordActivityProps) {
                         {item.kind === "appointment" ? "Appointment" : "Note"}
                       </span>
                       <time
-                        className="ml-2.5 font-mono text-xs text-muted-foreground"
+                        className="ml-2.5 text-xs text-muted-foreground"
                         dateTime={date.toISOString()}
                       >
                         <Clock
@@ -158,7 +158,7 @@ export function PatientRecordActivity({ items }: PatientRecordActivityProps) {
                     </div>
                   ) : item.treatmentName && item.treatmentId ? (
                     <Link
-                      className="inline-flex items-center gap-1 rounded-full border border-border/70 bg-secondary/60 px-2.5 py-0.5 font-mono text-[11px] font-semibold text-foreground transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary"
+                      className="inline-flex items-center gap-1 rounded-full border border-border/70 bg-secondary/60 px-2.5 py-0.5 text-xs font-medium text-foreground transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary"
                       href={`/demo/treatments?treatment=${item.treatmentId}`}
                     >
                       <Sparkles aria-hidden className="size-3 text-primary" />
@@ -169,11 +169,11 @@ export function PatientRecordActivity({ items }: PatientRecordActivityProps) {
 
                 {item.kind === "appointment" ? (
                   <div className="mt-3 flex items-center gap-2 border-t border-border/60 pt-3">
-                    <span className="font-mono text-xs text-muted-foreground">
+                    <span className="text-xs text-muted-foreground">
                       Treatment:
                     </span>
                     <Link
-                      className="font-mono text-xs font-semibold text-primary underline-offset-4 hover:underline"
+                      className="text-xs font-medium text-primary underline-offset-4 hover:underline"
                       href={`/demo/treatments?treatment=${item.treatmentId}`}
                     >
                       {item.treatmentName} &rarr;

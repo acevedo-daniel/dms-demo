@@ -89,8 +89,8 @@ export function ArchivePatientButton({
             <div className="flex size-11 items-center justify-center rounded-full bg-destructive/10 text-destructive ring-8 ring-destructive/5">
               <Archive aria-hidden className="size-5" />
             </div>
-            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-              Patient directory · Archive
+            <span className="text-xs font-medium text-muted-foreground">
+              Archive Patient Chart
             </span>
           </div>
           <AlertDialogTitle>Archive {patientName}?</AlertDialogTitle>
@@ -99,14 +99,14 @@ export function ArchivePatientButton({
             chart.
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <div className="rounded-[var(--radius-md)] border border-border/80 bg-secondary/30 p-3.5 text-xs leading-relaxed text-muted-foreground">
+        <div className="rounded-[var(--radius-lg)] border border-border/70 bg-secondary/40 p-4 text-xs leading-relaxed text-muted-foreground">
           <p>
             <strong className="font-semibold text-foreground">
-              Clinical scope:
+              Record preservation:
             </strong>{" "}
-            {patientName} will be removed from default directory search results,
-            but their chart identifier, past notes, and clinical history remain
-            preserved.
+            {patientName} will be hidden from the active patient directory,
+            while all historical appointments, treatment logs, and notes remain
+            permanently on file.
           </p>
         </div>
         {error ? (

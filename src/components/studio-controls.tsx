@@ -103,7 +103,7 @@ export function StudioControls({ className = "" }: StudioControlsProps) {
           <button
             aria-label="English language"
             aria-pressed={currentLocale === "en"}
-            className={`rounded-full px-2 py-0.5 font-mono text-[10px] font-semibold tracking-wider transition-all ${
+            className={`rounded-full px-2.5 py-0.5 text-xs font-medium transition-all ${
               currentLocale === "en"
                 ? "bg-surface text-foreground shadow-2xs"
                 : "text-muted-foreground hover:text-foreground"
@@ -116,7 +116,7 @@ export function StudioControls({ className = "" }: StudioControlsProps) {
           <button
             aria-label="Spanish language"
             aria-pressed={currentLocale === "es"}
-            className={`rounded-full px-2 py-0.5 font-mono text-[10px] font-semibold tracking-wider transition-all ${
+            className={`rounded-full px-2.5 py-0.5 text-xs font-medium transition-all ${
               currentLocale === "es"
                 ? "bg-surface text-foreground shadow-2xs"
                 : "text-muted-foreground hover:text-foreground"
@@ -154,7 +154,7 @@ export function StudioControls({ className = "" }: StudioControlsProps) {
       {notice && (
         <div
           aria-live="polite"
-          className="absolute -bottom-9 right-0 z-50 whitespace-nowrap rounded-md border border-border/90 bg-surface px-2.5 py-1 font-mono text-[10px] font-medium text-foreground shadow-sm animate-in fade-in slide-in-from-top-1"
+          className="absolute -bottom-9 right-0 z-50 whitespace-nowrap rounded-full border border-border/80 bg-surface px-3 py-1 text-xs font-medium text-foreground shadow-sm animate-in fade-in slide-in-from-top-1"
         >
           <span className="flex items-center gap-1.5">
             <Globe aria-hidden="true" className="size-3 text-accent" />

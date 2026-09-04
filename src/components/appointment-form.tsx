@@ -137,12 +137,12 @@ export function AppointmentForm({
           <div className="flex items-center justify-between">
             <Label htmlFor={`${formId}-patient`}>Patient</Label>
             {patientError ? (
-              <span className="inline-flex items-center gap-1 rounded-full border border-destructive/30 bg-destructive/10 px-2 py-0.5 font-mono text-[10px] font-semibold text-destructive animate-in fade-in-0 duration-150">
+              <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive animate-in fade-in-0 duration-150">
                 <AlertCircle aria-hidden className="size-3 shrink-0" />
                 Required
               </span>
             ) : (
-              <span className="font-mono text-[11px] text-muted-foreground">
+              <span className="text-xs text-muted-foreground">
                 Directory chart
               </span>
             )}
@@ -182,12 +182,12 @@ export function AppointmentForm({
           <div className="flex items-center justify-between">
             <Label htmlFor={`${formId}-treatment`}>Treatment</Label>
             {treatmentError ? (
-              <span className="inline-flex items-center gap-1 rounded-full border border-destructive/30 bg-destructive/10 px-2 py-0.5 font-mono text-[10px] font-semibold text-destructive animate-in fade-in-0 duration-150">
+              <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive animate-in fade-in-0 duration-150">
                 <AlertCircle aria-hidden className="size-3 shrink-0" />
                 Required
               </span>
             ) : (
-              <span className="font-mono text-[11px] text-muted-foreground">
+              <span className="text-xs text-muted-foreground">
                 Clinical protocol
               </span>
             )}
@@ -240,7 +240,7 @@ export function AppointmentForm({
               {dateTimeError &&
               (dateTimeError.toLowerCase().includes("date") ||
                 dateTimeError.toLowerCase().includes("monday")) ? (
-                <span className="inline-flex items-center gap-1 rounded-full border border-destructive/30 bg-destructive/10 px-2 py-0.5 font-mono text-[10px] font-semibold text-destructive animate-in fade-in-0 duration-150">
+                <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive animate-in fade-in-0 duration-150">
                   <AlertCircle aria-hidden className="size-3 shrink-0" />
                   {dateTimeError.includes("Monday")
                     ? "Weekday only"
@@ -266,7 +266,7 @@ export function AppointmentForm({
               {dateTimeError &&
               (dateTimeError.toLowerCase().includes("time") ||
                 dateTimeError.toLowerCase().includes("slot")) ? (
-                <span className="inline-flex items-center gap-1 rounded-full border border-destructive/30 bg-destructive/10 px-2 py-0.5 font-mono text-[10px] font-semibold text-destructive animate-in fade-in-0 duration-150">
+                <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive animate-in fade-in-0 duration-150">
                   <AlertCircle aria-hidden className="size-3 shrink-0" />
                   Required
                 </span>
@@ -310,12 +310,12 @@ export function AppointmentForm({
           <div className="flex items-center justify-between">
             <Label htmlFor={`${formId}-duration`}>Duration (minutes)</Label>
             {durationError ? (
-              <span className="inline-flex items-center gap-1 rounded-full border border-destructive/30 bg-destructive/10 px-2 py-0.5 font-mono text-[10px] font-semibold text-destructive animate-in fade-in-0 duration-150">
+              <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive animate-in fade-in-0 duration-150">
                 <AlertCircle aria-hidden className="size-3 shrink-0" />
                 15–180 min
               </span>
             ) : (
-              <span className="font-mono text-xs font-medium text-muted-foreground">
+              <span className="text-xs font-medium text-muted-foreground tabular-nums">
                 {values.durationMinutes} min
               </span>
             )}
@@ -343,7 +343,7 @@ export function AppointmentForm({
                 className={cn(
                   "rounded-full border px-3 py-1 font-mono text-xs font-medium transition-all",
                   values.durationMinutes === String(mins)
-                    ? "border-primary/20 bg-primary font-bold text-primary-foreground shadow-xs"
+                    ? "border-primary/20 bg-primary font-semibold text-primary-foreground shadow-xs"
                     : "border-border/70 bg-secondary/40 text-muted-foreground hover:border-foreground/20 hover:bg-secondary hover:text-foreground",
                 )}
                 key={mins}
@@ -410,8 +410,8 @@ export function AppointmentForm({
                     <div className="flex size-11 items-center justify-center rounded-full bg-destructive/10 text-destructive ring-8 ring-destructive/5">
                       <Trash2 aria-hidden className="size-5" />
                     </div>
-                    <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                      Schedule · Cancel slot
+                    <span className="text-xs font-medium text-muted-foreground">
+                      Cancel Appointment
                     </span>
                   </div>
                   <AlertDialogTitle>Cancel appointment?</AlertDialogTitle>
