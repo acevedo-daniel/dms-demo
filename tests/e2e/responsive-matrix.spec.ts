@@ -143,3 +143,35 @@ test("uses the intended navigation, directory, and schedule compositions", async
     page.getByRole("navigation", { name: "Workspace navigation" }),
   ).toBeVisible();
 });
+
+test("uses the schedule inspector without compressing the week grid", async ({
+  page,
+}) => {
+  await openDemoWorkspace(page);
+
+  await page.setViewportSize({ height: 960, width: 1280 });
+  await page.goto("/demo/schedule");
+  await page
+    .getByRole("button", { name: /Open scheduled appointment/ })
+    .first()
+    .click();
+  await expect(
+    page.getByRole("dialog", { name: "Appointment details" }),
+  ).toBeVisible();
+  await expect(
+    page.locator('[aria-label="Scrollable week schedule"]'),
+  ).toBeVisible();
+
+  await page.setViewportSize({ height: 1080, width: 1920 });
+  await page.goto("/demo/schedule");
+  await page
+    .getByRole("button", { name: /Open scheduled appointment/ })
+    .first()
+    .click();
+  await expect(
+    page.getByRole("complementary", { name: "Appointment context" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("dialog", { name: "Appointment details" }),
+  ).toBeHidden();
+});

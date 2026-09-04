@@ -3,10 +3,18 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { getDemoClock } from "@/lib/demo/constants";
 import { parseScheduleWeek, scheduleWeekStart } from "@/lib/demo/schedule";
-import { getScheduleData } from "@/lib/schedule-data";
+import {
+  getActiveScheduleAppointment,
+  getScheduleData,
+} from "@/lib/schedule-data";
 
 type SchedulePageProps = {
-  searchParams: Promise<{ create?: string; patient?: string; week?: string }>;
+  searchParams: Promise<{
+    appointment?: string;
+    create?: string;
+    patient?: string;
+    week?: string;
+  }>;
 };
 
 async function loadSchedule(week: Date) {
@@ -21,8 +29,12 @@ export default async function SchedulePage({
   searchParams,
 }: SchedulePageProps) {
   const parameters = await searchParams;
-  const weekStart =
-    parseScheduleWeek(parameters.week) ?? scheduleWeekStart(getDemoClock());
+  const selectedAppointment = await getActiveScheduleAppointment(
+    parameters.appointment,
+  );
+  const weekStart = selectedAppointment
+    ? scheduleWeekStart(new Date(selectedAppointment.startsAt))
+    : (parseScheduleWeek(parameters.week) ?? scheduleWeekStart(getDemoClock()));
   const schedule = await loadSchedule(weekStart);
 
   if (!schedule) {
@@ -57,11 +69,19 @@ export default async function SchedulePage({
   );
 
   return (
-    <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <main className="mx-auto w-full max-w-[var(--schedule-workspace-max)] px-4 py-8 sm:px-6 lg:px-8">
       <ScheduleBoard
         appointments={schedule.appointments}
-        initialPatientId={patientIsAvailable ? parameters.patient : undefined}
-        initialSheetOpen={parameters.create === "1"}
+        initialAppointmentId={selectedAppointment?.id}
+        initialCreate={parameters.create === "1" && !selectedAppointment}
+        initialPatientId={
+          parameters.create === "1" &&
+          patientIsAvailable &&
+          !selectedAppointment
+            ? parameters.patient
+            : undefined
+        }
+        key={`${weekStart.toISOString()}:${selectedAppointment?.id ?? ""}:${parameters.create ?? ""}:${parameters.patient ?? ""}`}
         patients={schedule.patients}
         treatments={schedule.treatments}
         weekStart={weekStart.toISOString()}

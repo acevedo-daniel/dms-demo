@@ -11,6 +11,7 @@ import {
   type DashboardAppointmentStatus,
 } from "@/lib/dashboard";
 import { getDemoClock } from "@/lib/demo/constants";
+import { scheduleWeekKey, scheduleWeekStart } from "@/lib/demo/schedule";
 
 function AppointmentStatus({ status }: { status: DashboardAppointmentStatus }) {
   return <AppointmentStatusBadge status={status} />;
@@ -120,7 +121,16 @@ export default async function DashboardPage() {
                       {appointment.treatmentName}
                     </p>
                   </div>
-                  <AppointmentStatus status={appointment.status} />
+                  <div className="flex items-center gap-3">
+                    <AppointmentStatus status={appointment.status} />
+                    <Button asChild size="sm" variant="ghost">
+                      <Link
+                        href={`/demo/schedule?week=${scheduleWeekKey(scheduleWeekStart(appointment.startsAt))}&appointment=${appointment.id}`}
+                      >
+                        Open in schedule
+                      </Link>
+                    </Button>
+                  </div>
                 </li>
               ))}
             </ol>

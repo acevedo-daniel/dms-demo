@@ -31,6 +31,61 @@ export type ScheduleTreatment = {
   name: string;
 };
 
+function isUuid(value: string | undefined): value is string {
+  return Boolean(
+    value &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+      value,
+    ),
+  );
+}
+
+function toScheduleAppointment(
+  appointment: Omit<ScheduleAppointment, "startsAt" | "status"> & {
+    startsAt: Date;
+    status: string;
+  },
+): ScheduleAppointment {
+  return {
+    ...appointment,
+    startsAt: appointment.startsAt.toISOString(),
+    status: appointment.status as ScheduleAppointment["status"],
+  };
+}
+
+export async function getActiveScheduleAppointment(appointmentId?: string) {
+  if (!isUuid(appointmentId)) {
+    return null;
+  }
+
+  const db = getDatabase();
+  const [appointment] = await db
+    .select({
+      durationMinutes: appointments.durationMinutes,
+      id: appointments.id,
+      note: appointments.note,
+      patientId: patients.id,
+      patientName: sql<string>`${patients.firstName} || ' ' || ${patients.lastName}`,
+      startsAt: appointments.startsAt,
+      status: appointments.status,
+      treatmentId: treatments.id,
+      treatmentName: treatments.name,
+    })
+    .from(appointments)
+    .innerJoin(patients, eq(appointments.patientId, patients.id))
+    .innerJoin(treatments, eq(appointments.treatmentId, treatments.id))
+    .where(
+      and(
+        eq(appointments.id, appointmentId),
+        eq(appointments.practiceId, DEMO_PRACTICE_ID),
+        inArray(appointments.status, activeAppointmentStatuses),
+      ),
+    )
+    .limit(1);
+
+  return appointment ? toScheduleAppointment(appointment) : null;
+}
+
 export async function getScheduleData(weekStart: Date) {
   const db = getDatabase();
   const weekEnd = addPracticeDays(weekStart, 5);
@@ -86,11 +141,7 @@ export async function getScheduleData(weekStart: Date) {
     ]);
 
   return {
-    appointments: scheduleAppointments.map((appointment) => ({
-      ...appointment,
-      startsAt: appointment.startsAt.toISOString(),
-      status: appointment.status as "SCHEDULED" | "CONFIRMED",
-    })),
+    appointments: scheduleAppointments.map(toScheduleAppointment),
     patients: schedulePatients,
     treatments: scheduleTreatments,
   };

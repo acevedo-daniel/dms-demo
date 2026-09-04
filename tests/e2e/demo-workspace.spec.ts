@@ -81,6 +81,20 @@ test("opens a provisioned demo session", async ({ page }) => {
   await expect(page.getByRole("link", { name: "Dashboard" })).toHaveCount(0);
 });
 
+test("opens the selected Today appointment in Schedule", async ({ page }) => {
+  await openResetDemoWorkspace(page);
+
+  const openInSchedule = page
+    .getByRole("link", { name: "Open in schedule" })
+    .first();
+  await expect(openInSchedule).toHaveAttribute("href", /appointment=/);
+  await openInSchedule.click();
+
+  await expect(
+    page.getByRole("dialog", { name: "Appointment details" }),
+  ).toBeVisible();
+});
+
 test("adds a patient through the directory", async ({ page }) => {
   await openResetDemoWorkspace(page);
   await page.getByRole("link", { name: "Patients" }).click();
@@ -212,6 +226,41 @@ test("creates an appointment from the weekly schedule", async ({ page }) => {
     page.getByRole("button", {
       name: "Open scheduled appointment for Alex Quinn · Routine consultation at 09:00",
     }),
+  ).toBeVisible();
+});
+
+test("resolves selected appointment deep links and drafts an empty slot", async ({
+  page,
+}) => {
+  await openResetDemoWorkspace(page);
+  await page.goto(
+    "/demo/schedule?week=2026-05-18&appointment=40000000-0000-4000-8000-000000000007",
+  );
+
+  const appointmentContext = page.getByRole("dialog", {
+    name: "Appointment details",
+  });
+  await expect(appointmentContext).toBeVisible();
+  await expect(appointmentContext.getByLabel("Time")).toHaveValue("09:30");
+
+  await appointmentContext
+    .getByRole("button", { name: "Close" })
+    .first()
+    .click();
+  await page
+    .getByRole("button", {
+      name: "Create appointment for Tue 12 May at 09:00",
+    })
+    .click();
+
+  await expect(
+    page
+      .locator('[role="status"]')
+      .filter({ hasText: "Draft appointment" })
+      .first(),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("dialog", { name: "Create appointment" }),
   ).toBeVisible();
 });
 
