@@ -10,13 +10,6 @@ import {
 } from "@/components/schedule-context-panel";
 import { AppointmentStatusBadge } from "@/components/appointment-status-badge";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { announceWorkspaceFeedback } from "@/components/workspace-feedback";
 import { cn } from "@/lib/utils";
 import { formatDemoDate, formatDemoTime } from "@/lib/demo/format";
@@ -446,7 +439,7 @@ export function ScheduleBoard({
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <nav
             aria-label="Schedule week"
-            className="inline-flex items-center rounded-full border border-border/80 bg-background/60 p-1 shadow-xs backdrop-blur-xs"
+            className="inline-flex items-center rounded-full border border-border/80 bg-surface p-1 shadow-xs backdrop-blur-xs"
           >
             <Button
               asChild
@@ -479,23 +472,39 @@ export function ScheduleBoard({
               </Link>
             </Button>
           </nav>
-          <div className="flex items-center gap-2.5 text-sm text-muted-foreground">
-            <span className="font-mono text-xs uppercase tracking-wider">
-              Status
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Filter
             </span>
-            <Select
-              onValueChange={(val) => setFilter(val as StatusFilter)}
-              value={filter}
+            <div
+              aria-label="Filter by appointment status"
+              className="inline-flex items-center rounded-full border border-border/80 bg-surface p-1 shadow-xs backdrop-blur-xs"
+              role="radiogroup"
             >
-              <SelectTrigger className="h-8 min-w-[8rem] rounded-full border-border/80 bg-background/60 px-3 text-xs font-medium backdrop-blur-xs">
-                <SelectValue placeholder="All active" />
-              </SelectTrigger>
-              <SelectContent align="end">
-                <SelectItem value="ALL">All active</SelectItem>
-                <SelectItem value="SCHEDULED">Scheduled</SelectItem>
-                <SelectItem value="CONFIRMED">Confirmed</SelectItem>
-              </SelectContent>
-            </Select>
+              {(
+                [
+                  { label: "All active", value: "ALL" },
+                  { label: "Confirmed", value: "CONFIRMED" },
+                  { label: "Scheduled", value: "SCHEDULED" },
+                ] as const
+              ).map((tab) => (
+                <button
+                  aria-checked={filter === tab.value}
+                  className={cn(
+                    "dms-pressable rounded-full px-3 py-1 text-xs font-medium transition-all",
+                    filter === tab.value
+                      ? "bg-secondary text-foreground font-semibold shadow-2xs"
+                      : "text-muted-foreground hover:text-foreground",
+                  )}
+                  key={tab.value}
+                  onClick={() => setFilter(tab.value)}
+                  role="radio"
+                  type="button"
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </header>
@@ -521,7 +530,10 @@ export function ScheduleBoard({
                   Time
                 </div>
                 {days.map((day) => {
-                  const isDemoDay = practiceDateInputValue(day) === demoDayKey;
+                  const dayKey = practiceDateInputValue(day);
+                  const isDemoDay = dayKey === demoDayKey;
+                  const dayApptCount = (appointmentsByDay.get(dayKey) ?? [])
+                    .length;
                   return (
                     <div
                       className={cn(
@@ -534,17 +546,25 @@ export function ScheduleBoard({
                       <div className="flex items-center justify-between gap-2">
                         <span
                           className={cn(
-                            "font-semibold",
+                            "font-semibold tracking-tight",
                             isDemoDay ? "text-primary" : "text-foreground",
                           )}
                         >
                           {dayLabel(day)}
                         </span>
-                        {isDemoDay ? (
-                          <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary">
-                            Today
-                          </span>
-                        ) : null}
+                        <div className="flex items-center gap-1.5">
+                          {dayApptCount > 0 ? (
+                            <span className="rounded-full bg-secondary/80 px-2 py-0.5 font-mono text-[10px] font-medium text-muted-foreground">
+                              {dayApptCount}{" "}
+                              {dayApptCount === 1 ? "slot" : "slots"}
+                            </span>
+                          ) : null}
+                          {isDemoDay ? (
+                            <span className="rounded-full border border-border/80 bg-foreground/5 px-2 py-0.5 font-mono text-[10px] font-medium tracking-wide text-foreground/80">
+                              Today
+                            </span>
+                          ) : null}
+                        </div>
                       </div>
                     </div>
                   );
@@ -593,7 +613,7 @@ export function ScheduleBoard({
                             <button
                               aria-label={`Create appointment for ${dayLabel(day)} at ${formatDemoTime(new Date(startsAt))}`}
                               className={cn(
-                                "dms-pressable block h-12 w-full text-left transition-colors hover:bg-primary/[0.05] focus-visible:relative focus-visible:z-20 focus-visible:outline-none",
+                                "group/slot dms-pressable relative block h-12 w-full text-left transition-colors hover:bg-primary/[0.04] focus-visible:relative focus-visible:z-20 focus-visible:outline-none",
                                 index % 2 === 0
                                   ? "border-b border-border/60"
                                   : "border-b border-border/30",
@@ -603,16 +623,22 @@ export function ScheduleBoard({
                                 openCreate(startsAt, event.currentTarget)
                               }
                               type="button"
-                            />
+                            >
+                              <span className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-150 group-hover/slot:opacity-100">
+                                <span className="rounded-full border border-border/80 bg-surface px-2 py-0.5 font-mono text-[10px] font-medium text-foreground/80 shadow-2xs">
+                                  + Book
+                                </span>
+                              </span>
+                            </button>
                           );
                         },
                       )}
                       {isDemoDay && hasVisibleDemoMarker ? (
                         <div
-                          className="pointer-events-none absolute z-20 h-px w-full bg-accent"
+                          className="pointer-events-none absolute z-20 h-px w-full bg-foreground/30"
                           style={{ top: `${demoMarkerSlot * 3}rem` }}
                         >
-                          <span className="absolute -top-2.5 left-1.5 rounded-full bg-accent px-2 py-0.5 text-[10px] font-semibold tracking-wide text-accent-foreground shadow-xs">
+                          <span className="absolute -top-2.5 left-1.5 rounded-full border border-border bg-foreground px-2 py-0.5 text-[10px] font-medium tracking-wide text-background shadow-xs">
                             Now 08:30
                           </span>
                         </div>
@@ -651,9 +677,9 @@ export function ScheduleBoard({
                             aria-label={`Open ${appointment.status.toLowerCase()} appointment for ${appointmentName(appointment)} at ${formatDemoTime(new Date(appointment.startsAt))}`}
                             aria-pressed={isSelected}
                             className={cn(
-                              "dms-pressable dms-raised-action absolute right-1.5 left-1.5 z-10 overflow-hidden rounded-[var(--radius-md)] border text-left transition-all duration-150 focus-visible:outline-none shadow-xs hover:shadow-sm",
+                              "dms-pressable dms-raised-action group absolute right-1.5 left-1.5 z-10 overflow-hidden rounded-[var(--radius-md)] border text-left transition-all duration-150 focus-visible:outline-none shadow-xs hover:shadow-sm",
                               confirmed
-                                ? "border-accent/40 border-l-[3.5px] border-l-accent bg-accent-soft text-accent-soft-foreground hover:border-accent"
+                                ? "border-accent/40 border-l-[3.5px] border-l-accent bg-accent-soft/90 text-accent-soft-foreground hover:border-accent hover:bg-accent-soft"
                                 : "border-border/90 border-l-[3.5px] border-l-foreground/40 bg-card text-foreground hover:border-foreground/30",
                               isSelected &&
                                 "ring-2 ring-primary ring-offset-2 ring-offset-background",
@@ -670,14 +696,14 @@ export function ScheduleBoard({
                             type="button"
                           >
                             <div className="flex items-center justify-between gap-1">
-                              <span className="text-xs font-semibold tabular-nums">
+                              <span className="text-xs font-semibold tabular-nums tracking-tight">
                                 {formatDemoTime(new Date(appointment.startsAt))}
                               </span>
-                              <span className="text-[10px] opacity-75 tabular-nums">
+                              <span className="rounded bg-background/50 px-1.5 py-0.5 font-mono text-[10px] opacity-75 tabular-nums">
                                 {appointment.durationMinutes}m
                               </span>
                             </div>
-                            <span className="mt-0.5 block truncate text-xs font-semibold leading-tight">
+                            <span className="mt-0.5 block truncate text-xs font-semibold leading-tight text-foreground">
                               {appointment.patientName}
                             </span>
                             <div className="mt-0.5 flex items-center justify-between gap-1">
@@ -688,7 +714,13 @@ export function ScheduleBoard({
                               ) : (
                                 <span />
                               )}
-                              <span className="text-[10px] font-medium tracking-wide opacity-75 shrink-0">
+                              <span
+                                className={cn(
+                                  "text-[10px] font-medium tracking-wide opacity-75 shrink-0",
+                                  confirmed &&
+                                    "text-accent font-semibold opacity-100",
+                                )}
+                              >
                                 {appointmentStatusLabel(appointment)}
                               </span>
                             </div>

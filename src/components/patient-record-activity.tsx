@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Calendar, Clock, FileText, Sparkles } from "lucide-react";
+import { ArrowRight, Clock } from "lucide-react";
 import { useMemo, useState } from "react";
 import { AppointmentStatusBadge } from "@/components/appointment-status-badge";
 import { formatDemoDate, formatDemoTime } from "@/lib/demo/format";
@@ -68,8 +68,8 @@ export function PatientRecordActivity({ items }: PatientRecordActivityProps) {
     <section aria-labelledby="activity-title">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wider text-primary">
-            Operational history
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+            Operational chronology
           </p>
           <h2
             className="mt-1 text-2xl font-semibold tracking-tight text-foreground"
@@ -79,10 +79,10 @@ export function PatientRecordActivity({ items }: PatientRecordActivityProps) {
           </h2>
         </div>
 
-        {/* Filter Pills */}
+        {/* Filter Pills with explicit aria-label for E2E testing */}
         <div
           aria-label="Filter patient activity"
-          className="flex items-center gap-1.5 overflow-x-auto pb-1"
+          className="inline-flex items-center rounded-full border border-border/80 bg-surface/80 p-1 shadow-xs backdrop-blur-xs"
           role="group"
         >
           {filters.map((option) => (
@@ -90,17 +90,17 @@ export function PatientRecordActivity({ items }: PatientRecordActivityProps) {
               aria-label={option.label}
               aria-pressed={filter === option.value}
               className={cn(
-                "dms-pressable inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all whitespace-nowrap",
+                "dms-pressable rounded-full px-3 py-1 text-xs font-medium transition-all",
                 filter === option.value
-                  ? "border border-primary/20 bg-primary text-primary-foreground font-semibold shadow-xs"
-                  : "border border-border/70 bg-secondary/50 text-muted-foreground hover:border-foreground/20 hover:bg-secondary hover:text-foreground",
+                  ? "bg-secondary text-foreground font-semibold shadow-2xs"
+                  : "text-muted-foreground hover:text-foreground",
               )}
               key={option.value}
               onClick={() => setFilter(option.value)}
               type="button"
             >
               <span>{option.label}</span>
-              <span aria-hidden="true" className="opacity-80">
+              <span aria-hidden="true" className="ml-1 opacity-70">
                 ({option.count})
               </span>
             </button>
@@ -115,32 +115,28 @@ export function PatientRecordActivity({ items }: PatientRecordActivityProps) {
 
             return (
               <li
-                className="group rounded-[var(--radius-lg)] border border-border/80 bg-card/40 p-4 transition-all duration-150 hover:border-foreground/20 hover:bg-card hover:shadow-xs sm:p-5"
+                className="group rounded-[var(--radius-lg)] border border-border/80 bg-card/40 p-4 shadow-xs transition-all duration-150 hover:border-foreground/20 hover:bg-card hover:shadow-xs sm:p-5"
                 key={`${item.kind}-${item.id}`}
               >
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex items-center gap-2.5">
-                    <div
-                      aria-hidden
+                    <span
+                      aria-hidden="true"
                       className={cn(
-                        "flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold",
+                        "size-2 rounded-full",
                         item.kind === "appointment"
-                          ? "bg-primary/10 text-primary"
-                          : "bg-accent-soft text-accent-soft-foreground",
+                          ? "bg-foreground/50"
+                          : "bg-amber-600/70 dark:bg-amber-400/70",
                       )}
-                    >
-                      {item.kind === "appointment" ? (
-                        <Calendar className="size-4" />
-                      ) : (
-                        <FileText className="size-4" />
-                      )}
-                    </div>
+                    />
                     <div>
                       <span className="text-sm font-semibold tracking-tight text-foreground">
-                        {item.kind === "appointment" ? "Appointment" : "Note"}
+                        {item.kind === "appointment"
+                          ? "Clinical Appointment"
+                          : "Clinical Handover Note"}
                       </span>
                       <time
-                        className="ml-2.5 text-xs text-muted-foreground"
+                        className="ml-2 text-xs text-muted-foreground"
                         dateTime={date.toISOString()}
                       >
                         <Clock
@@ -153,35 +149,44 @@ export function PatientRecordActivity({ items }: PatientRecordActivityProps) {
                   </div>
 
                   {item.kind === "appointment" ? (
-                    <div className="flex items-center gap-2.5 self-start sm:self-auto">
+                    <div className="flex items-center gap-2 self-start sm:self-auto">
                       <AppointmentStatusBadge status={item.status} />
                     </div>
                   ) : item.treatmentName && item.treatmentId ? (
                     <Link
-                      className="inline-flex items-center gap-1 rounded-full border border-border/70 bg-secondary/60 px-2.5 py-0.5 text-xs font-medium text-foreground transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary"
+                      className="inline-flex items-center gap-1 rounded border border-border/70 bg-secondary/50 px-2 py-0.5 text-[11px] font-medium text-foreground/80 transition-colors hover:border-foreground/30 hover:text-foreground"
                       href={`/demo/treatments?treatment=${item.treatmentId}`}
                     >
-                      <Sparkles aria-hidden className="size-3 text-primary" />
                       <span>{item.treatmentName}</span>
                     </Link>
                   ) : null}
                 </div>
 
                 {item.kind === "appointment" ? (
-                  <div className="mt-3 flex items-center gap-2 border-t border-border/60 pt-3">
-                    <span className="text-xs text-muted-foreground">
-                      Treatment:
-                    </span>
+                  <div className="mt-3 flex items-center justify-between border-t border-border/60 pt-2.5">
+                    <div className="flex items-center gap-2 text-xs">
+                      <span className="text-muted-foreground">Protocol:</span>
+                      <span className="font-medium text-foreground">
+                        {item.treatmentName}
+                      </span>
+                    </div>
                     <Link
-                      className="text-xs font-medium text-primary underline-offset-4 hover:underline"
+                      className="inline-flex items-center gap-1 text-xs font-medium text-foreground/80 underline-offset-4 hover:underline hover:text-foreground"
                       href={`/demo/treatments?treatment=${item.treatmentId}`}
                     >
-                      {item.treatmentName} &rarr;
+                      <span>Protocol details</span>
+                      <ArrowRight aria-hidden className="size-3" />
                     </Link>
                   </div>
                 ) : (
-                  <div className="mt-3 rounded-[var(--radius-md)] border border-border/50 bg-secondary/20 p-3.5 text-sm leading-relaxed text-foreground/90">
-                    <p className="whitespace-pre-wrap">{item.body}</p>
+                  <div className="mt-3 rounded-[var(--radius-md)] border border-border/60 bg-secondary/20 p-3.5 text-sm leading-relaxed text-foreground/90">
+                    <p className="whitespace-pre-wrap font-sans text-xs sm:text-sm">
+                      {item.body}
+                    </p>
+                    <div className="mt-2.5 flex items-center gap-2 border-t border-border/40 pt-2 text-[10px] text-muted-foreground">
+                      <span className="size-1 rounded-full bg-foreground/40" />
+                      <span>Atelier Dental clinical session entry</span>
+                    </div>
                   </div>
                 )}
               </li>
@@ -200,8 +205,7 @@ export function PatientRecordActivity({ items }: PatientRecordActivityProps) {
             No {filter} activity is recorded yet.
           </h3>
           <p className="mt-1 text-sm text-muted-foreground">
-            Activity entries will appear here chronologically as care is
-            delivered.
+            Operational appointments and notes will accumulate in this timeline.
           </p>
         </section>
       )}

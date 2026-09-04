@@ -62,8 +62,8 @@ export function WorkspaceFeedback() {
       }}
       role="status"
     >
-      <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary ring-2 ring-primary/20">
-        <CheckCircle2 aria-hidden className="size-4" />
+      <div className="flex size-7 shrink-0 items-center justify-center rounded-full border border-border/80 bg-secondary text-foreground/85">
+        <CheckCircle2 aria-hidden className="size-3.5 text-accent" />
       </div>
       <p className="flex-1 pr-1 text-xs font-semibold tracking-tight text-foreground sm:text-sm">
         {message}

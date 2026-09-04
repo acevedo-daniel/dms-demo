@@ -52,11 +52,11 @@ export function ExploreDmsGuide() {
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="inline-flex items-center gap-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-primary">
+            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Practice walkthrough
             </span>
-            <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-medium text-primary">
-              4 quick steps
+            <span className="rounded-full border border-border/70 bg-secondary/60 px-2.5 py-0.5 font-mono text-[10px] font-medium text-muted-foreground">
+              4 steps
             </span>
           </div>
           <h2
@@ -88,15 +88,15 @@ export function ExploreDmsGuide() {
             >
               <div>
                 <div className="flex items-center justify-between gap-2">
-                  <span className="flex size-6 items-center justify-center rounded-full bg-secondary text-xs font-semibold text-foreground/80 transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                  <span className="flex size-6 items-center justify-center rounded-full border border-border/70 bg-secondary/80 font-mono text-xs font-semibold text-foreground/80 transition-colors group-hover:border-foreground/40 group-hover:bg-foreground group-hover:text-background">
                     {index + 1}
                   </span>
                   <ArrowUpRight
                     aria-hidden
-                    className="size-4 text-muted-foreground transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-primary"
+                    className="size-4 text-muted-foreground transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-foreground"
                   />
                 </div>
-                <p className="mt-3.5 text-sm font-semibold tracking-tight text-foreground transition-colors group-hover:text-primary">
+                <p className="mt-3.5 text-sm font-semibold tracking-tight text-foreground">
                   {item.label}
                 </p>
                 <p className="mt-1.5 text-xs leading-5 text-muted-foreground">

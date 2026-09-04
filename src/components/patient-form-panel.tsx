@@ -525,8 +525,11 @@ export function PatientFormPanel({
         <AlertDialogContent>
           <AlertDialogHeader>
             <div className="flex items-center justify-between">
-              <div className="flex size-11 items-center justify-center rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 ring-8 ring-amber-500/5">
-                <AlertTriangle aria-hidden className="size-5" />
+              <div className="flex size-10 items-center justify-center rounded-full border border-border/80 bg-secondary/80 text-foreground/80">
+                <AlertTriangle
+                  aria-hidden
+                  className="size-4 text-foreground/80"
+                />
               </div>
               <span className="text-xs font-medium text-muted-foreground">
                 Unsaved Changes

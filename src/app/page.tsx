@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  AlertCircle,
   ArrowRight,
   CalendarDays,
   CheckCircle2,
@@ -13,10 +12,10 @@ import {
   LockKeyhole,
   NotebookPen,
   ShieldCheck,
-  Sparkles,
   UsersRound,
 } from "lucide-react";
 import scheduleScreenshot from "../../docs/screenshots/schedule.webp";
+import { AppointmentStatusBadge } from "@/components/appointment-status-badge";
 import { DmsLogo } from "@/components/dms-logo";
 import { StudioControls } from "@/components/studio-controls";
 import { Badge } from "@/components/ui/badge";
@@ -37,7 +36,7 @@ export const metadata: Metadata = {
 
 const engineeringSignals = [
   {
-    badge: "100% Deterministic Seed",
+    badge: "Practice Synchronization",
     description:
       "A calm five-day clinical rhythm with 30-minute block clarity. Eliminates double bookings and chair desynchronization effortlessly.",
     icon: CalendarDays,
@@ -45,28 +44,28 @@ const engineeringSignals = [
     spec: "12 patients · 8 treatments · 5-day cycle",
   },
   {
-    badge: "Real PostgreSQL",
+    badge: "Clinical Record Durability",
     description:
       "Instant consistency between reception and treatment operatories. Every appointment, status change, and clinical note is securely preserved.",
     icon: Database,
     label: "Relational integrity",
-    spec: "ACID transactions · Drizzle ORM schema",
+    spec: "Unified ledger · Immediate record synchronization",
   },
   {
-    badge: "Automated WCAG AA Coverage",
+    badge: "High-Contrast Ergonomics",
     description:
       "Engineered for high-intensity clinical focus. Natural navigation, high-contrast typography, and zero cognitive friction.",
     icon: ShieldCheck,
     label: "Accessible by design",
-    spec: "axe-core automated · Full keyboard traps",
+    spec: "Clinical readability & tactile keyboard control",
   },
   {
-    badge: "Resettable Privacy Boundary",
+    badge: "Confidential Practice Sandbox",
     description:
       "A complete practice operations preview with total patient privacy. Clean, isolated environments with zero exposure of real personal data.",
     icon: LockKeyhole,
     label: "Protected workspace",
-    spec: "Session-scoped cookie · 0 PII footprint",
+    spec: "Fictional Atelier cohort · Zero personal exposure",
   },
 ];
 
@@ -152,7 +151,7 @@ export default function Home() {
         {/* Hero Header Area: Centered, Prestigious, Airy */}
         <div className="mx-auto max-w-4xl text-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-surface/80 px-4 py-1.5 shadow-2xs backdrop-blur-xs ring-1 ring-black/[0.03]">
-            <span className="size-2 rounded-full bg-emerald-500 ring-4 ring-emerald-500/20" />
+            <span className="size-2 rounded-full bg-accent ring-2 ring-accent/25" />
             <span className="text-xs font-semibold uppercase tracking-wider text-accent">
               Atelier Dental
             </span>
@@ -227,7 +226,7 @@ export default function Home() {
               </div>
               <div className="flex items-center gap-3 text-xs text-muted-foreground">
                 <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-surface px-2.5 py-0.5 border border-border/70 text-[11px] font-medium">
-                  <span className="size-1.5 rounded-full bg-emerald-500" />
+                  <span className="size-1.5 rounded-full bg-accent" />
                   Chair Operations · 5-Day View
                 </span>
               </div>
@@ -247,15 +246,18 @@ export default function Home() {
             {/* Stage Footer Status Strip */}
             <figcaption className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-t border-border/60 bg-surface/90 px-4 py-3 text-xs text-muted-foreground sm:px-5">
               <div className="flex items-center gap-2 font-medium text-foreground">
-                <CalendarDays aria-hidden className="size-3.5 text-primary" />
+                <CalendarDays
+                  aria-hidden
+                  className="size-3.5 text-muted-foreground"
+                />
                 <span>Schedule · 11–15 May 2026</span>
               </div>
               <div className="flex items-center gap-3">
                 <span className="text-xs text-muted-foreground">
                   Atelier Dental Practice Workspace
                 </span>
-                <span className="hidden md:inline-flex rounded-full bg-primary/10 px-2.5 py-0.5 text-[10px] font-semibold text-primary">
-                  100% On-Time Flow
+                <span className="hidden md:inline-flex rounded-full border border-border/70 bg-secondary/50 px-2.5 py-0.5 text-[10px] font-medium text-foreground/80">
+                  Continuous Practice Flow
                 </span>
               </div>
             </figcaption>
@@ -263,22 +265,17 @@ export default function Home() {
 
           {/* Floating Live Card: Up Next (Top Right) */}
           <div className="pointer-events-none hidden md:flex absolute -top-5 -right-3 lg:-right-5 z-10 items-center gap-3 rounded-[var(--radius-lg)] border border-border/80 bg-surface/95 p-3.5 shadow-raised backdrop-blur-md">
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600">
-              <span className="text-xs font-semibold">ER</span>
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-full border border-border bg-secondary text-xs font-semibold text-foreground/80">
+              <span>ER</span>
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-xs font-semibold text-foreground">
                   Elena Rostova
                 </span>
-                <Badge
-                  className="border-emerald-500/30 bg-emerald-500/10 text-[10px] font-semibold text-emerald-600"
-                  variant="outline"
-                >
-                  Confirmed
-                </Badge>
+                <AppointmentStatusBadge status="CONFIRMED" />
               </div>
-              <p className="text-xs text-muted-foreground">
+              <p className="mt-0.5 text-xs text-muted-foreground">
                 Comprehensive Exam · 09:30 · Operatory 1
               </p>
             </div>
@@ -286,7 +283,7 @@ export default function Home() {
 
           {/* Floating Live Card: Shift Handover (Bottom Left) */}
           <div className="pointer-events-none hidden md:flex absolute -bottom-5 -left-3 lg:-left-5 z-10 items-center gap-3 rounded-[var(--radius-lg)] border border-border/80 bg-surface/95 p-3.5 shadow-raised backdrop-blur-md">
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-full border border-border bg-secondary text-xs font-semibold text-foreground/80">
               <NotebookPen aria-hidden className="size-4" />
             </div>
             <div>
@@ -315,7 +312,7 @@ export default function Home() {
               Precision Schedule Blocks
             </p>
             <p className="mt-0.5 text-[11px] text-muted-foreground">
-              Aligned with standard restorative pacing
+              Aligned with standard clinical pacing
             </p>
           </div>
           <div className="rounded-[var(--radius-md)] border border-border/60 bg-surface/60 p-4 text-center">
@@ -342,13 +339,13 @@ export default function Home() {
           </div>
           <div className="rounded-[var(--radius-md)] border border-border/60 bg-surface/60 p-4 text-center">
             <p className="font-display text-2xl font-semibold text-foreground">
-              &lt;100ms
+              Continuous
             </p>
             <p className="mt-1 text-xs font-medium text-foreground">
-              Instant Interaction Speed
+              Clinical Practice Flow
             </p>
             <p className="mt-0.5 text-[11px] text-muted-foreground">
-              Server-rendered with zero lag
+              Zero friction between reception and operatories
             </p>
           </div>
         </div>
@@ -382,7 +379,7 @@ export default function Home() {
           <div className="group relative flex flex-col justify-between overflow-hidden rounded-[var(--radius-xl)] border border-border/80 bg-gradient-to-br from-card via-card to-secondary/30 p-7 sm:p-9 shadow-xs transition-all duration-200 hover:border-foreground/20 hover:shadow-sm lg:col-span-7">
             <div>
               <div className="flex items-center justify-between">
-                <div className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <div className="flex size-10 items-center justify-center rounded-full border border-border bg-surface text-foreground/75 shadow-2xs">
                   <CalendarDays aria-hidden className="size-5" />
                 </div>
                 <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -390,7 +387,7 @@ export default function Home() {
                 </span>
               </div>
               <h3 className="mt-5 text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
-                Five-day schedule matrix
+                Five-day clinical agenda
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground max-w-xl">
                 Plan the week with 30-minute block precision, instant operatory
@@ -403,7 +400,7 @@ export default function Home() {
             <div className="mt-8 rounded-[var(--radius-lg)] border border-border/70 bg-surface/90 p-5 shadow-xs backdrop-blur-xs">
               <div className="flex items-center justify-between border-b border-border/60 pb-3">
                 <div className="flex items-center gap-2">
-                  <span className="size-2 rounded-full bg-emerald-500" />
+                  <span className="size-1.5 rounded-full bg-accent" />
                   <span className="text-xs font-semibold text-foreground">
                     Operatory 1 · Morning Session
                   </span>
@@ -412,27 +409,22 @@ export default function Home() {
                   Tuesday, 12 May
                 </span>
               </div>
-              <div className="mt-4 rounded-[var(--radius-md)] border border-accent/30 bg-accent-soft/70 p-4 text-accent-soft-foreground">
+              <div className="mt-4 rounded-[var(--radius-md)] border border-border/80 bg-secondary/30 p-4">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-xs font-semibold tabular-nums">
+                  <span className="text-xs font-semibold tabular-nums text-foreground">
                     09:30 – 10:15
                   </span>
-                  <Badge
-                    className="border-accent/40 bg-surface/90 text-xs font-medium text-accent"
-                    variant="outline"
-                  >
-                    Confirmed
-                  </Badge>
+                  <AppointmentStatusBadge status="CONFIRMED" />
                 </div>
                 <p className="mt-2 text-sm font-semibold text-foreground">
                   Sofia Rossi · Comprehensive Exam
                 </p>
-                <p className="mt-0.5 text-xs text-accent-soft-foreground/90">
+                <p className="mt-0.5 text-xs text-muted-foreground">
                   Operatory 1 · 45 min baseline duration
                 </p>
               </div>
               <div className="mt-4 flex items-center justify-between border-t border-border/60 pt-3 text-[11px] text-muted-foreground">
-                <span>Multi-chair synchronization</span>
+                <span>Operatory chair coordination</span>
                 <span className="font-mono text-foreground font-medium">
                   30m grid resolution
                 </span>
@@ -444,7 +436,7 @@ export default function Home() {
           <div className="group relative flex flex-col justify-between overflow-hidden rounded-[var(--radius-xl)] border border-border/80 bg-gradient-to-br from-card via-card to-secondary/30 p-7 sm:p-9 shadow-xs transition-all duration-200 hover:border-foreground/20 hover:shadow-sm lg:col-span-5">
             <div>
               <div className="flex items-center justify-between">
-                <div className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <div className="flex size-10 items-center justify-center rounded-full border border-border bg-surface text-foreground/75 shadow-2xs">
                   <UsersRound aria-hidden className="size-5" />
                 </div>
                 <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -465,7 +457,7 @@ export default function Home() {
               <div className="flex items-center gap-3.5">
                 <div
                   aria-hidden
-                  className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary"
+                  className="flex size-10 shrink-0 items-center justify-center rounded-full border border-border bg-secondary text-xs font-semibold text-foreground/80"
                 >
                   SR
                 </div>
@@ -480,10 +472,10 @@ export default function Home() {
               </div>
               <div className="mt-4 flex flex-wrap gap-2 pt-3 border-t border-border/60">
                 <Badge
-                  className="gap-1.5 border-amber-500/30 bg-amber-500/10 text-xs font-medium text-amber-700 dark:text-amber-400"
+                  className="gap-1.5 border-border/80 bg-secondary/50 text-xs font-medium text-foreground/80"
                   variant="outline"
                 >
-                  <AlertCircle aria-hidden className="size-3" />
+                  <span className="size-1.5 rounded-full bg-amber-600/80" />
                   Penicillin allergy
                 </Badge>
                 <Badge className="text-xs font-medium" variant="secondary">
@@ -492,7 +484,7 @@ export default function Home() {
               </div>
               <div className="mt-4 flex items-center justify-between border-t border-border/60 pt-3 text-[11px] text-muted-foreground">
                 <span>Direct clinical timeline</span>
-                <span className="text-emerald-600 font-medium">
+                <span className="text-foreground/80 font-medium">
                   History preserved
                 </span>
               </div>
@@ -503,7 +495,7 @@ export default function Home() {
           <div className="group relative flex flex-col justify-between overflow-hidden rounded-[var(--radius-xl)] border border-border/80 bg-gradient-to-br from-card via-card to-secondary/30 p-7 sm:p-9 shadow-xs transition-all duration-200 hover:border-foreground/20 hover:shadow-sm lg:col-span-5">
             <div>
               <div className="flex items-center justify-between">
-                <div className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <div className="flex size-10 items-center justify-center rounded-full border border-border bg-surface text-foreground/75 shadow-2xs">
                   <ClipboardList aria-hidden className="size-5" />
                 </div>
                 <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -542,9 +534,9 @@ export default function Home() {
                   45 min
                 </Badge>
               </div>
-              <div className="mt-4 pt-3 border-t border-border/60 text-xs font-medium text-primary flex items-center gap-1">
+              <div className="mt-4 pt-3 border-t border-border/60 text-xs font-medium text-muted-foreground flex items-center gap-1">
                 <span>Pre-fills booking duration automatically</span>
-                <ArrowRight aria-hidden className="size-3" />
+                <ArrowRight aria-hidden className="size-3 text-foreground/60" />
               </div>
               <div className="mt-3 flex items-center justify-between border-t border-border/60 pt-2 text-[11px] text-muted-foreground">
                 <span>Atelier Standard Protocols</span>
@@ -559,7 +551,7 @@ export default function Home() {
           <div className="group relative flex flex-col justify-between overflow-hidden rounded-[var(--radius-xl)] border border-border/80 bg-gradient-to-br from-card via-card to-secondary/30 p-7 sm:p-9 shadow-xs transition-all duration-200 hover:border-foreground/20 hover:shadow-sm lg:col-span-7">
             <div>
               <div className="flex items-center justify-between">
-                <div className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <div className="flex size-10 items-center justify-center rounded-full border border-border bg-surface text-foreground/75 shadow-2xs">
                   <NotebookPen aria-hidden className="size-5" />
                 </div>
                 <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -593,8 +585,9 @@ export default function Home() {
               </p>
               <div className="mt-4 flex items-center justify-between border-t border-border/60 pt-3 text-xs text-muted-foreground">
                 <span className="text-[11px]">Logged by Dr. Jane Smith</span>
-                <span className="text-[11px] text-emerald-600 font-medium">
-                  Audit trail preserved
+                <span className="text-[11px] font-medium text-foreground/70 flex items-center gap-1.5">
+                  <span className="size-1 rounded-full bg-foreground/40" />
+                  Verified session entry
                 </span>
               </div>
             </div>
@@ -604,7 +597,7 @@ export default function Home() {
           <div className="lg:col-span-12 rounded-[var(--radius-xl)] border border-border/70 bg-surface/60 p-6 sm:p-8 backdrop-blur-xs">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between border-b border-border/60 pb-5">
               <div className="flex items-center gap-2">
-                <Sparkles aria-hidden className="size-4 text-primary" />
+                <span className="size-1.5 rounded-full bg-accent" />
                 <h3 className="text-sm font-semibold tracking-tight text-foreground">
                   Connected Clinical Journey · A Typical Morning at Atelier
                 </h3>
@@ -616,8 +609,8 @@ export default function Home() {
 
             <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <div className="rounded-[var(--radius-md)] border border-border/60 bg-surface/80 p-4">
-                <div className="flex items-center gap-2 text-xs font-semibold text-primary">
-                  <span className="flex size-5 items-center justify-center rounded-full bg-primary/10 text-[11px]">
+                <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
+                  <span className="flex size-5 items-center justify-center rounded-full border border-border/70 bg-secondary/80 font-mono text-[10px] text-foreground/80">
                     1
                   </span>
                   <span>Intake & Identification</span>
@@ -629,8 +622,8 @@ export default function Home() {
               </div>
 
               <div className="rounded-[var(--radius-md)] border border-border/60 bg-surface/80 p-4">
-                <div className="flex items-center gap-2 text-xs font-semibold text-primary">
-                  <span className="flex size-5 items-center justify-center rounded-full bg-primary/10 text-[11px]">
+                <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
+                  <span className="flex size-5 items-center justify-center rounded-full border border-border/70 bg-secondary/80 font-mono text-[10px] text-foreground/80">
                     2
                   </span>
                   <span>Chair Allocation</span>
@@ -642,8 +635,8 @@ export default function Home() {
               </div>
 
               <div className="rounded-[var(--radius-md)] border border-border/60 bg-surface/80 p-4">
-                <div className="flex items-center gap-2 text-xs font-semibold text-primary">
-                  <span className="flex size-5 items-center justify-center rounded-full bg-primary/10 text-[11px]">
+                <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
+                  <span className="flex size-5 items-center justify-center rounded-full border border-border/70 bg-secondary/80 font-mono text-[10px] text-foreground/80">
                     3
                   </span>
                   <span>Protocol Guidance</span>
@@ -655,8 +648,8 @@ export default function Home() {
               </div>
 
               <div className="rounded-[var(--radius-md)] border border-border/60 bg-surface/80 p-4">
-                <div className="flex items-center gap-2 text-xs font-semibold text-primary">
-                  <span className="flex size-5 items-center justify-center rounded-full bg-primary/10 text-[11px]">
+                <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
+                  <span className="flex size-5 items-center justify-center rounded-full border border-border/70 bg-secondary/80 font-mono text-[10px] text-foreground/80">
                     4
                   </span>
                   <span>Handover & Next Visit</span>
@@ -703,11 +696,11 @@ export default function Home() {
               >
                 <div>
                   <div className="flex items-center justify-between">
-                    <div className="flex size-10 items-center justify-center rounded-[var(--radius-sm)] border border-border bg-surface shadow-xs group-hover:border-primary/30">
-                      <Icon aria-hidden className="size-5 text-primary" />
+                    <div className="flex size-10 items-center justify-center rounded-[var(--radius-sm)] border border-border bg-surface shadow-xs">
+                      <Icon aria-hidden className="size-5 text-foreground/80" />
                     </div>
                     <Badge
-                      className="border-primary/20 bg-primary/5 text-xs font-medium text-foreground"
+                      className="border-border/80 bg-secondary/50 text-[11px] font-medium text-foreground/85"
                       variant="outline"
                     >
                       {badge}
@@ -1059,7 +1052,7 @@ export default function Home() {
                       className="transition-colors hover:text-foreground"
                       href="/demo/schedule"
                     >
-                      Schedule · 5-day matrix
+                      Schedule · 5-day agenda
                     </Link>
                   </li>
                   <li>

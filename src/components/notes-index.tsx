@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Clock, FilePenLine, Pencil, Search, Sparkles, X } from "lucide-react";
+import { Clock, FilePenLine, Pencil, Search, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   NoteComposerPanel,
@@ -171,33 +171,35 @@ export function NotesIndex({ notes, patients, treatments }: NotesIndexProps) {
       <header className="flex flex-col gap-6 border-b border-border/80 pb-8 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span className="font-medium text-primary">Clinical Notes</span>
+            <span className="font-semibold uppercase tracking-wider text-accent">
+              Clinical Handover Log
+            </span>
             <span className="text-muted-foreground/40">·</span>
-            <span>Atelier Dental</span>
+            <span className="font-medium text-foreground">Atelier Dental</span>
           </div>
           <h1 className="mt-3 text-3xl font-semibold tracking-[-0.035em] sm:text-4xl text-foreground">
             Notes
           </h1>
           <p className="mt-2 max-w-xl text-sm leading-6 text-muted-foreground">
-            Concise operational context and clinical annotations connected to
-            patient records and care plans.
+            Timestamped clinical observations, procedural handovers, and patient
+            timeline context preserved across shifts.
           </p>
         </div>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="flex flex-wrap items-center gap-2">
-            <div className="rounded-full border border-border/70 bg-secondary/60 px-3 py-1 text-xs font-medium text-muted-foreground">
+            <div className="rounded-full border border-border/70 bg-surface/80 px-3 py-1 text-xs font-medium text-muted-foreground shadow-2xs">
               <span className="font-semibold text-foreground">
                 {displayNotes.length}
               </span>{" "}
               annotations
             </div>
-            <div className="rounded-full border border-border/70 bg-secondary/60 px-3 py-1 text-xs font-medium text-muted-foreground">
+            <div className="rounded-full border border-border/70 bg-surface/80 px-3 py-1 text-xs font-medium text-muted-foreground shadow-2xs">
               <span className="font-semibold text-foreground">
                 {uniquePatientsCount}
               </span>{" "}
               patients
             </div>
-            <div className="hidden sm:block rounded-full border border-border/70 bg-secondary/60 px-3 py-1 text-xs font-medium text-muted-foreground">
+            <div className="hidden sm:block rounded-full border border-border/70 bg-surface/80 px-3 py-1 text-xs font-medium text-muted-foreground shadow-2xs">
               <span className="font-semibold text-foreground">
                 {uniqueTreatmentsCount}
               </span>{" "}
@@ -228,7 +230,7 @@ export function NotesIndex({ notes, patients, treatments }: NotesIndexProps) {
             Find a note
           </label>
           <span
-            className="text-xs text-muted-foreground"
+            className="text-xs text-muted-foreground font-medium"
             id="notes-result-count"
           >
             {resultLabel(filteredNotes.length)}
@@ -286,10 +288,10 @@ export function NotesIndex({ notes, patients, treatments }: NotesIndexProps) {
                 <div className="h-px flex-1 bg-border/80" />
               </div>
 
-              <ol className="mt-4 space-y-3">
+              <ol className="mt-4 space-y-4">
                 {group.notes.map((note) => (
                   <li
-                    className="group rounded-[var(--radius-lg)] border border-border/80 bg-card/40 p-5 transition-all duration-150 hover:border-foreground/20 hover:bg-card hover:shadow-xs focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                    className="group rounded-[var(--radius-xl)] border border-border/80 bg-card/40 p-5 sm:p-6 transition-all duration-150 hover:border-foreground/20 hover:bg-card hover:shadow-xs focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                     id={`note-${note.id}`}
                     key={note.id}
                     tabIndex={-1}
@@ -298,7 +300,7 @@ export function NotesIndex({ notes, patients, treatments }: NotesIndexProps) {
                       <div className="flex min-w-0 flex-1 items-start gap-3.5">
                         <div
                           aria-hidden
-                          className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary"
+                          className="flex size-10 shrink-0 items-center justify-center rounded-full border border-border bg-secondary/60 text-xs font-semibold text-foreground/80"
                         >
                           {patientInitials(note.patientName)}
                         </div>
@@ -306,7 +308,7 @@ export function NotesIndex({ notes, patients, treatments }: NotesIndexProps) {
                           <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
                             <Link
                               aria-label={`Open patient record for ${note.patientName}`}
-                              className="text-sm font-semibold tracking-tight text-foreground transition-colors group-hover:text-primary"
+                              className="text-base font-semibold tracking-tight text-foreground transition-colors group-hover:text-primary"
                               href={`/demo/patients/${note.patientId}`}
                             >
                               {note.patientName}
@@ -314,13 +316,9 @@ export function NotesIndex({ notes, patients, treatments }: NotesIndexProps) {
 
                             {note.treatmentName && note.treatmentId ? (
                               <Link
-                                className="inline-flex items-center gap-1 rounded-full border border-border/70 bg-secondary/60 px-2.5 py-0.5 text-xs font-medium text-foreground transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary"
+                                className="inline-flex items-center rounded border border-border/70 bg-secondary/50 px-2 py-0.5 text-[11px] font-medium text-foreground/80 transition-colors hover:border-foreground/30 hover:text-foreground"
                                 href={`/demo/treatments?treatment=${note.treatmentId}`}
                               >
-                                <Sparkles
-                                  aria-hidden
-                                  className="size-3 text-primary"
-                                />
                                 <span>{note.treatmentName}</span>
                               </Link>
                             ) : null}
@@ -337,8 +335,18 @@ export function NotesIndex({ notes, patients, treatments }: NotesIndexProps) {
                             </time>
                           </div>
 
-                          <div className="mt-3 rounded-[var(--radius-md)] border border-border/50 bg-secondary/20 p-3.5 text-sm leading-relaxed text-foreground/90">
+                          <div className="mt-3 text-sm leading-relaxed text-foreground/90">
                             <p className="whitespace-pre-wrap">{note.body}</p>
+                          </div>
+
+                          <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-border/50 pt-3 text-[11px] text-muted-foreground">
+                            <span>
+                              Logged by Dr. Jane Smith · Lead Clinician
+                            </span>
+                            <span className="font-medium text-foreground/70 flex items-center gap-1.5">
+                              <span className="size-1 rounded-full bg-foreground/40" />
+                              Verified entry
+                            </span>
                           </div>
                         </div>
                       </div>

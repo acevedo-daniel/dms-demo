@@ -131,7 +131,7 @@ export function DemoUserControls({
     <>
       <div className="border-b border-border px-3.5 py-3">
         <div className="flex items-center gap-2.5">
-          <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
+          <div className="flex size-8 shrink-0 items-center justify-center rounded-full border border-border bg-secondary text-xs font-semibold text-foreground/80">
             {userInitials}
           </div>
           <div className="min-w-0">
@@ -159,8 +159,8 @@ export function DemoUserControls({
           <AlertDialogContent>
             <AlertDialogHeader>
               <div className="flex items-center justify-between">
-                <div className="flex size-11 items-center justify-center rounded-full bg-accent/10 text-accent ring-8 ring-accent/5">
-                  <RotateCcw aria-hidden className="size-5" />
+                <div className="flex size-10 items-center justify-center rounded-full border border-border bg-secondary text-foreground/80">
+                  <RotateCcw aria-hidden className="size-4" />
                 </div>
                 <span className="text-xs font-medium text-muted-foreground">
                   Practice Reset
@@ -244,7 +244,7 @@ export function DemoUserControls({
         onClick={() => setIsMenuOpen((open) => !open)}
         variant="ghost"
       >
-        <span className="flex size-6 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
+        <span className="flex size-6 items-center justify-center rounded-full border border-border bg-secondary text-[11px] font-semibold text-foreground/80">
           {userInitials}
         </span>
         <span className="hidden text-xs font-medium text-foreground xl:inline-block">

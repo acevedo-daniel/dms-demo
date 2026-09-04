@@ -1,48 +1,52 @@
-import { CheckCircle2, CircleX, Clock3 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 type AppointmentStatus = "SCHEDULED" | "CONFIRMED" | "COMPLETED" | "CANCELLED";
 
 const appointmentStatusPresentation: Record<
   AppointmentStatus,
-  { className: string; icon: typeof Clock3; label: string }
+  { dotClass: string; label: string }
 > = {
   SCHEDULED: {
-    className: "border-border/80 bg-secondary/60 text-muted-foreground",
-    icon: Clock3,
+    dotClass: "bg-muted-foreground/60",
     label: "Scheduled",
   },
   CONFIRMED: {
-    className: "border-accent/30 bg-accent-soft text-accent-soft-foreground",
-    icon: CheckCircle2,
+    dotClass: "bg-emerald-600/90 dark:bg-emerald-400/90",
     label: "Confirmed",
   },
   COMPLETED: {
-    className: "border-success/30 bg-success-soft text-success-foreground",
-    icon: CheckCircle2,
+    dotClass: "bg-foreground/70",
     label: "Completed",
   },
   CANCELLED: {
-    className: "border-destructive/30 bg-destructive-soft text-destructive",
-    icon: CircleX,
+    dotClass: "bg-destructive/70",
     label: "Cancelled",
   },
 };
 
-function AppointmentStatusBadge({ status }: { status: AppointmentStatus }) {
-  const {
-    className,
-    icon: Icon,
-    label,
-  } = appointmentStatusPresentation[status];
+function AppointmentStatusBadge({
+  className,
+  status,
+}: {
+  className?: string;
+  status: AppointmentStatus;
+}) {
+  const { dotClass, label } = appointmentStatusPresentation[status];
 
   return (
     <Badge
-      className={`gap-1.5 text-xs font-medium ${className}`}
+      className={cn(
+        "gap-1.5 border-border/80 bg-secondary/40 px-2.5 py-0.5 text-[11px] font-medium text-foreground/80 shadow-2xs backdrop-blur-xs transition-colors hover:bg-secondary/60",
+        className,
+      )}
       variant="outline"
     >
-      <Icon aria-hidden className="size-3" />
-      {label}
+      <span
+        aria-hidden="true"
+        className={cn("size-1.5 shrink-0 rounded-full", dotClass)}
+      />
+      <span>{label}</span>
     </Badge>
   );
 }
