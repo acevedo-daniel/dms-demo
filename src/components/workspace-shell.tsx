@@ -113,7 +113,10 @@ export function WorkspaceShell({ children, userName }: WorkspaceShellProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-20 border-b border-border bg-background">
+      <header
+        aria-label="DMS workspace header"
+        className="sticky top-0 z-20 border-b border-border bg-surface/90 backdrop-blur-md"
+      >
         <div className="mx-auto flex h-[var(--header-height)] w-full max-w-[var(--content-max)] items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex h-full min-w-0 items-center gap-2 lg:gap-7">
             <Button

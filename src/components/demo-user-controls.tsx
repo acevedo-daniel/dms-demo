@@ -154,7 +154,7 @@ export function DemoUserControls({
                 Keep current data
               </AlertDialogCancel>
               <AlertDialogAction
-                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                className="border border-destructive bg-destructive text-destructive-foreground hover:bg-destructive/90"
                 disabled={isResetPending}
                 onClick={(event) => {
                   event.preventDefault();
@@ -209,7 +209,7 @@ export function DemoUserControls({
         <MoreHorizontal aria-hidden className="size-5" />
       </Button>
       {isMenuOpen ? (
-        <div className="absolute top-[calc(100%+0.5rem)] right-0 z-30 w-72 overflow-hidden rounded-[var(--radius-md)] border border-border bg-surface-raised shadow-[var(--shadow-raised)]">
+        <div className="absolute top-[calc(100%+0.5rem)] right-0 z-30 w-72 overflow-hidden rounded-[var(--radius-md)] border border-border bg-surface-raised shadow-raised">
           {controls}
         </div>
       ) : null}

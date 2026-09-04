@@ -50,6 +50,7 @@ async function addPatient(page: Page) {
 }
 
 test("opens a provisioned demo session", async ({ page }) => {
+  await page.setViewportSize({ height: 960, width: 1280 });
   await openDemoWorkspace(page);
 
   await expect(
@@ -61,6 +62,23 @@ test("opens a provisioned demo session", async ({ page }) => {
       .getByText("Tuesday, 12 May 2026", { exact: true })
       .first(),
   ).toBeVisible();
+
+  const navigation = page.getByRole("navigation", {
+    name: "Workspace navigation",
+  });
+  await expect(navigation).toBeVisible();
+  await expect(navigation.getByRole("link")).toHaveText([
+    "Today",
+    "Schedule",
+    "Patients",
+    "Treatments",
+    "Notes",
+  ]);
+  await expect(navigation.getByRole("link", { name: "Today" })).toHaveAttribute(
+    "aria-current",
+    "page",
+  );
+  await expect(page.getByRole("link", { name: "Dashboard" })).toHaveCount(0);
 });
 
 test("adds a patient through the directory", async ({ page }) => {

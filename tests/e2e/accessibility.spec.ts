@@ -113,3 +113,29 @@ test("moves focus to the dashboard content when the walkthrough is dismissed", a
     page.getByRole("heading", { level: 2, name: "Today" }),
   ).toBeFocused();
 });
+
+test("uses the navigation sheet below the desktop breakpoint", async ({
+  page,
+}) => {
+  await page.setViewportSize({ height: 844, width: 375 });
+  await openResetDemoWorkspace(page);
+
+  await page.getByRole("button", { name: "Open workspace navigation" }).click();
+  const navigationSheet = page.getByRole("dialog", {
+    name: /DMS Atelier Dental/,
+  });
+  const navigation = navigationSheet.getByRole("navigation", {
+    name: "Workspace navigation",
+  });
+
+  await expect(navigationSheet).toBeVisible();
+  await expect(navigation.getByRole("link", { name: "Today" })).toHaveAttribute(
+    "aria-current",
+    "page",
+  );
+
+  await navigation.getByRole("link", { name: "Patients" }).click();
+
+  await expect(page).toHaveURL(/\/demo\/patients$/);
+  await expect(navigationSheet).toBeHidden();
+});
