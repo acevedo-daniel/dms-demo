@@ -47,23 +47,31 @@ export function ExploreDmsGuide() {
   return (
     <section
       aria-labelledby="explore-title"
-      className="mt-10 border-y border-border py-7"
+      className="mt-12 rounded-[var(--radius-lg)] border border-border/80 bg-gradient-to-b from-card/70 via-card/40 to-card/10 p-6 sm:p-7 shadow-xs"
     >
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-primary">
-            Suggested walkthrough
-          </p>
-          <h2 className="mt-2 font-medium" id="explore-title">
+          <div className="inline-flex items-center gap-2">
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
+              Suggested walkthrough
+            </span>
+            <span className="rounded-[var(--radius-pill)] bg-primary/10 px-2 py-0.5 font-mono text-[10px] font-medium text-primary">
+              4 steps
+            </span>
+          </div>
+          <h2
+            className="mt-2 text-lg font-semibold tracking-tight sm:text-xl text-foreground"
+            id="explore-title"
+          >
             Explore DMS
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            A short path through the sample workspace.
+            A short, curated path through the clinical workspace operations.
           </p>
         </div>
         <Button
           aria-label="Dismiss Explore DMS guide"
-          className="-mt-2 -mr-2"
+          className="size-8 rounded-full border border-border/70 hover:bg-secondary/70 hover:text-foreground"
           onClick={dismissGuide}
           size="icon"
           variant="ghost"
@@ -71,23 +79,30 @@ export function ExploreDmsGuide() {
           <X aria-hidden className="size-4" />
         </Button>
       </div>
-      <ol className="mt-6 grid gap-x-8 gap-y-5 sm:grid-cols-2">
+      <ol className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {guideItems.map((item, index) => (
-          <li className="flex gap-3" key={item.label}>
-            <span className="pt-0.5 font-mono text-xs text-muted-foreground">
-              0{index + 1}
-            </span>
+          <li key={item.label}>
             <Link
-              className="group min-w-0 font-medium text-primary"
+              className="group flex h-full flex-col justify-between rounded-[var(--radius-md)] border border-border/60 bg-background/50 p-4 transition-all duration-150 hover:border-foreground/25 hover:bg-card hover:shadow-xs"
               href={item.href}
             >
-              <span className="inline-flex items-center gap-1 underline-offset-4 group-hover:underline">
-                {item.label}
-                <ArrowUpRight aria-hidden className="size-3.5" />
-              </span>
-              <span className="mt-1 block text-sm font-normal leading-6 text-muted-foreground">
-                {item.description}
-              </span>
+              <div>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-mono text-xs font-semibold text-primary/80">
+                    0{index + 1}
+                  </span>
+                  <ArrowUpRight
+                    aria-hidden
+                    className="size-3.5 text-muted-foreground transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-primary"
+                  />
+                </div>
+                <p className="mt-2.5 text-sm font-semibold tracking-tight text-foreground transition-colors group-hover:text-primary">
+                  {item.label}
+                </p>
+                <p className="mt-1.5 text-xs leading-5 text-muted-foreground">
+                  {item.description}
+                </p>
+              </div>
             </Link>
           </li>
         ))}

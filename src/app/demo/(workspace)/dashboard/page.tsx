@@ -34,6 +34,18 @@ async function loadDashboard() {
   }
 }
 
+function getPatientInitials(name: string) {
+  return (
+    name
+      .split(" ")
+      .map((w) => w[0])
+      .filter(Boolean)
+      .slice(0, 2)
+      .join("")
+      .toUpperCase() || "PT"
+  );
+}
+
 export default async function DashboardPage() {
   const dashboard = await loadDashboard();
 
@@ -66,63 +78,90 @@ export default async function DashboardPage() {
 
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      <header className="flex flex-col gap-5 border-b border-border pb-7 sm:flex-row sm:items-end sm:justify-between">
+      <header className="flex flex-col gap-6 border-b border-border/80 pb-8 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-primary">
-            Daily operating view
-          </p>
-          <h1 className="mt-3 text-3xl font-semibold tracking-[-0.03em]">
+          <div className="flex items-center gap-2.5">
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
+              Daily operating view
+            </span>
+            <span className="font-mono text-xs text-muted-foreground/50">
+              /
+            </span>
+            <span className="font-mono text-xs text-muted-foreground">
+              Atelier Dental
+            </span>
+          </div>
+          <h1 className="mt-3 text-3xl font-semibold tracking-[-0.035em] sm:text-4xl text-foreground">
             Today
           </h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            {formatDemoDate(getDemoClock())} · Practice time{" "}
-            {formatDemoTime(getDemoClock())}
+          <p className="mt-2 text-sm text-muted-foreground flex flex-wrap items-center gap-x-2.5 gap-y-1">
+            <span className="font-medium text-foreground">
+              {formatDemoDate(getDemoClock())}
+            </span>
+            <span aria-hidden className="text-muted-foreground/40">
+              ·
+            </span>
+            <span className="font-mono text-xs text-muted-foreground">
+              Practice time {formatDemoTime(getDemoClock())}
+            </span>
           </p>
         </div>
-        <Button asChild>
-          <Link href="/demo/schedule?create=1">
-            <CalendarPlus aria-hidden className="size-4" />
-            Create appointment
-          </Link>
-        </Button>
+        <div className="flex items-center gap-3">
+          <Button asChild className="h-10 px-4 font-semibold shadow-xs">
+            <Link href="/demo/schedule?create=1">
+              <CalendarPlus aria-hidden className="size-4" />
+              Create appointment
+            </Link>
+          </Button>
+        </div>
       </header>
 
       <section aria-labelledby="up-next-title" className="pt-8">
         {dashboard.upNext ? (
-          <div className="rounded-[var(--radius-md)] border border-border border-l-4 border-l-accent bg-surface p-5 shadow-xs sm:flex sm:items-center sm:justify-between sm:gap-6">
+          <div className="relative overflow-hidden rounded-[var(--radius-lg)] border border-border/80 border-l-4 border-l-primary bg-gradient-to-r from-card via-card to-card/60 p-6 sm:p-7 shadow-xs sm:flex sm:items-center sm:justify-between sm:gap-6">
             <div className="min-w-0">
-              <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-primary">
-                Up next
-              </p>
-              <div className="mt-3 flex flex-wrap items-baseline gap-x-3 gap-y-2">
+              <div className="flex items-center gap-2">
+                <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
+                  Up next
+                </span>
+                <span className="inline-flex size-1.5 rounded-full bg-primary" />
+              </div>
+              <div className="mt-3 flex flex-wrap items-baseline gap-x-3.5 gap-y-2">
                 <time
-                  className="font-mono text-xl font-semibold tabular-nums"
+                  className="font-mono text-2xl font-bold tabular-nums tracking-tight text-foreground sm:text-3xl"
                   dateTime={dashboard.upNext.startsAt.toISOString()}
                 >
                   {formatDemoTime(dashboard.upNext.startsAt)}
                 </time>
-                <h2
-                  className="text-xl font-semibold tracking-tight"
-                  id="up-next-title"
-                >
-                  <Link
-                    className="hover:text-primary"
-                    href={`/demo/patients/${dashboard.upNext.patientId}`}
+                <div className="flex items-center gap-2.5">
+                  <span className="flex size-7 items-center justify-center rounded-full bg-primary/10 font-mono text-xs font-bold text-primary">
+                    {getPatientInitials(dashboard.upNext.patientName)}
+                  </span>
+                  <h2
+                    className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl"
+                    id="up-next-title"
                   >
-                    {dashboard.upNext.patientName}
-                  </Link>
-                </h2>
+                    <Link
+                      className="transition-colors hover:text-primary"
+                      href={`/demo/patients/${dashboard.upNext.patientId}`}
+                    >
+                      {dashboard.upNext.patientName}
+                    </Link>
+                  </h2>
+                </div>
               </div>
-              <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+              <div className="mt-3 flex flex-wrap items-center gap-2.5 text-sm text-muted-foreground">
                 <Link
-                  className="hover:text-primary"
+                  className="font-medium text-foreground transition-colors hover:text-primary"
                   href={`/demo/treatments?treatment=${dashboard.upNext.treatmentId}`}
                 >
                   {dashboard.upNext.treatmentName}
                 </Link>
-                <span aria-hidden>·</span>
+                <span aria-hidden className="text-muted-foreground/40">
+                  ·
+                </span>
                 <Badge
-                  className="gap-1 font-normal text-xs text-muted-foreground"
+                  className="gap-1 text-xs font-normal text-muted-foreground"
                   variant="secondary"
                 >
                   <MapPin
@@ -134,7 +173,7 @@ export default async function DashboardPage() {
                 <AppointmentStatus status={dashboard.upNext.status} />
               </div>
             </div>
-            <div className="mt-5 flex shrink-0 flex-wrap items-center gap-2 sm:mt-0">
+            <div className="mt-6 flex shrink-0 flex-wrap items-center gap-2.5 sm:mt-0">
               {dashboard.upNext.status === "SCHEDULED" ? (
                 <ConfirmAppointmentButton
                   appointmentId={dashboard.upNext.id}
@@ -142,7 +181,12 @@ export default async function DashboardPage() {
                   size="sm"
                 />
               ) : null}
-              <Button asChild size="sm" variant="outline">
+              <Button
+                asChild
+                size="sm"
+                variant="outline"
+                className="border-border/80"
+              >
                 <Link href={scheduleHref(dashboard.upNext)}>
                   Open in schedule
                 </Link>
@@ -150,56 +194,62 @@ export default async function DashboardPage() {
             </div>
           </div>
         ) : (
-          <div className="border-y border-border py-6">
-            <h2 className="font-medium" id="up-next-title">
+          <div className="rounded-[var(--radius-lg)] border border-border/80 bg-card/40 p-8 text-center sm:text-left">
+            <h2
+              className="text-base font-semibold text-foreground"
+              id="up-next-title"
+            >
               All appointments for today have been completed.
             </h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Review completed encounters or open the master schedule.
+            </p>
           </div>
         )}
       </section>
 
-      <div className="mt-10 grid gap-10 xl:grid-cols-[minmax(0,1.55fr)_minmax(17rem,.75fr)]">
+      <div className="mt-12 grid gap-10 xl:grid-cols-[minmax(0,1.6fr)_minmax(18rem,.8fr)]">
         <section aria-labelledby="today-agenda-title">
-          <div className="flex items-end justify-between gap-4">
+          <div className="flex items-end justify-between gap-4 border-b border-border/80 pb-4">
             <div>
-              <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-primary">
+              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
                 Operating day
               </p>
               <h2
-                className="mt-3 text-xl font-semibold tracking-tight"
+                className="mt-2 text-xl font-semibold tracking-tight text-foreground"
                 id="today-agenda-title"
                 tabIndex={-1}
               >
                 Today&apos;s agenda
               </h2>
             </div>
-            <span className="font-mono text-xs text-muted-foreground">
+            <span className="rounded-full border border-border/80 bg-secondary/50 px-2.5 py-0.5 font-mono text-xs text-muted-foreground">
               {dashboard.today.length} active
             </span>
           </div>
 
           {dashboard.today.length ? (
-            <ol className="mt-5 divide-y divide-border border-y border-border">
+            <ol className="mt-4 divide-y divide-border/70 border-y border-border/80">
               {dashboard.today.map((appointment) => (
                 <li
-                  className="-mx-3 grid gap-4 rounded-[var(--radius-md)] px-3 py-5 transition-colors hover:bg-secondary/40 sm:grid-cols-[5.25rem_minmax(0,1fr)_auto] sm:items-center"
+                  className="-mx-3 grid gap-3 rounded-[var(--radius-md)] px-3 py-4 transition-all duration-150 hover:bg-secondary/40 sm:grid-cols-[5.5rem_minmax(0,1fr)_auto] sm:items-center"
                   key={appointment.id}
                 >
                   <time
-                    className="font-mono text-sm font-medium tabular-nums text-foreground"
+                    className="font-mono text-sm font-semibold tabular-nums text-foreground"
                     dateTime={appointment.startsAt.toISOString()}
                   >
                     {formatDemoTime(appointment.startsAt)}
                   </time>
                   <div className="min-w-0">
                     <Link
-                      className="font-medium text-foreground hover:text-primary"
+                      className="truncate font-semibold text-foreground transition-colors hover:text-primary"
                       href={`/demo/patients/${appointment.patientId}`}
                     >
                       {appointment.patientName}
                     </Link>
                     <Link
-                      className="mt-1 block truncate text-sm text-muted-foreground hover:text-primary"
+                      className="mt-0.5 block truncate text-xs text-muted-foreground transition-colors hover:text-primary"
                       href={`/demo/treatments?treatment=${appointment.treatmentId}`}
                     >
                       {appointment.treatmentName}
@@ -207,7 +257,12 @@ export default async function DashboardPage() {
                   </div>
                   <div className="flex flex-wrap items-center gap-2 sm:justify-end">
                     <AppointmentStatus status={appointment.status} />
-                    <Button asChild size="sm" variant="ghost">
+                    <Button
+                      asChild
+                      size="sm"
+                      variant="ghost"
+                      className="text-xs hover:bg-secondary"
+                    >
                       <Link
                         aria-label={`Open ${appointment.patientName} at ${formatDemoTime(appointment.startsAt)} in schedule`}
                         href={scheduleHref(appointment)}
@@ -220,12 +275,12 @@ export default async function DashboardPage() {
               ))}
             </ol>
           ) : (
-            <div className="mt-5 border-y border-border py-12 text-center">
+            <div className="mt-6 rounded-[var(--radius-md)] border border-border/70 bg-card/30 py-12 text-center">
               <Clock3
                 aria-hidden
                 className="mx-auto size-5 text-muted-foreground"
               />
-              <p className="mt-3 font-medium">
+              <p className="mt-3 font-medium text-foreground">
                 No appointments are scheduled for today.
               </p>
               <Button asChild className="mt-4" variant="outline">
@@ -238,34 +293,48 @@ export default async function DashboardPage() {
         {dashboard.needsAttention.length ? (
           <section
             aria-labelledby="attention-title"
-            className="border-y border-border py-5 xl:self-start"
+            className="rounded-[var(--radius-lg)] border border-border/80 bg-card/40 p-5 sm:p-6 xl:self-start shadow-xs"
           >
-            <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-primary">
-              Follow-up queue
-            </p>
-            <h2
-              className="mt-3 text-xl font-semibold tracking-tight"
-              id="attention-title"
-            >
-              Needs attention
-            </h2>
-            <p className="mt-1 text-sm leading-6 text-muted-foreground">
+            <div className="flex items-center justify-between gap-2 border-b border-border/60 pb-3">
+              <div>
+                <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
+                  Follow-up queue
+                </p>
+                <h2
+                  className="mt-1 text-lg font-semibold tracking-tight text-foreground"
+                  id="attention-title"
+                >
+                  Needs attention
+                </h2>
+              </div>
+              <span className="rounded-full bg-amber-500/10 px-2 py-0.5 font-mono text-xs font-semibold text-amber-600 dark:text-amber-400">
+                {dashboard.needsAttention.length}
+              </span>
+            </div>
+            <p className="mt-2 text-xs leading-5 text-muted-foreground">
               Scheduled appointments awaiting confirmation.
             </p>
-            <ol className="mt-4 divide-y divide-border">
+            <ol className="mt-4 divide-y divide-border/60">
               {dashboard.needsAttention.map((appointment) => (
                 <li
-                  className="-mx-3 rounded-[var(--radius-md)] px-3 py-4 transition-colors hover:bg-secondary/40"
+                  className="-mx-2 rounded-[var(--radius-md)] p-3 transition-colors hover:bg-secondary/40"
                   key={appointment.id}
                 >
-                  <Link
-                    className="font-medium hover:text-primary"
-                    href={`/demo/patients/${appointment.patientId}`}
-                  >
-                    {appointment.patientName}
-                  </Link>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    {formatDemoTime(appointment.startsAt)} ·{" "}
+                  <div className="flex items-baseline justify-between gap-2">
+                    <Link
+                      className="truncate font-medium text-sm text-foreground transition-colors hover:text-primary"
+                      href={`/demo/patients/${appointment.patientId}`}
+                    >
+                      {appointment.patientName}
+                    </Link>
+                    <time
+                      className="shrink-0 font-mono text-xs tabular-nums text-muted-foreground"
+                      dateTime={appointment.startsAt.toISOString()}
+                    >
+                      {formatDemoTime(appointment.startsAt)}
+                    </time>
+                  </div>
+                  <p className="mt-1 truncate text-xs text-muted-foreground">
                     {appointment.treatmentName}
                   </p>
                   <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -274,7 +343,12 @@ export default async function DashboardPage() {
                       patientName={appointment.patientName}
                       size="sm"
                     />
-                    <Button asChild size="sm" variant="ghost">
+                    <Button
+                      asChild
+                      size="sm"
+                      variant="ghost"
+                      className="text-xs"
+                    >
                       <Link href={scheduleHref(appointment)}>Open</Link>
                     </Button>
                   </div>
@@ -287,66 +361,83 @@ export default async function DashboardPage() {
 
       <section
         aria-labelledby="recent-notes-title"
-        className="mt-10 border-t border-border pt-10"
+        className="mt-14 border-t border-border/80 pt-10"
       >
         <div className="flex items-end justify-between gap-4">
           <div>
-            <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-primary">
-              Shared context
-            </p>
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
+                Shared context
+              </span>
+              <span className="font-mono text-xs text-muted-foreground/40">
+                /
+              </span>
+              <span className="font-mono text-xs text-muted-foreground">
+                Clinical handover
+              </span>
+            </div>
             <h2
-              className="mt-3 text-xl font-semibold tracking-tight"
+              className="mt-2 text-xl font-semibold tracking-tight text-foreground"
               id="recent-notes-title"
             >
               Recent notes
             </h2>
           </div>
-          <Button asChild size="sm" variant="ghost">
+          <Button
+            asChild
+            size="sm"
+            variant="ghost"
+            className="text-xs hover:bg-secondary"
+          >
             <Link href="/demo/notes">Open notes</Link>
           </Button>
         </div>
         {dashboard.recentNotes.length ? (
-          <ol className="mt-5 divide-y divide-border border-y border-border">
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {dashboard.recentNotes.map((note) => (
-              <li
-                className="-mx-3 rounded-[var(--radius-md)] px-3 py-4 transition-colors hover:bg-secondary/40"
+              <div
+                className="flex flex-col justify-between rounded-[var(--radius-md)] border border-border/70 bg-card/40 p-4 transition-all hover:border-foreground/20 hover:bg-card hover:shadow-xs"
                 key={note.id}
               >
-                <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
-                  <Link
-                    className="font-medium text-foreground hover:text-primary"
-                    href={`/demo/patients/${note.patientId}`}
-                  >
-                    {note.patientName}
-                  </Link>
-                  {note.treatmentName && note.treatmentId ? (
+                <div>
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
                     <Link
-                      className="text-muted-foreground hover:text-primary"
-                      href={`/demo/treatments?treatment=${note.treatmentId}`}
+                      className="font-semibold text-foreground transition-colors hover:text-primary"
+                      href={`/demo/patients/${note.patientId}`}
                     >
-                      · {note.treatmentName}
+                      {note.patientName}
                     </Link>
-                  ) : null}
+                    {note.treatmentName && note.treatmentId ? (
+                      <Link
+                        className="max-w-[140px] truncate text-xs text-muted-foreground transition-colors hover:text-primary"
+                        href={`/demo/treatments?treatment=${note.treatmentId}`}
+                      >
+                        · {note.treatmentName}
+                      </Link>
+                    ) : null}
+                  </div>
+                  <p className="mt-2.5 line-clamp-3 text-xs leading-6 text-foreground/90">
+                    {note.body}
+                  </p>
                 </div>
-                <p className="mt-2 max-w-3xl text-sm leading-6 text-foreground">
-                  {note.body}
-                </p>
                 <time
-                  className="mt-2 block font-mono text-xs text-muted-foreground"
+                  className="mt-4 block font-mono text-[11px] text-muted-foreground"
                   dateTime={note.createdAt.toISOString()}
                 >
                   {formatDemoDate(note.createdAt)}
                 </time>
-              </li>
+              </div>
             ))}
-          </ol>
+          </div>
         ) : (
-          <div className="mt-5 border-y border-border py-12 text-center">
+          <div className="mt-6 rounded-[var(--radius-md)] border border-border/70 bg-card/30 py-12 text-center">
             <FileText
               aria-hidden
               className="mx-auto size-5 text-muted-foreground"
             />
-            <p className="mt-3 font-medium">No recent notes are available.</p>
+            <p className="mt-3 font-medium text-foreground">
+              No recent notes are available.
+            </p>
           </div>
         )}
       </section>

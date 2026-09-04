@@ -118,17 +118,37 @@ export function DemoUserControls({
     }
   }
 
+  const userInitials =
+    userName
+      .split(" ")
+      .map((word) => word[0])
+      .filter(Boolean)
+      .slice(0, 2)
+      .join("")
+      .toUpperCase() || "JS";
+
   const controls = (
     <>
       <div className="border-b border-border px-3 py-3">
-        <p className="text-sm font-semibold text-foreground">{userName}</p>
-        <p className="mt-0.5 text-xs text-muted-foreground">Demo workspace</p>
+        <div className="flex items-center gap-2.5">
+          <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 font-mono text-xs font-semibold text-primary">
+            {userInitials}
+          </div>
+          <div className="min-w-0">
+            <p className="truncate text-sm font-semibold text-foreground">
+              {userName}
+            </p>
+            <p className="font-mono text-[11px] text-muted-foreground">
+              Demo workspace · Atelier
+            </p>
+          </div>
+        </div>
       </div>
       <div className="space-y-1 p-2">
         <AlertDialog onOpenChange={setIsResetOpen} open={isResetOpen}>
           <AlertDialogTrigger asChild>
             <Button
-              className="w-full justify-start"
+              className="w-full justify-start text-xs sm:text-sm"
               disabled={isSignOutPending}
               variant="ghost"
             >
@@ -168,7 +188,7 @@ export function DemoUserControls({
           </AlertDialogContent>
         </AlertDialog>
         <Button
-          className="w-full justify-start"
+          className="w-full justify-start text-xs sm:text-sm"
           disabled={isSignOutPending || isResetPending}
           onClick={signOut}
           variant="ghost"
@@ -202,14 +222,20 @@ export function DemoUserControls({
         aria-expanded={isMenuOpen}
         aria-haspopup="dialog"
         aria-label="Open demo controls"
+        className="h-9 gap-2 rounded-full border border-border/80 bg-background/50 px-2 sm:px-2.5 transition-colors hover:border-foreground/25 hover:bg-secondary/60"
         onClick={() => setIsMenuOpen((open) => !open)}
-        size="icon"
         variant="ghost"
       >
-        <MoreHorizontal aria-hidden className="size-5" />
+        <span className="flex size-6 items-center justify-center rounded-full bg-primary/10 font-mono text-[11px] font-semibold text-primary">
+          {userInitials}
+        </span>
+        <span className="hidden text-xs font-medium text-foreground xl:inline-block">
+          {userName}
+        </span>
+        <MoreHorizontal aria-hidden className="size-4 text-muted-foreground" />
       </Button>
       {isMenuOpen ? (
-        <div className="absolute top-[calc(100%+0.5rem)] right-0 z-30 w-72 overflow-hidden rounded-[var(--radius-md)] border border-border bg-surface-raised shadow-raised">
+        <div className="absolute top-[calc(100%+0.5rem)] right-0 z-30 w-72 overflow-hidden rounded-[var(--radius-md)] border border-border bg-surface-raised shadow-raised backdrop-blur-md">
           {controls}
         </div>
       ) : null}

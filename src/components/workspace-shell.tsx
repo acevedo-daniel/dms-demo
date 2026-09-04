@@ -15,6 +15,7 @@ import { useState, type ComponentType, type ReactNode } from "react";
 import { DemoUserControls } from "@/components/demo-user-controls";
 import { DmsLogo } from "@/components/dms-logo";
 import { NavigationSheet } from "@/components/navigation-sheet";
+import { StudioControls } from "@/components/studio-controls";
 import { Button } from "@/components/ui/button";
 import { WorkspaceFeedback } from "@/components/workspace-feedback";
 import { cn } from "@/lib/utils";
@@ -161,6 +162,7 @@ export function WorkspaceShell({ children, userName }: WorkspaceShellProps) {
                 </Link>
               </Button>
             ) : null}
+            <StudioControls className="hidden sm:inline-flex" />
             <div className="hidden lg:block">
               <DemoUserControls userName={userName} />
             </div>
@@ -176,7 +178,13 @@ export function WorkspaceShell({ children, userName }: WorkspaceShellProps) {
             onNavigate={() => setIsNavigationOpen(false)}
             variant="sheet"
           />
-          <div className="mt-auto">
+          <div className="mt-auto space-y-3 border-t border-border pt-4">
+            <div className="flex items-center justify-between px-1">
+              <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+                Preferences
+              </span>
+              <StudioControls />
+            </div>
             <DemoUserControls
               onActionComplete={() => setIsNavigationOpen(false)}
               userName={userName}
