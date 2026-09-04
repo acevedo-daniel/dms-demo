@@ -171,7 +171,7 @@ export function PatientFormPanel({
       >
         <DialogTrigger asChild>{trigger}</DialogTrigger>
         <DialogContent
-          className="top-0 right-0 left-auto h-dvh w-full max-w-none translate-x-0 translate-y-0 rounded-none border-y-0 border-r-0 p-0 sm:w-[30rem] sm:max-w-none"
+          className="top-0 right-0 left-auto h-dvh w-full max-w-none translate-x-0 translate-y-0 rounded-none border-y-0 border-r-0 border-l border-border/80 bg-card/95 p-0 backdrop-blur-md shadow-dialog duration-[var(--motion-base)] sm:w-[32rem] sm:max-w-none"
           onEscapeKeyDown={(event) => {
             if (isDirty) {
               event.preventDefault();
@@ -185,11 +185,22 @@ export function PatientFormPanel({
             }
           }}
         >
-          <DialogHeader className="border-b border-border px-6 py-6 text-left">
-            <DialogTitle>
+          <DialogHeader className="border-b border-border/80 bg-secondary/15 px-6 py-5 text-left">
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
+                Patient intake
+              </span>
+              <span className="font-mono text-xs text-muted-foreground/40">
+                /
+              </span>
+              <span className="font-mono text-xs text-muted-foreground">
+                Atelier Dental
+              </span>
+            </div>
+            <DialogTitle className="mt-1.5 text-xl font-semibold tracking-tight text-foreground">
               {isEditing ? "Edit patient" : "Add patient"}
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
               {isEditing
                 ? "Update the patient’s operational contact record."
                 : "Create a patient record for the Atelier Dental workspace."}
@@ -201,81 +212,141 @@ export function PatientFormPanel({
             id={formId}
             onSubmit={savePatient}
           >
-            <div className="space-y-5 overflow-y-auto px-6 py-6">
-              <div className="space-y-2">
-                <Label htmlFor={`${formId}-identifier`}>Identifier</Label>
-                <Input
-                  aria-describedby={
-                    identifierError ? `${formId}-identifier-error` : undefined
-                  }
-                  aria-invalid={Boolean(identifierError)}
-                  autoComplete="off"
-                  id={`${formId}-identifier`}
-                  onChange={(event) =>
-                    updateValue("identifier", event.target.value)
-                  }
-                  required
-                  value={values.identifier}
-                />
-                {identifierError ? (
-                  <p
-                    className="text-sm text-destructive"
-                    id={`${formId}-identifier-error`}
-                    role="alert"
-                  >
-                    {identifierError}
-                  </p>
-                ) : null}
-              </div>
-              <div className="grid gap-5 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor={`${formId}-first-name`}>First name</Label>
-                  <Input
-                    id={`${formId}-first-name`}
-                    onChange={(event) =>
-                      updateValue("firstName", event.target.value)
-                    }
-                    required
-                    value={values.firstName}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor={`${formId}-last-name`}>Last name</Label>
-                  <Input
-                    id={`${formId}-last-name`}
-                    onChange={(event) =>
-                      updateValue("lastName", event.target.value)
-                    }
-                    required
-                    value={values.lastName}
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor={`${formId}-email`}>Email</Label>
-                <Input
-                  id={`${formId}-email`}
-                  onChange={(event) => updateValue("email", event.target.value)}
-                  type="email"
-                  value={values.email}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor={`${formId}-phone`}>Phone</Label>
-                <Input
-                  id={`${formId}-phone`}
-                  onChange={(event) => updateValue("phone", event.target.value)}
-                  type="tel"
-                  value={values.phone}
-                />
-              </div>
-              {error && !identifierError ? (
-                <p className="text-sm text-destructive" role="alert">
-                  {error}
+            <div className="flex-1 space-y-6 overflow-y-auto px-6 py-6">
+              {/* Clinical Identity Section */}
+              <div className="space-y-4">
+                <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                  Clinical identity
                 </p>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label
+                      className="text-xs font-semibold text-foreground"
+                      htmlFor={`${formId}-identifier`}
+                    >
+                      Identifier
+                    </Label>
+                    <span className="font-mono text-[11px] text-muted-foreground">
+                      Unique chart ID
+                    </span>
+                  </div>
+                  <Input
+                    aria-describedby={
+                      identifierError ? `${formId}-identifier-error` : undefined
+                    }
+                    aria-invalid={Boolean(identifierError)}
+                    autoComplete="off"
+                    autoFocus
+                    className="font-mono text-sm tracking-wide placeholder:font-sans"
+                    id={`${formId}-identifier`}
+                    onChange={(event) =>
+                      updateValue("identifier", event.target.value)
+                    }
+                    placeholder="e.g. PAT-010"
+                    required
+                    value={values.identifier}
+                  />
+                  {identifierError ? (
+                    <p
+                      className="text-xs font-medium text-destructive"
+                      id={`${formId}-identifier-error`}
+                      role="alert"
+                    >
+                      {identifierError}
+                    </p>
+                  ) : null}
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label
+                      className="text-xs font-semibold text-foreground"
+                      htmlFor={`${formId}-first-name`}
+                    >
+                      First name
+                    </Label>
+                    <Input
+                      id={`${formId}-first-name`}
+                      onChange={(event) =>
+                        updateValue("firstName", event.target.value)
+                      }
+                      placeholder="e.g. Elena"
+                      required
+                      value={values.firstName}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label
+                      className="text-xs font-semibold text-foreground"
+                      htmlFor={`${formId}-last-name`}
+                    >
+                      Last name
+                    </Label>
+                    <Input
+                      id={`${formId}-last-name`}
+                      onChange={(event) =>
+                        updateValue("lastName", event.target.value)
+                      }
+                      placeholder="e.g. Rostova"
+                      required
+                      value={values.lastName}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Contact Information Section */}
+              <div className="space-y-4 border-t border-border/80 pt-6">
+                <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                  Contact details
+                </p>
+                <div className="space-y-2">
+                  <Label
+                    className="text-xs font-semibold text-foreground"
+                    htmlFor={`${formId}-email`}
+                  >
+                    Email
+                  </Label>
+                  <Input
+                    id={`${formId}-email`}
+                    onChange={(event) =>
+                      updateValue("email", event.target.value)
+                    }
+                    placeholder="patient@example.com"
+                    type="email"
+                    value={values.email}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label
+                    className="text-xs font-semibold text-foreground"
+                    htmlFor={`${formId}-phone`}
+                  >
+                    Phone
+                  </Label>
+                  <Input
+                    id={`${formId}-phone`}
+                    onChange={(event) =>
+                      updateValue("phone", event.target.value)
+                    }
+                    placeholder="(555) 012-3456"
+                    type="tel"
+                    value={values.phone}
+                  />
+                </div>
+              </div>
+
+              {error && !identifierError ? (
+                <div
+                  className="rounded-[var(--radius-md)] border border-destructive/30 bg-destructive/10 p-3 text-xs font-medium text-destructive"
+                  role="alert"
+                >
+                  {error}
+                </div>
               ) : null}
             </div>
-            <DialogFooter className="mt-auto border-t border-border px-6 py-4 sm:justify-between">
+
+            <DialogFooter className="mt-auto border-t border-border/80 bg-secondary/15 px-6 py-4 sm:justify-between">
               <Button onClick={requestClose} type="button" variant="ghost">
                 Close
               </Button>
