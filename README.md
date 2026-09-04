@@ -18,7 +18,7 @@ DMS brings appointments, patient records, a treatment catalog, and operational n
 
 ### Daily operations
 
-![DMS dashboard showing the demo day's schedule, follow-up work, and recent notes](docs/screenshots/dashboard.webp)
+![DMS Today view showing the demo day's appointments, follow-up work, and recent notes](docs/screenshots/today.webp)
 
 ### Core workflows
 

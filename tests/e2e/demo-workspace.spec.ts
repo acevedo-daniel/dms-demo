@@ -278,7 +278,7 @@ test("adds a note from a patient record", async ({ page }) => {
 
   await expect(dialog).toBeHidden();
   await expect(page.getByText("Created by end-to-end test.")).toBeVisible();
-  await expect(page.getByRole("status")).toContainText("Note added.");
+  await expect(page.getByRole("status")).toContainText("Patient note saved.");
 });
 
 test("uses Today as an immediate, connected operating view", async ({

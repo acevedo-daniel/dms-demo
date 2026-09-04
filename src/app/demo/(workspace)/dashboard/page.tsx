@@ -127,11 +127,12 @@ export default async function DashboardPage() {
                 <AppointmentStatus status={dashboard.upNext.status} />
               </div>
             </div>
-            <div className="mt-5 flex shrink-0 flex-wrap gap-2 sm:mt-0">
+            <div className="mt-5 flex shrink-0 flex-wrap items-center gap-2 sm:mt-0">
               {dashboard.upNext.status === "SCHEDULED" ? (
                 <ConfirmAppointmentButton
                   appointmentId={dashboard.upNext.id}
                   patientName={dashboard.upNext.patientName}
+                  size="sm"
                 />
               ) : null}
               <Button asChild size="sm" variant="outline">
@@ -257,10 +258,11 @@ export default async function DashboardPage() {
                     {formatDemoTime(appointment.startsAt)} ·{" "}
                     {appointment.treatmentName}
                   </p>
-                  <div className="mt-3 flex flex-wrap gap-2">
+                  <div className="mt-3 flex flex-wrap items-center gap-2">
                     <ConfirmAppointmentButton
                       appointmentId={appointment.id}
                       patientName={appointment.patientName}
+                      size="sm"
                     />
                     <Button asChild size="sm" variant="ghost">
                       <Link href={scheduleHref(appointment)}>Open</Link>

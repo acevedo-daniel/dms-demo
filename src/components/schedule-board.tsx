@@ -10,7 +10,13 @@ import {
 } from "@/components/schedule-context-panel";
 import { AppointmentStatusBadge } from "@/components/appointment-status-badge";
 import { Button } from "@/components/ui/button";
-import { Select } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { announceWorkspaceFeedback } from "@/components/workspace-feedback";
 import { cn } from "@/lib/utils";
 import { formatDemoDate, formatDemoTime } from "@/lib/demo/format";
@@ -448,20 +454,22 @@ export function ScheduleBoard({
               </Link>
             </Button>
           </nav>
-          <label className="flex items-center gap-2 text-sm text-muted-foreground">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <span>Status</span>
             <Select
-              className="w-auto px-2"
-              onChange={(event) =>
-                setFilter(event.target.value as StatusFilter)
-              }
+              onValueChange={(val) => setFilter(val as StatusFilter)}
               value={filter}
             >
-              <option value="ALL">All active</option>
-              <option value="SCHEDULED">Scheduled</option>
-              <option value="CONFIRMED">Confirmed</option>
+              <SelectTrigger className="h-[var(--control-sm)] min-w-[7.5rem] bg-card px-2.5 text-xs font-medium">
+                <SelectValue placeholder="All active" />
+              </SelectTrigger>
+              <SelectContent align="end">
+                <SelectItem value="ALL">All active</SelectItem>
+                <SelectItem value="SCHEDULED">Scheduled</SelectItem>
+                <SelectItem value="CONFIRMED">Confirmed</SelectItem>
+              </SelectContent>
             </Select>
-          </label>
+          </div>
         </div>
       </header>
 

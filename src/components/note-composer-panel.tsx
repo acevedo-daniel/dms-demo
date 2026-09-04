@@ -23,7 +23,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Select } from "@/components/ui/select";
+import { NativeSelect as Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { announceWorkspaceFeedback } from "@/components/workspace-feedback";
 import type {
