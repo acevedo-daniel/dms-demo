@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { NativeSelect as Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 import type {
   ScheduleAppointment,
   SchedulePatient,
@@ -80,28 +81,32 @@ export function AppointmentForm({
     >
       <div className="space-y-5 overflow-y-auto px-6 py-6">
         {isEditing && appointment && canManageStatus ? (
-          <div className="flex flex-wrap gap-2 border-b border-border pb-5">
+          <div className="flex flex-wrap items-center gap-2 border-b border-border/80 pb-5">
             {appointment.status === "SCHEDULED" ? (
               <Button
+                className="h-8 gap-1.5 border-accent/40 bg-accent-soft text-xs font-semibold text-accent-soft-foreground hover:border-accent hover:bg-accent-soft/80"
                 disabled={isStatusPending}
                 onClick={() => onUpdateStatus("CONFIRMED")}
+                size="sm"
                 type="button"
                 variant="outline"
               >
-                <Check aria-hidden className="size-4 text-primary" />
+                <Check aria-hidden className="size-3.5" />
                 Confirm
               </Button>
             ) : null}
             <Button
+              className="h-8 gap-1.5 border-success/40 bg-success-soft text-xs font-semibold text-success-foreground hover:border-success hover:bg-success-soft/80"
               disabled={isStatusPending}
               onClick={() => onUpdateStatus("COMPLETED")}
+              size="sm"
               type="button"
               variant="outline"
             >
-              <CheckCircle2 aria-hidden className="size-4 text-success" />
+              <CheckCircle2 aria-hidden className="size-3.5" />
               Complete
             </Button>
-            <Button asChild variant="ghost">
+            <Button asChild className="h-8 text-xs" size="sm" variant="ghost">
               <Link href={`/demo/patients/${appointment.patientId}`}>
                 Open patient
               </Link>
@@ -206,7 +211,12 @@ export function AppointmentForm({
         ) : null}
 
         <div className="space-y-2">
-          <Label htmlFor={`${formId}-duration`}>Duration (minutes)</Label>
+          <div className="flex items-center justify-between">
+            <Label htmlFor={`${formId}-duration`}>Duration (minutes)</Label>
+            <span className="font-mono text-xs font-medium text-muted-foreground">
+              {values.durationMinutes} min
+            </span>
+          </div>
           <Input
             aria-describedby={
               durationError ? `${formId}-duration-error` : undefined
@@ -223,6 +233,23 @@ export function AppointmentForm({
             type="number"
             value={values.durationMinutes}
           />
+          <div className="flex flex-wrap gap-1.5 pt-1">
+            {[15, 30, 45, 60, 90].map((mins) => (
+              <button
+                className={cn(
+                  "rounded-[var(--radius-sm)] px-2.5 py-1 font-mono text-[11px] font-medium transition-colors",
+                  values.durationMinutes === String(mins)
+                    ? "bg-primary font-bold text-primary-foreground shadow-xs"
+                    : "bg-secondary text-muted-foreground hover:bg-secondary/80 hover:text-foreground",
+                )}
+                key={mins}
+                onClick={() => onValueChange("durationMinutes", String(mins))}
+                type="button"
+              >
+                {mins}m
+              </button>
+            ))}
+          </div>
           {durationError ? (
             <p
               className="text-sm text-destructive"

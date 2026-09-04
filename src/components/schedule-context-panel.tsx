@@ -118,7 +118,7 @@ export function ScheduleContextFrame({
     return (
       <aside
         aria-label="Appointment context"
-        className="sticky top-[calc(var(--header-height)+1rem)] flex max-h-[calc(100vh-var(--header-height)-2rem)] min-h-0 flex-col overflow-hidden rounded-[var(--radius-lg)] border border-border bg-surface shadow-raised"
+        className="sticky top-[calc(var(--header-height)+1rem)] flex max-h-[calc(100vh-var(--header-height)-2rem)] min-h-0 flex-col overflow-hidden rounded-[var(--radius-lg)] border border-border/80 bg-card shadow-raised"
         onKeyDownCapture={(event) => {
           if (event.key === "Escape" && isDirty) {
             event.preventDefault();
@@ -142,7 +142,7 @@ export function ScheduleContextFrame({
       open={open}
     >
       <DialogContent
-        className="top-0 right-0 left-auto h-dvh w-full max-w-none translate-x-0 translate-y-0 rounded-none border-y-0 border-r-0 p-0 md:w-[32rem] md:max-w-none"
+        className="top-0 right-0 left-auto h-dvh w-full max-w-none translate-x-0 translate-y-0 rounded-none border-y-0 border-r-0 border-l border-border/80 bg-card/95 p-0 shadow-dialog backdrop-blur-md md:w-[32rem] md:max-w-none"
         onEscapeKeyDown={(event) => {
           if (isDirty) {
             event.preventDefault();
@@ -335,31 +335,38 @@ export function ScheduleContextPanel({
         {(isOverlay) => (
           <>
             {isOverlay ? (
-              <DialogHeader className="border-b border-border px-6 py-6 text-left">
-                <DialogTitle>
+              <DialogHeader className="border-b border-border/80 px-6 py-6 text-left">
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
+                    {isEditing && appointment
+                      ? `${practiceTimeInputValue(new Date(appointment.startsAt))} · ${appointment.patientName}`
+                      : "New appointment"}
+                  </span>
+                </div>
+                <DialogTitle className="mt-1 text-xl font-semibold tracking-tight text-foreground">
                   {isEditing ? "Appointment details" : "Create appointment"}
                 </DialogTitle>
-                <DialogDescription>
+                <DialogDescription className="mt-1 text-sm text-muted-foreground">
                   {isEditing
                     ? "Update appointment details or take the next status action."
                     : "Appointments are created as Scheduled."}
                 </DialogDescription>
               </DialogHeader>
             ) : (
-              <header className="border-b border-border px-6 py-6">
-                <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-primary">
+              <header className="border-b border-border/80 px-6 py-6">
+                <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
                   {isEditing && appointment
                     ? `${practiceTimeInputValue(new Date(appointment.startsAt))} · ${appointment.patientName}`
                     : "Draft appointment"}
                 </p>
                 <h2
-                  className="mt-2 text-lg font-semibold"
+                  className="mt-1 text-xl font-semibold tracking-tight text-foreground"
                   id="schedule-context-title"
                   tabIndex={-1}
                 >
                   {isEditing ? "Appointment details" : "Create appointment"}
                 </h2>
-                <p className="mt-2 text-sm text-muted-foreground">
+                <p className="mt-1.5 text-sm text-muted-foreground">
                   {isEditing
                     ? "Update appointment details or take the next status action."
                     : "Appointments are created as Scheduled."}

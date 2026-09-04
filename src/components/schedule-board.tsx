@@ -408,25 +408,61 @@ export function ScheduleBoard({
 
   return (
     <div>
-      <header className="flex flex-col gap-5 border-b border-border pb-7">
+      <header className="flex flex-col gap-6 border-b border-border/80 pb-8">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-primary">
-              Appointment coordination
-            </p>
+            <div className="flex items-center gap-2.5">
+              <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">
+                Appointment coordination
+              </span>
+              <span className="font-mono text-xs text-muted-foreground/50">
+                /
+              </span>
+              <span className="font-mono text-xs text-muted-foreground">
+                Atelier Dental
+              </span>
+            </div>
             <h1
-              className="mt-3 text-3xl font-semibold tracking-[-0.03em]"
+              className="mt-3 text-3xl font-semibold tracking-[-0.035em] sm:text-4xl text-foreground"
               id="schedule-title"
               tabIndex={-1}
             >
               Schedule
             </h1>
-            <p className="mt-2 text-sm text-muted-foreground">
-              {weekRange(days)} · Monday–Friday
+            <p className="mt-2 text-sm text-muted-foreground flex flex-wrap items-center gap-x-2.5 gap-y-1">
+              <span className="font-medium text-foreground">
+                {weekRange(days)}
+              </span>
+              <span aria-hidden className="text-muted-foreground/40">
+                ·
+              </span>
+              <span className="font-mono text-xs text-muted-foreground">
+                Monday–Friday
+              </span>
+              <span
+                aria-hidden
+                className="hidden sm:inline text-muted-foreground/40"
+              >
+                ·
+              </span>
+              <span className="hidden sm:inline-flex items-center gap-1.5 font-mono text-[11px] text-muted-foreground/80">
+                <span className="rounded bg-secondary px-1.5 py-0.5 border border-border/60">
+                  C
+                </span>
+                <span>create</span>
+                <span className="rounded bg-secondary px-1.5 py-0.5 border border-border/60 ml-1">
+                  T
+                </span>
+                <span>today</span>
+                <span className="rounded bg-secondary px-1.5 py-0.5 border border-border/60 ml-1">
+                  ←/→
+                </span>
+                <span>week</span>
+              </span>
             </p>
           </div>
           <Button
-            className="hidden md:inline-flex"
+            className="hidden md:inline-flex h-10 px-4 font-semibold shadow-xs"
             onClick={(event) => openCreate(undefined, event.currentTarget)}
           >
             <CalendarPlus aria-hidden className="size-4" />
@@ -436,12 +472,12 @@ export function ScheduleBoard({
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <nav
             aria-label="Schedule week"
-            className="inline-flex items-center rounded-[var(--radius-md)] border border-border bg-surface p-0.5 shadow-xs"
+            className="inline-flex items-center rounded-full border border-border/80 bg-background/60 p-1 shadow-xs backdrop-blur-xs"
           >
             <Button
               asChild
               aria-label="Previous week"
-              className="size-8 rounded-[var(--radius-sm)]"
+              className="size-8 rounded-full hover:bg-secondary"
               size="icon"
               variant="ghost"
             >
@@ -451,7 +487,7 @@ export function ScheduleBoard({
             </Button>
             <Button
               asChild
-              className="h-8 rounded-[var(--radius-sm)] px-3 text-xs font-medium"
+              className="h-8 rounded-full px-3.5 text-xs font-semibold hover:bg-secondary"
               size="sm"
               variant="ghost"
             >
@@ -460,7 +496,7 @@ export function ScheduleBoard({
             <Button
               asChild
               aria-label="Next week"
-              className="size-8 rounded-[var(--radius-sm)]"
+              className="size-8 rounded-full hover:bg-secondary"
               size="icon"
               variant="ghost"
             >
@@ -469,13 +505,15 @@ export function ScheduleBoard({
               </Link>
             </Button>
           </nav>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <span>Status</span>
+          <div className="flex items-center gap-2.5 text-sm text-muted-foreground">
+            <span className="font-mono text-xs uppercase tracking-wider">
+              Status
+            </span>
             <Select
               onValueChange={(val) => setFilter(val as StatusFilter)}
               value={filter}
             >
-              <SelectTrigger className="h-[var(--control-sm)] min-w-[7.5rem] bg-card px-2.5 text-xs font-medium">
+              <SelectTrigger className="h-8 min-w-[8rem] rounded-full border-border/80 bg-background/60 px-3 text-xs font-medium backdrop-blur-xs">
                 <SelectValue placeholder="All active" />
               </SelectTrigger>
               <SelectContent align="end">
@@ -499,13 +537,13 @@ export function ScheduleBoard({
         <section aria-label="Week schedule" className="hidden md:block">
           <div
             aria-label="Scrollable week schedule"
-            className="overflow-x-auto rounded-[var(--radius-md)] border border-border bg-surface pb-2 shadow-xs focus-visible:outline-none"
+            className="overflow-x-auto rounded-[var(--radius-lg)] border border-border/80 bg-surface pb-2 shadow-xs focus-visible:outline-none"
             role="region"
             tabIndex={0}
           >
             <div className="min-w-[62rem]">
-              <div className="sticky top-0 z-20 grid grid-cols-[4.5rem_repeat(5,minmax(10.5rem,1fr))] border-b border-border bg-surface">
-                <div className="sticky left-0 z-30 border-r border-border bg-surface px-3 py-4 font-mono text-xs text-muted-foreground">
+              <div className="sticky top-0 z-20 grid grid-cols-[4.5rem_repeat(5,minmax(10.5rem,1fr))] border-b border-border/80 bg-surface/95 backdrop-blur-sm">
+                <div className="sticky left-0 z-30 border-r border-border/80 bg-surface/95 px-3 py-4 font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
                   Time
                 </div>
                 {days.map((day) => {
@@ -513,21 +551,41 @@ export function ScheduleBoard({
                   return (
                     <div
                       className={cn(
-                        "border-r border-border px-4 py-4 text-sm font-semibold last:border-r-0",
-                        isDemoDay && "border-b-2 border-b-accent",
+                        "border-r border-border/80 px-4 py-3.5 text-sm transition-colors last:border-r-0",
+                        isDemoDay &&
+                          "bg-primary/[0.03] border-b-2 border-b-primary",
                       )}
                       key={day.toISOString()}
                     >
-                      {dayLabel(day)}
+                      <div className="flex items-center justify-between gap-2">
+                        <span
+                          className={cn(
+                            "font-semibold",
+                            isDemoDay ? "text-primary" : "text-foreground",
+                          )}
+                        >
+                          {dayLabel(day)}
+                        </span>
+                        {isDemoDay ? (
+                          <span className="rounded-full bg-primary/10 px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-primary">
+                            Today
+                          </span>
+                        ) : null}
+                      </div>
                     </div>
                   );
                 })}
               </div>
               <div className="grid grid-cols-[4.5rem_repeat(5,minmax(10.5rem,1fr))]">
-                <div className="sticky left-0 z-10 border-r border-border bg-surface">
+                <div className="sticky left-0 z-10 border-r border-border/80 bg-surface/95 backdrop-blur-xs">
                   {Array.from({ length: scheduleSlotsPerDay }, (_, index) => (
                     <div
-                      className="h-12 border-b border-border-subtle bg-surface px-3 pt-1 font-mono text-xs text-muted-foreground"
+                      className={cn(
+                        "h-12 border-b border-border/50 bg-surface px-3 pt-1.5 font-mono text-xs text-muted-foreground/80",
+                        index % 2 === 0
+                          ? "border-b-border/70"
+                          : "border-b-border/30",
+                      )}
                       key={index}
                     >
                       {String(
@@ -544,7 +602,10 @@ export function ScheduleBoard({
 
                   return (
                     <div
-                      className="relative border-r border-border last:border-r-0"
+                      className={cn(
+                        "relative border-r border-border/80 last:border-r-0",
+                        isDemoDay && "bg-primary/[0.015]",
+                      )}
                       key={dayKey}
                     >
                       {Array.from(
@@ -557,7 +618,12 @@ export function ScheduleBoard({
                           return (
                             <button
                               aria-label={`Create appointment for ${dayLabel(day)} at ${formatDemoTime(new Date(startsAt))}`}
-                              className="dms-pressable block h-12 w-full border-b border-border-subtle text-left transition-colors hover:bg-accent/[0.06] focus-visible:relative focus-visible:z-20 focus-visible:outline-none"
+                              className={cn(
+                                "dms-pressable block h-12 w-full text-left transition-colors hover:bg-primary/[0.05] focus-visible:relative focus-visible:z-20 focus-visible:outline-none",
+                                index % 2 === 0
+                                  ? "border-b border-border/60"
+                                  : "border-b border-border/30",
+                              )}
                               key={startsAt}
                               onClick={(event) =>
                                 openCreate(startsAt, event.currentTarget)
@@ -572,8 +638,8 @@ export function ScheduleBoard({
                           className="pointer-events-none absolute z-20 h-px w-full bg-accent"
                           style={{ top: `${demoMarkerSlot * 3}rem` }}
                         >
-                          <span className="absolute -top-2 left-1 rounded-[var(--radius-sm)] bg-accent px-1 font-mono text-[10px] text-accent-foreground">
-                            Now
+                          <span className="absolute -top-2.5 left-1.5 rounded-full bg-accent px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wider text-accent-foreground shadow-xs">
+                            Now 08:30
                           </span>
                         </div>
                       ) : null}
@@ -583,19 +649,21 @@ export function ScheduleBoard({
                         dayKey ? (
                         <div
                           aria-label={`Draft appointment at ${formatDemoTime(new Date(draft.startsAt))} for ${draft.durationMinutes} minutes`}
-                          className="pointer-events-none absolute right-1 left-1 z-10 overflow-hidden rounded-[var(--radius-sm)] border border-dashed border-accent bg-accent-soft/40 px-2 py-1.5 text-left transition-[height] duration-[var(--motion-base)] ease-[var(--ease-emphasized)]"
+                          className="pointer-events-none absolute right-1.5 left-1.5 z-10 overflow-hidden rounded-[var(--radius-md)] border-2 border-dashed border-accent bg-accent-soft/50 px-2.5 py-2 text-left shadow-xs transition-[height] duration-[var(--motion-base)] ease-[var(--ease-emphasized)] backdrop-blur-xs"
                           role="status"
                           style={{
                             height: `${(draft.durationMinutes / 30) * 3}rem`,
                             top: `${slotIndex(draft.startsAt) * 3}rem`,
                           }}
                         >
-                          <span className="block truncate text-xs font-semibold text-accent-soft-foreground">
-                            Draft appointment
-                          </span>
-                          <span className="mt-0.5 block font-mono text-[10px] text-accent-soft-foreground">
-                            {draft.durationMinutes} min
-                          </span>
+                          <div className="flex items-center justify-between gap-1">
+                            <span className="block truncate text-xs font-bold text-accent-soft-foreground">
+                              Draft appointment
+                            </span>
+                            <span className="rounded bg-accent/20 px-1 py-0.2 font-mono text-[10px] font-bold text-accent-soft-foreground shrink-0">
+                              {draft.durationMinutes} min
+                            </span>
+                          </div>
                         </div>
                       ) : null}
                       {dayAppointments.map((appointment) => {
@@ -609,12 +677,13 @@ export function ScheduleBoard({
                             aria-label={`Open ${appointment.status.toLowerCase()} appointment for ${appointmentName(appointment)} at ${formatDemoTime(new Date(appointment.startsAt))}`}
                             aria-pressed={isSelected}
                             className={cn(
-                              "dms-pressable dms-raised-action absolute right-1 left-1 z-10 overflow-hidden rounded-[var(--radius-sm)] border text-left focus-visible:outline-none",
+                              "dms-pressable dms-raised-action absolute right-1.5 left-1.5 z-10 overflow-hidden rounded-[var(--radius-md)] border text-left transition-all duration-150 focus-visible:outline-none shadow-xs hover:shadow-sm",
                               confirmed
-                                ? "border-accent/30 bg-accent-soft text-accent-soft-foreground hover:border-accent"
-                                : "border-border bg-surface hover:border-border-strong",
-                              isSelected && "ring-2 ring-accent ring-offset-1",
-                              isCompact ? "px-1 py-1" : "px-2 py-1.5",
+                                ? "border-accent/40 border-l-[3.5px] border-l-accent bg-accent-soft text-accent-soft-foreground hover:border-accent"
+                                : "border-border/90 border-l-[3.5px] border-l-foreground/40 bg-card text-foreground hover:border-foreground/30",
+                              isSelected &&
+                                "ring-2 ring-primary ring-offset-2 ring-offset-background",
+                              isCompact ? "px-2 py-1" : "px-2.5 py-1.5",
                             )}
                             key={appointment.id}
                             onClick={(event) =>
@@ -626,18 +695,29 @@ export function ScheduleBoard({
                             }}
                             type="button"
                           >
-                            <span className="block truncate text-xs leading-3 font-semibold">
-                              {formatDemoTime(new Date(appointment.startsAt))} ·{" "}
+                            <div className="flex items-center justify-between gap-1">
+                              <span className="font-mono text-[11px] font-bold tabular-nums">
+                                {formatDemoTime(new Date(appointment.startsAt))}
+                              </span>
+                              <span className="font-mono text-[10px] opacity-70">
+                                {appointment.durationMinutes}m
+                              </span>
+                            </div>
+                            <span className="mt-0.5 block truncate text-xs font-semibold leading-tight">
                               {appointment.patientName}
                             </span>
-                            {!isCompact ? (
-                              <span className="mt-0.5 block truncate text-xs leading-3 text-muted-foreground">
-                                {appointment.treatmentName}
+                            <div className="mt-0.5 flex items-center justify-between gap-1">
+                              {!isCompact ? (
+                                <span className="block truncate text-[11px] opacity-80 leading-tight">
+                                  {appointment.treatmentName}
+                                </span>
+                              ) : (
+                                <span />
+                              )}
+                              <span className="font-mono text-[9px] uppercase tracking-wider opacity-70 shrink-0">
+                                {appointmentStatusLabel(appointment)}
                               </span>
-                            ) : null}
-                            <span className="mt-0.5 block truncate text-[10px] leading-3 font-medium">
-                              {appointmentStatusLabel(appointment)}
-                            </span>
+                            </div>
                           </button>
                         );
                       })}
@@ -652,30 +732,68 @@ export function ScheduleBoard({
       </div>
 
       <section aria-label="Day agenda" className="mt-8 md:hidden">
-        <div className="flex items-center justify-between gap-3 border-y border-border py-3">
-          <Button
-            aria-label="Previous day"
-            disabled={mobileDayIndex === 0}
-            onClick={() => setMobileDayIndex((index) => index - 1)}
-            size="icon"
-            variant="ghost"
-          >
-            <ChevronLeft aria-hidden className="size-4" />
-          </Button>
-          <p aria-live="polite" className="text-sm font-medium">
-            {formatDemoDate(selectedMobileDay)}
-          </p>
-          <Button
-            aria-label="Next day"
-            disabled={mobileDayIndex === days.length - 1}
-            onClick={() => setMobileDayIndex((index) => index + 1)}
-            size="icon"
-            variant="ghost"
-          >
-            <ChevronRight aria-hidden className="size-4" />
-          </Button>
+        <div className="rounded-[var(--radius-lg)] border border-border/80 bg-card p-3 shadow-xs">
+          <div className="flex items-center justify-between gap-2 border-b border-border/60 pb-3">
+            <Button
+              aria-label="Previous day"
+              className="size-8 rounded-full"
+              disabled={mobileDayIndex === 0}
+              onClick={() => setMobileDayIndex((index) => index - 1)}
+              size="icon"
+              variant="ghost"
+            >
+              <ChevronLeft aria-hidden className="size-4" />
+            </Button>
+            <p
+              aria-live="polite"
+              className="text-sm font-semibold text-foreground"
+            >
+              {formatDemoDate(selectedMobileDay)}
+            </p>
+            <Button
+              aria-label="Next day"
+              className="size-8 rounded-full"
+              disabled={mobileDayIndex === days.length - 1}
+              onClick={() => setMobileDayIndex((index) => index + 1)}
+              size="icon"
+              variant="ghost"
+            >
+              <ChevronRight aria-hidden className="size-4" />
+            </Button>
+          </div>
+
+          <div className="mt-2.5 grid grid-cols-5 gap-1.5">
+            {days.map((day, idx) => {
+              const isSelected = idx === mobileDayIndex;
+              const isDemoDay = practiceDateInputValue(day) === demoDayKey;
+              const shortName = ["Mon", "Tue", "Wed", "Thu", "Fri"][idx];
+              const dateNum = day.getDate();
+              return (
+                <button
+                  key={day.toISOString()}
+                  onClick={() => setMobileDayIndex(idx)}
+                  className={cn(
+                    "flex flex-col items-center py-2 rounded-[var(--radius-md)] border text-xs transition-all",
+                    isSelected
+                      ? "border-primary bg-primary text-primary-foreground font-semibold shadow-xs"
+                      : "border-transparent bg-secondary/40 text-muted-foreground hover:bg-secondary hover:text-foreground",
+                    !isSelected &&
+                      isDemoDay &&
+                      "border-border/80 text-foreground font-medium",
+                  )}
+                  type="button"
+                >
+                  <span className="font-mono text-[10px] uppercase tracking-wider">
+                    {shortName}
+                  </span>
+                  <span className="text-sm font-bold mt-0.5">{dateNum}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
-        <ol className="divide-y divide-border border-b border-border">
+
+        <ol className="mt-4 divide-y divide-border/60 border-y border-border/80">
           {Array.from({ length: scheduleSlotsPerDay }, (_, index) => {
             const startsAt = scheduleSlotStart(selectedMobileDay, index);
             const slotAppointments = selectedMobileAppointments.filter(
@@ -684,16 +802,16 @@ export function ScheduleBoard({
             const isDraft = draft?.startsAt === startsAt.toISOString();
             return (
               <li
-                className="flex min-h-16 items-center gap-4 py-2"
+                className="flex min-h-16 items-center gap-4 py-2.5"
                 key={startsAt.toISOString()}
               >
-                <time className="w-12 shrink-0 font-mono text-xs text-muted-foreground">
+                <time className="w-12 shrink-0 font-mono text-xs font-medium text-muted-foreground">
                   {formatDemoTime(startsAt)}
                 </time>
                 {isDraft ? (
                   <div
                     aria-live="polite"
-                    className="flex-1 rounded-[var(--radius-sm)] border border-dashed border-accent bg-accent-soft/40 px-3 py-2 text-sm text-accent-soft-foreground"
+                    className="flex-1 rounded-[var(--radius-md)] border-2 border-dashed border-accent bg-accent-soft/50 px-3 py-2 text-sm text-accent-soft-foreground"
                     role="status"
                   >
                     Draft appointment · {draft.durationMinutes} min
@@ -704,12 +822,12 @@ export function ScheduleBoard({
                       aria-label={`Open ${appointment.status.toLowerCase()} appointment for ${appointmentName(appointment)} at ${formatDemoTime(new Date(appointment.startsAt))}`}
                       aria-pressed={appointment.id === selectedAppointmentId}
                       className={cn(
-                        "dms-pressable dms-raised-action min-w-0 flex-1 rounded-[var(--radius-sm)] border px-3 py-2 text-left focus-visible:outline-none",
+                        "dms-pressable dms-raised-action min-w-0 flex-1 rounded-[var(--radius-md)] border px-3 py-2 text-left focus-visible:outline-none shadow-xs",
                         appointment.status === "CONFIRMED"
-                          ? "border-accent/30 bg-accent-soft"
-                          : "border-border bg-surface",
+                          ? "border-accent/40 border-l-4 border-l-accent bg-accent-soft"
+                          : "border-border/90 border-l-4 border-l-foreground/40 bg-card",
                         appointment.id === selectedAppointmentId &&
-                          "ring-2 ring-accent ring-offset-1",
+                          "ring-2 ring-primary ring-offset-1",
                       )}
                       key={appointment.id}
                       onClick={(event) =>
@@ -717,10 +835,10 @@ export function ScheduleBoard({
                       }
                       type="button"
                     >
-                      <p className="truncate text-sm font-medium">
+                      <p className="truncate text-sm font-semibold text-foreground">
                         {appointment.patientName}
                       </p>
-                      <p className="mt-1 truncate text-xs text-muted-foreground">
+                      <p className="mt-0.5 truncate text-xs text-muted-foreground">
                         {appointment.treatmentName} ·{" "}
                         {formatDemoTime(appointmentEnd(appointment))}
                       </p>
@@ -731,13 +849,14 @@ export function ScheduleBoard({
                   ))
                 ) : (
                   <Button
-                    className="justify-start text-muted-foreground"
+                    className="justify-start text-muted-foreground text-xs hover:text-foreground"
                     onClick={(event) =>
                       openCreate(startsAt.toISOString(), event.currentTarget)
                     }
+                    size="sm"
                     variant="ghost"
                   >
-                    <CalendarPlus aria-hidden className="size-4" />
+                    <CalendarPlus aria-hidden className="size-3.5" />
                     Create appointment
                   </Button>
                 )}
