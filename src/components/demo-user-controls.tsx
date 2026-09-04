@@ -158,12 +158,30 @@ export function DemoUserControls({
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
+              <div className="flex items-center justify-between">
+                <div className="flex size-11 items-center justify-center rounded-full bg-accent/10 text-accent ring-8 ring-accent/5">
+                  <RotateCcw aria-hidden className="size-5" />
+                </div>
+                <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                  Demo workspace · Reset
+                </span>
+              </div>
               <AlertDialogTitle>Reset sample data?</AlertDialogTitle>
               <AlertDialogDescription>
                 This restores the curated Atelier Dental baseline and removes
                 changes made in this demo session.
               </AlertDialogDescription>
             </AlertDialogHeader>
+            <div className="rounded-[var(--radius-md)] border border-border/80 bg-secondary/30 p-3.5 text-xs leading-relaxed text-muted-foreground">
+              <p>
+                <strong className="font-semibold text-foreground">
+                  Session impact:
+                </strong>{" "}
+                All newly created appointments, registered patients, and
+                clinical notes will revert to the standard initial demonstration
+                state.
+              </p>
+            </div>
             {error ? (
               <p className="text-sm text-destructive" role="alert">
                 {error}
@@ -174,14 +192,14 @@ export function DemoUserControls({
                 Keep current data
               </AlertDialogCancel>
               <AlertDialogAction
-                className="border border-destructive bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                className="dms-pressable rounded-full border border-destructive/20 bg-destructive px-4 text-xs font-semibold text-destructive-foreground shadow-xs transition-all hover:bg-destructive/90 active:scale-[0.98]"
                 disabled={isResetPending}
                 onClick={(event) => {
                   event.preventDefault();
                   void resetSampleData();
                 }}
               >
-                <RotateCcw aria-hidden className="size-4" />
+                <RotateCcw aria-hidden className="size-3.5" />
                 {isResetPending ? "Resetting..." : "Reset sample data"}
               </AlertDialogAction>
             </AlertDialogFooter>

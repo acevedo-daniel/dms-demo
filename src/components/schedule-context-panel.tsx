@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useState, type ReactNode } from "react";
+import { AlertTriangle } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -225,10 +226,39 @@ export function ScheduleContextPanel({
 
   async function saveAppointment(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (!values.patientId) {
+      setError("Please select a patient from the directory.");
+      return;
+    }
+
+    if (!values.treatmentId) {
+      setError("Please select a clinical treatment protocol.");
+      return;
+    }
+
+    if (!values.date) {
+      setError("Please choose an appointment date.");
+      return;
+    }
+
+    if (!values.time) {
+      setError("Please choose an appointment time.");
+      return;
+    }
+
     const startsAt = toPracticeDateTime(values.date, values.time);
 
     if (!startsAt) {
       setError("Enter a valid appointment date and time.");
+      return;
+    }
+
+    const duration = Number(values.durationMinutes);
+    if (!duration || duration < 15 || duration > 180 || duration % 15 !== 0) {
+      setError(
+        "Duration must be between 15 and 180 minutes in 15-minute intervals.",
+      );
       return;
     }
 
@@ -398,20 +428,30 @@ export function ScheduleContextPanel({
       <AlertDialog onOpenChange={setIsDiscardOpen} open={isDiscardOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
+            <div className="flex items-center justify-between">
+              <div className="flex size-11 items-center justify-center rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 ring-8 ring-amber-500/5">
+                <AlertTriangle aria-hidden className="size-5" />
+              </div>
+              <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                Schedule · Unsaved
+              </span>
+            </div>
             <AlertDialogTitle>Discard changes?</AlertDialogTitle>
             <AlertDialogDescription>
-              Your unsaved appointment changes will be lost.
+              Your unsaved appointment changes will be lost and not saved to the
+              practice calendar.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel autoFocus>Keep editing</AlertDialogCancel>
             <AlertDialogAction
-              className="border border-destructive bg-destructive text-white hover:bg-destructive/90"
+              className="dms-pressable rounded-full border border-destructive/20 bg-destructive px-4 text-xs font-semibold text-destructive-foreground shadow-xs transition-all hover:bg-destructive/90 active:scale-[0.98]"
               onClick={() => {
                 setIsDiscardOpen(false);
                 onOpenChange(false);
               }}
             >
+              <AlertTriangle aria-hidden className="size-3.5" />
               Discard changes
             </AlertDialogAction>
           </AlertDialogFooter>

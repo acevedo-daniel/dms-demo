@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Check, CheckCircle2, Trash2 } from "lucide-react";
+import { AlertCircle, Check, CheckCircle2, Trash2 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,6 +14,10 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import {
+  StudioDatePicker,
+  StudioTimePicker,
+} from "@/components/ui/datetime-picker";
 import { DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -73,10 +77,24 @@ export function AppointmentForm({
   const canManageStatus =
     appointment?.status === "SCHEDULED" || appointment?.status === "CONFIRMED";
 
+  const patientError = error?.toLowerCase().includes("patient") ? error : null;
+  const treatmentError = error?.toLowerCase().includes("treatment")
+    ? error
+    : null;
+  const generalError =
+    error &&
+    !dateTimeError &&
+    !durationError &&
+    !patientError &&
+    !treatmentError
+      ? error
+      : null;
+
   return (
     <form
       className="flex min-h-0 flex-1 flex-col"
       id={formId}
+      noValidate
       onSubmit={onSubmit}
     >
       <div className="space-y-5 overflow-y-auto px-6 py-6">
@@ -114,9 +132,26 @@ export function AppointmentForm({
           </div>
         ) : null}
 
+        {/* Patient Selection Field */}
         <div className="space-y-2">
-          <Label htmlFor={`${formId}-patient`}>Patient</Label>
+          <div className="flex items-center justify-between">
+            <Label htmlFor={`${formId}-patient`}>Patient</Label>
+            {patientError ? (
+              <span className="inline-flex items-center gap-1 rounded-full border border-destructive/30 bg-destructive/10 px-2 py-0.5 font-mono text-[10px] font-semibold text-destructive animate-in fade-in-0 duration-150">
+                <AlertCircle aria-hidden className="size-3 shrink-0" />
+                Required
+              </span>
+            ) : (
+              <span className="font-mono text-[11px] text-muted-foreground">
+                Directory chart
+              </span>
+            )}
+          </div>
           <Select
+            aria-describedby={
+              patientError ? `${formId}-patient-error` : undefined
+            }
+            aria-invalid={Boolean(patientError)}
             autoFocus
             id={`${formId}-patient`}
             onChange={(event) => onValueChange("patientId", event.target.value)}
@@ -130,11 +165,38 @@ export function AppointmentForm({
               </option>
             ))}
           </Select>
+          {patientError ? (
+            <p
+              className="flex items-center gap-1.5 text-xs font-medium text-destructive animate-in fade-in-0 slide-in-from-top-0.5"
+              id={`${formId}-patient-error`}
+              role="alert"
+            >
+              <AlertCircle aria-hidden className="size-3.5 shrink-0" />
+              {patientError}
+            </p>
+          ) : null}
         </div>
 
+        {/* Treatment Protocol Selection Field */}
         <div className="space-y-2">
-          <Label htmlFor={`${formId}-treatment`}>Treatment</Label>
+          <div className="flex items-center justify-between">
+            <Label htmlFor={`${formId}-treatment`}>Treatment</Label>
+            {treatmentError ? (
+              <span className="inline-flex items-center gap-1 rounded-full border border-destructive/30 bg-destructive/10 px-2 py-0.5 font-mono text-[10px] font-semibold text-destructive animate-in fade-in-0 duration-150">
+                <AlertCircle aria-hidden className="size-3 shrink-0" />
+                Required
+              </span>
+            ) : (
+              <span className="font-mono text-[11px] text-muted-foreground">
+                Clinical protocol
+              </span>
+            )}
+          </div>
           <Select
+            aria-describedby={
+              treatmentError ? `${formId}-treatment-error` : undefined
+            }
+            aria-invalid={Boolean(treatmentError)}
             id={`${formId}-treatment`}
             onChange={(event) => {
               const treatment = treatments.find(
@@ -158,48 +220,79 @@ export function AppointmentForm({
               </option>
             ))}
           </Select>
+          {treatmentError ? (
+            <p
+              className="flex items-center gap-1.5 text-xs font-medium text-destructive animate-in fade-in-0 slide-in-from-top-0.5"
+              id={`${formId}-treatment-error`}
+              role="alert"
+            >
+              <AlertCircle aria-hidden className="size-3.5 shrink-0" />
+              {treatmentError}
+            </p>
+          ) : null}
         </div>
 
+        {/* Studio Date & Time Inputs */}
         <div className="grid gap-5 sm:grid-cols-2">
           <div className="space-y-2">
-            <Label htmlFor={`${formId}-date`}>Date</Label>
-            <Input
+            <div className="flex items-center justify-between">
+              <Label htmlFor={`${formId}-date`}>Date</Label>
+              {dateTimeError &&
+              (dateTimeError.toLowerCase().includes("date") ||
+                dateTimeError.toLowerCase().includes("monday")) ? (
+                <span className="inline-flex items-center gap-1 rounded-full border border-destructive/30 bg-destructive/10 px-2 py-0.5 font-mono text-[10px] font-semibold text-destructive animate-in fade-in-0 duration-150">
+                  <AlertCircle aria-hidden className="size-3 shrink-0" />
+                  {dateTimeError.includes("Monday")
+                    ? "Weekday only"
+                    : "Required"}
+                </span>
+              ) : null}
+            </div>
+            <StudioDatePicker
               aria-describedby={
                 dateTimeError ? `${formId}-date-time-error` : undefined
               }
               aria-invalid={Boolean(dateTimeError)}
-              className="font-mono text-sm tracking-wide"
               id={`${formId}-date`}
-              onChange={(event) => onValueChange("date", event.target.value)}
+              name="date"
+              onChange={(value) => onValueChange("date", value)}
               required
-              type="date"
               value={values.date}
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor={`${formId}-time`}>Time</Label>
-            <Input
+            <div className="flex items-center justify-between">
+              <Label htmlFor={`${formId}-time`}>Time</Label>
+              {dateTimeError &&
+              (dateTimeError.toLowerCase().includes("time") ||
+                dateTimeError.toLowerCase().includes("slot")) ? (
+                <span className="inline-flex items-center gap-1 rounded-full border border-destructive/30 bg-destructive/10 px-2 py-0.5 font-mono text-[10px] font-semibold text-destructive animate-in fade-in-0 duration-150">
+                  <AlertCircle aria-hidden className="size-3 shrink-0" />
+                  Required
+                </span>
+              ) : null}
+            </div>
+            <StudioTimePicker
               aria-describedby={
                 dateTimeError ? `${formId}-date-time-error` : undefined
               }
               aria-invalid={Boolean(dateTimeError)}
-              className="font-mono text-sm tracking-wide"
               id={`${formId}-time`}
-              onChange={(event) => onValueChange("time", event.target.value)}
+              name="time"
+              onChange={(value) => onValueChange("time", value)}
               required
-              step="1800"
-              type="time"
               value={values.time}
             />
           </div>
         </div>
         {dateTimeError ? (
           <p
-            className="text-sm text-destructive"
+            className="flex items-center gap-1.5 text-xs font-medium text-destructive animate-in fade-in-0 slide-in-from-top-0.5"
             id={`${formId}-date-time-error`}
             role="alert"
           >
-            {dateTimeError}
+            <AlertCircle aria-hidden className="size-3.5 shrink-0" />
+            <span>{dateTimeError}</span>
             {error?.includes("overlaps") ? (
               <button
                 className="ml-2 font-medium underline underline-offset-4"
@@ -212,12 +305,20 @@ export function AppointmentForm({
           </p>
         ) : null}
 
+        {/* Duration Field */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <Label htmlFor={`${formId}-duration`}>Duration (minutes)</Label>
-            <span className="font-mono text-xs font-medium text-muted-foreground">
-              {values.durationMinutes} min
-            </span>
+            {durationError ? (
+              <span className="inline-flex items-center gap-1 rounded-full border border-destructive/30 bg-destructive/10 px-2 py-0.5 font-mono text-[10px] font-semibold text-destructive animate-in fade-in-0 duration-150">
+                <AlertCircle aria-hidden className="size-3 shrink-0" />
+                15–180 min
+              </span>
+            ) : (
+              <span className="font-mono text-xs font-medium text-muted-foreground">
+                {values.durationMinutes} min
+              </span>
+            )}
           </div>
           <Input
             aria-describedby={
@@ -240,10 +341,10 @@ export function AppointmentForm({
             {[15, 30, 45, 60, 90].map((mins) => (
               <button
                 className={cn(
-                  "rounded-[var(--radius-sm)] px-2.5 py-1 font-mono text-[11px] font-medium transition-colors",
+                  "rounded-full border px-3 py-1 font-mono text-xs font-medium transition-all",
                   values.durationMinutes === String(mins)
-                    ? "bg-primary font-bold text-primary-foreground shadow-xs"
-                    : "bg-secondary text-muted-foreground hover:bg-secondary/80 hover:text-foreground",
+                    ? "border-primary/20 bg-primary font-bold text-primary-foreground shadow-xs"
+                    : "border-border/70 bg-secondary/40 text-muted-foreground hover:border-foreground/20 hover:bg-secondary hover:text-foreground",
                 )}
                 key={mins}
                 onClick={() => onValueChange("durationMinutes", String(mins))}
@@ -255,10 +356,11 @@ export function AppointmentForm({
           </div>
           {durationError ? (
             <p
-              className="text-sm text-destructive"
+              className="flex items-center gap-1.5 text-xs font-medium text-destructive"
               id={`${formId}-duration-error`}
               role="alert"
             >
+              <AlertCircle aria-hidden className="size-3.5 shrink-0" />
               {durationError}
             </p>
           ) : null}
@@ -267,6 +369,7 @@ export function AppointmentForm({
           </p>
         </div>
 
+        {/* Operational Note Field */}
         <div className="space-y-2">
           <Label htmlFor={`${formId}-note`}>Operational note</Label>
           <Textarea
@@ -276,10 +379,15 @@ export function AppointmentForm({
             value={values.note}
           />
         </div>
-        {error && !dateTimeError && !durationError ? (
-          <p className="text-sm text-destructive" role="alert">
-            {error}
-          </p>
+
+        {generalError ? (
+          <div
+            className="flex items-center gap-2 rounded-[var(--radius-md)] border border-destructive/30 bg-destructive/10 p-3.5 text-xs font-medium text-destructive"
+            role="alert"
+          >
+            <AlertCircle aria-hidden className="size-4 shrink-0" />
+            <span>{generalError}</span>
+          </div>
         ) : null}
 
         {isEditing && appointment && canManageStatus ? (
@@ -298,10 +406,18 @@ export function AppointmentForm({
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
+                  <div className="flex items-center justify-between">
+                    <div className="flex size-11 items-center justify-center rounded-full bg-destructive/10 text-destructive ring-8 ring-destructive/5">
+                      <Trash2 aria-hidden className="size-5" />
+                    </div>
+                    <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                      Schedule · Cancel slot
+                    </span>
+                  </div>
                   <AlertDialogTitle>Cancel appointment?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    This appointment will remain in patient history as
-                    Cancelled.
+                    This appointment will be released from the schedule board
+                    and permanently preserved in patient history as Cancelled.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
@@ -309,7 +425,7 @@ export function AppointmentForm({
                     Keep appointment
                   </AlertDialogCancel>
                   <AlertDialogAction
-                    className="border border-destructive bg-destructive text-white hover:bg-destructive/90"
+                    className="dms-pressable rounded-full border border-destructive/20 bg-destructive px-4 text-xs font-semibold text-destructive-foreground shadow-xs transition-all hover:bg-destructive/90 active:scale-[0.98]"
                     disabled={isStatusPending}
                     onClick={() => onUpdateStatus("CANCELLED")}
                   >

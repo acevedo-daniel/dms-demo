@@ -26,7 +26,7 @@ export function PatientNoteAction({
       patients={patients}
       treatments={treatments}
       trigger={
-        <Button variant="outline">
+        <Button className="h-10 font-semibold shadow-xs" variant="outline">
           <FilePenLine aria-hidden className="size-4" />
           Add note
         </Button>

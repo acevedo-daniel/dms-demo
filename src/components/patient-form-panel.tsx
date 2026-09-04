@@ -2,7 +2,7 @@
 
 import { useId, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
-import { AlertTriangle, Check, UserPlus } from "lucide-react";
+import { AlertCircle, AlertTriangle, Check, UserPlus } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -91,9 +91,24 @@ export function PatientFormPanel({
   const [initialValues, setInitialValues] = useState(() =>
     toFormState(patient),
   );
+  const [fieldErrors, setFieldErrors] = useState<{
+    email?: string;
+    firstName?: string;
+    identifier?: string;
+    lastName?: string;
+  }>({});
   const isEditing = Boolean(patient);
   const isDirty = JSON.stringify(values) !== JSON.stringify(initialValues);
-  const identifierError = error?.includes("identifier") ? error : null;
+  const identifierError =
+    fieldErrors.identifier ||
+    (error?.toLowerCase().includes("identifier") ? error : null);
+  const firstNameError =
+    fieldErrors.firstName ||
+    (error?.toLowerCase().includes("first name") ? error : null);
+  const lastNameError =
+    fieldErrors.lastName ||
+    (error?.toLowerCase().includes("last name") ? error : null);
+  const emailError = fieldErrors.email || null;
 
   function requestClose() {
     if (isPending) {
@@ -110,10 +125,54 @@ export function PatientFormPanel({
 
   function updateValue(field: keyof PatientFormState, value: string) {
     setValues((current) => ({ ...current, [field]: value }));
+    if (fieldErrors[field as keyof typeof fieldErrors]) {
+      setFieldErrors((prev) => ({ ...prev, [field]: undefined }));
+    }
   }
 
   async function savePatient(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    const nextFieldErrors: {
+      email?: string;
+      firstName?: string;
+      identifier?: string;
+      lastName?: string;
+    } = {};
+
+    if (!values.identifier.trim()) {
+      nextFieldErrors.identifier = "Identifier is required (e.g. PAT-010).";
+    }
+
+    if (!values.firstName.trim()) {
+      nextFieldErrors.firstName = "First name is required.";
+    }
+
+    if (!values.lastName.trim()) {
+      nextFieldErrors.lastName = "Last name is required.";
+    }
+
+    if (
+      values.email.trim() &&
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email.trim())
+    ) {
+      nextFieldErrors.email =
+        "Enter a valid email address (e.g. name@domain.com).";
+    }
+
+    if (Object.values(nextFieldErrors).some(Boolean)) {
+      setFieldErrors(nextFieldErrors);
+      setError(
+        nextFieldErrors.identifier ||
+          nextFieldErrors.firstName ||
+          nextFieldErrors.lastName ||
+          nextFieldErrors.email ||
+          "Please fill in all required fields.",
+      );
+      return;
+    }
+
+    setFieldErrors({});
     setError(null);
     setIsPending(true);
 
@@ -160,6 +219,7 @@ export function PatientFormPanel({
         onOpenChange={(open) => {
           if (open) {
             setError(null);
+            setFieldErrors({});
             setValues(initialValues);
             setIsOpen(true);
             return;
@@ -210,6 +270,7 @@ export function PatientFormPanel({
           <form
             className="flex min-h-0 flex-1 flex-col"
             id={formId}
+            noValidate
             onSubmit={savePatient}
           >
             <div className="flex-1 space-y-6 overflow-y-auto px-6 py-6">
@@ -226,9 +287,16 @@ export function PatientFormPanel({
                     >
                       Identifier
                     </Label>
-                    <span className="font-mono text-[11px] text-muted-foreground">
-                      Unique chart ID
-                    </span>
+                    {identifierError ? (
+                      <span className="inline-flex items-center gap-1 rounded-full border border-destructive/30 bg-destructive/10 px-2 py-0.5 font-mono text-[10px] font-semibold text-destructive animate-in fade-in-0 duration-150">
+                        <AlertCircle aria-hidden className="size-3 shrink-0" />
+                        Required
+                      </span>
+                    ) : (
+                      <span className="font-mono text-[11px] text-muted-foreground">
+                        Unique chart ID
+                      </span>
+                    )}
                   </div>
                   <Input
                     aria-describedby={
@@ -248,10 +316,11 @@ export function PatientFormPanel({
                   />
                   {identifierError ? (
                     <p
-                      className="text-xs font-medium text-destructive"
+                      className="flex items-center gap-1.5 text-xs font-medium text-destructive animate-in fade-in-0 slide-in-from-top-0.5"
                       id={`${formId}-identifier-error`}
                       role="alert"
                     >
+                      <AlertCircle aria-hidden className="size-3.5 shrink-0" />
                       {identifierError}
                     </p>
                   ) : null}
@@ -259,13 +328,30 @@ export function PatientFormPanel({
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
-                    <Label
-                      className="text-xs font-semibold text-foreground"
-                      htmlFor={`${formId}-first-name`}
-                    >
-                      First name
-                    </Label>
+                    <div className="flex items-center justify-between">
+                      <Label
+                        className="text-xs font-semibold text-foreground"
+                        htmlFor={`${formId}-first-name`}
+                      >
+                        First name
+                      </Label>
+                      {firstNameError ? (
+                        <span className="inline-flex items-center gap-1 rounded-full border border-destructive/30 bg-destructive/10 px-2 py-0.5 font-mono text-[10px] font-semibold text-destructive animate-in fade-in-0 duration-150">
+                          <AlertCircle
+                            aria-hidden
+                            className="size-3 shrink-0"
+                          />
+                          Required
+                        </span>
+                      ) : null}
+                    </div>
                     <Input
+                      aria-describedby={
+                        firstNameError
+                          ? `${formId}-first-name-error`
+                          : undefined
+                      }
+                      aria-invalid={Boolean(firstNameError)}
                       id={`${formId}-first-name`}
                       onChange={(event) =>
                         updateValue("firstName", event.target.value)
@@ -274,15 +360,43 @@ export function PatientFormPanel({
                       required
                       value={values.firstName}
                     />
+                    {firstNameError ? (
+                      <p
+                        className="flex items-center gap-1.5 text-xs font-medium text-destructive animate-in fade-in-0 slide-in-from-top-0.5"
+                        id={`${formId}-first-name-error`}
+                        role="alert"
+                      >
+                        <AlertCircle
+                          aria-hidden
+                          className="size-3.5 shrink-0"
+                        />
+                        {firstNameError}
+                      </p>
+                    ) : null}
                   </div>
                   <div className="space-y-2">
-                    <Label
-                      className="text-xs font-semibold text-foreground"
-                      htmlFor={`${formId}-last-name`}
-                    >
-                      Last name
-                    </Label>
+                    <div className="flex items-center justify-between">
+                      <Label
+                        className="text-xs font-semibold text-foreground"
+                        htmlFor={`${formId}-last-name`}
+                      >
+                        Last name
+                      </Label>
+                      {lastNameError ? (
+                        <span className="inline-flex items-center gap-1 rounded-full border border-destructive/30 bg-destructive/10 px-2 py-0.5 font-mono text-[10px] font-semibold text-destructive animate-in fade-in-0 duration-150">
+                          <AlertCircle
+                            aria-hidden
+                            className="size-3 shrink-0"
+                          />
+                          Required
+                        </span>
+                      ) : null}
+                    </div>
                     <Input
+                      aria-describedby={
+                        lastNameError ? `${formId}-last-name-error` : undefined
+                      }
+                      aria-invalid={Boolean(lastNameError)}
                       id={`${formId}-last-name`}
                       onChange={(event) =>
                         updateValue("lastName", event.target.value)
@@ -291,6 +405,19 @@ export function PatientFormPanel({
                       required
                       value={values.lastName}
                     />
+                    {lastNameError ? (
+                      <p
+                        className="flex items-center gap-1.5 text-xs font-medium text-destructive animate-in fade-in-0 slide-in-from-top-0.5"
+                        id={`${formId}-last-name-error`}
+                        role="alert"
+                      >
+                        <AlertCircle
+                          aria-hidden
+                          className="size-3.5 shrink-0"
+                        />
+                        {lastNameError}
+                      </p>
+                    ) : null}
                   </div>
                 </div>
               </div>
@@ -301,13 +428,29 @@ export function PatientFormPanel({
                   Contact details
                 </p>
                 <div className="space-y-2">
-                  <Label
-                    className="text-xs font-semibold text-foreground"
-                    htmlFor={`${formId}-email`}
-                  >
-                    Email
-                  </Label>
+                  <div className="flex items-center justify-between">
+                    <Label
+                      className="text-xs font-semibold text-foreground"
+                      htmlFor={`${formId}-email`}
+                    >
+                      Email
+                    </Label>
+                    {emailError ? (
+                      <span className="inline-flex items-center gap-1 rounded-full border border-destructive/30 bg-destructive/10 px-2 py-0.5 font-mono text-[10px] font-semibold text-destructive animate-in fade-in-0 duration-150">
+                        <AlertCircle aria-hidden className="size-3 shrink-0" />
+                        Invalid format
+                      </span>
+                    ) : (
+                      <span className="font-mono text-[11px] text-muted-foreground">
+                        Optional
+                      </span>
+                    )}
+                  </div>
                   <Input
+                    aria-describedby={
+                      emailError ? `${formId}-email-error` : undefined
+                    }
+                    aria-invalid={Boolean(emailError)}
                     id={`${formId}-email`}
                     onChange={(event) =>
                       updateValue("email", event.target.value)
@@ -316,6 +459,16 @@ export function PatientFormPanel({
                     type="email"
                     value={values.email}
                   />
+                  {emailError ? (
+                    <p
+                      className="flex items-center gap-1.5 text-xs font-medium text-destructive animate-in fade-in-0 slide-in-from-top-0.5"
+                      id={`${formId}-email-error`}
+                      role="alert"
+                    >
+                      <AlertCircle aria-hidden className="size-3.5 shrink-0" />
+                      {emailError}
+                    </p>
+                  ) : null}
                 </div>
                 <div className="space-y-2">
                   <Label
@@ -336,12 +489,17 @@ export function PatientFormPanel({
                 </div>
               </div>
 
-              {error && !identifierError ? (
+              {error &&
+              !identifierError &&
+              !firstNameError &&
+              !lastNameError &&
+              !emailError ? (
                 <div
-                  className="rounded-[var(--radius-md)] border border-destructive/30 bg-destructive/10 p-3 text-xs font-medium text-destructive"
+                  className="flex items-center gap-2 rounded-[var(--radius-md)] border border-destructive/30 bg-destructive/10 p-3.5 text-xs font-medium text-destructive"
                   role="alert"
                 >
-                  {error}
+                  <AlertCircle aria-hidden className="size-4 shrink-0" />
+                  <span>{error}</span>
                 </div>
               ) : null}
             </div>
@@ -372,21 +530,30 @@ export function PatientFormPanel({
       <AlertDialog onOpenChange={setIsDiscardOpen} open={isDiscardOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
+            <div className="flex items-center justify-between">
+              <div className="flex size-11 items-center justify-center rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 ring-8 ring-amber-500/5">
+                <AlertTriangle aria-hidden className="size-5" />
+              </div>
+              <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                Patient intake · Unsaved
+              </span>
+            </div>
             <AlertDialogTitle>Discard changes?</AlertDialogTitle>
             <AlertDialogDescription>
-              Your unsaved patient changes will be lost.
+              Any changes made to this patient record will be lost and not saved
+              to the practice database.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel autoFocus>Keep editing</AlertDialogCancel>
             <AlertDialogAction
-              className="border border-destructive bg-destructive text-white hover:bg-destructive/90"
+              className="dms-pressable rounded-full border border-destructive/20 bg-destructive px-4 text-xs font-semibold text-destructive-foreground shadow-xs transition-all hover:bg-destructive/90 active:scale-[0.98]"
               onClick={() => {
                 setIsDiscardOpen(false);
                 setIsOpen(false);
               }}
             >
-              <AlertTriangle aria-hidden className="size-4" />
+              <AlertTriangle aria-hidden className="size-3.5" />
               Discard changes
             </AlertDialogAction>
           </AlertDialogFooter>

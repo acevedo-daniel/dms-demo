@@ -2,7 +2,6 @@
 
 import { CheckCircle2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
 
 const workspaceFeedbackEvent = "dms:workspace-feedback";
 
@@ -46,10 +45,16 @@ export function WorkspaceFeedback() {
 
   return (
     <div
-      aria-live="polite"
       aria-atomic="true"
-      className="fixed right-4 bottom-4 z-50 flex max-w-sm items-start gap-3 rounded-[var(--radius-md)] border border-border bg-card px-4 py-3 text-sm shadow-raised sm:right-6 sm:bottom-6"
+      aria-live="polite"
+      className="fixed right-4 bottom-4 z-50 flex max-w-md items-center gap-3 rounded-full border border-border/90 bg-popover/95 py-2 pr-2 pl-3 text-sm shadow-raised backdrop-blur-md transition-all duration-200 animate-in fade-in-0 slide-in-from-bottom-3 sm:right-6 sm:bottom-6"
       onFocus={() => {
+        if (timeoutId.current) {
+          window.clearTimeout(timeoutId.current);
+          timeoutId.current = undefined;
+        }
+      }}
+      onMouseEnter={() => {
         if (timeoutId.current) {
           window.clearTimeout(timeoutId.current);
           timeoutId.current = undefined;
@@ -57,20 +62,20 @@ export function WorkspaceFeedback() {
       }}
       role="status"
     >
-      <CheckCircle2
-        aria-hidden
-        className="mt-0.5 size-4 shrink-0 text-primary"
-      />
-      <p className="flex-1 leading-5">{message}</p>
-      <Button
+      <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary ring-2 ring-primary/20">
+        <CheckCircle2 aria-hidden className="size-4" />
+      </div>
+      <p className="flex-1 pr-1 text-xs font-semibold tracking-tight text-foreground sm:text-sm">
+        {message}
+      </p>
+      <button
         aria-label="Dismiss notification"
-        className="-mr-2 -mt-1 shrink-0"
+        className="dms-pressable flex size-7 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground active:scale-95"
         onClick={() => setMessage("")}
-        size="icon"
-        variant="ghost"
+        type="button"
       >
-        <X aria-hidden className="size-4" />
-      </Button>
+        <X aria-hidden className="size-3.5" />
+      </button>
     </div>
   );
 }

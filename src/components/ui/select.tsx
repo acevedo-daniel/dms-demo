@@ -33,7 +33,8 @@ function SelectTrigger({
     <SelectPrimitive.Trigger
       data-slot="select-trigger"
       className={cn(
-        "dms-pressable dms-field flex h-[var(--control-md)] w-full items-center justify-between gap-2 rounded-[var(--radius-sm)] border border-border bg-card px-3 py-2 text-sm text-foreground shadow-xs outline-none focus:border-accent focus:ring-1 focus:ring-accent disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+        "dms-pressable dms-field flex h-[var(--control-md)] w-full items-center justify-between gap-2 rounded-[var(--radius-sm)] border border-border bg-card px-3 py-2 text-sm text-foreground shadow-xs outline-none focus:border-accent focus:ring-1 focus:ring-accent disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1 transition-colors",
+        "aria-invalid:border-destructive/80 aria-invalid:ring-2 aria-invalid:ring-destructive/15 aria-invalid:bg-destructive/[0.02]",
         className,
       )}
       {...props}
@@ -181,6 +182,21 @@ function fromRadixValue(val: string) {
   return val === RADIX_EMPTY_VALUE ? "" : val;
 }
 
+function getOptionText(node: React.ReactNode): string {
+  if (node == null || typeof node === "boolean") return "";
+  if (typeof node === "string" || typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(getOptionText).join("");
+  if (
+    React.isValidElement(node) &&
+    node.props &&
+    typeof node.props === "object" &&
+    "children" in node.props
+  ) {
+    return getOptionText(node.props.children as React.ReactNode);
+  }
+  return "";
+}
+
 function StudioSelect({
   autoFocus,
   children,
@@ -207,7 +223,7 @@ function StudioSelect({
         };
         list.push({
           disabled: p.disabled,
-          label: String(p.children ?? ""),
+          label: getOptionText(p.children),
           value: String(p.value ?? ""),
         });
       }
@@ -237,9 +253,12 @@ function StudioSelect({
         value={currentRadixValue}
       >
         <SelectTrigger
+          aria-invalid={props["aria-invalid"]}
           autoFocus={autoFocus}
           className={cn(
             "h-11 rounded-[var(--radius-md)] border-border/80 bg-background/60 px-3.5 text-sm shadow-xs backdrop-blur-xs transition-all hover:border-foreground/20 focus:border-foreground/30 focus:bg-background",
+            props["aria-invalid"] &&
+              "border-destructive/80 ring-2 ring-destructive/15 bg-destructive/[0.02] hover:border-destructive",
             className,
           )}
         >

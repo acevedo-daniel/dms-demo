@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useState, type ReactNode } from "react";
-import { AlertTriangle, FilePenLine } from "lucide-react";
+import { AlertCircle, AlertTriangle, FilePenLine } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -93,6 +93,10 @@ export function NoteComposerPanel({
   const isEditing = Boolean(note);
   const [isOpen, setIsOpen] = useState(false);
   const [isDiscardOpen, setIsDiscardOpen] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<{
+    body?: string;
+    patientId?: string;
+  }>({});
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [values, setValues] = useState(() =>
@@ -100,8 +104,10 @@ export function NoteComposerPanel({
   );
   const [initialFormValues, setInitialFormValues] = useState(values);
   const isDirty = JSON.stringify(values) !== JSON.stringify(initialFormValues);
-  const bodyError = error?.includes("note") ? error : null;
-  const patientError = error?.includes("patient") ? error : null;
+  const bodyError =
+    fieldErrors.body || (error?.includes("note") ? error : null);
+  const patientError =
+    fieldErrors.patientId || (error?.includes("patient") ? error : null);
 
   function requestClose() {
     if (isPending) {
@@ -118,21 +124,35 @@ export function NoteComposerPanel({
 
   function updateValue(field: keyof NoteFormState, value: string) {
     setValues((current) => ({ ...current, [field]: value }));
+    if (fieldErrors[field as keyof typeof fieldErrors]) {
+      setFieldErrors((prev) => ({ ...prev, [field]: undefined }));
+    }
   }
 
   async function saveNote(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
+    const nextFieldErrors: { body?: string; patientId?: string } = {};
+
     if (!values.patientId) {
-      setError("Select a patient before saving this note.");
-      return;
+      nextFieldErrors.patientId = "Select a patient before saving this note.";
     }
 
     if (!values.body.trim()) {
-      setError("A note is required.");
+      nextFieldErrors.body = "A note is required.";
+    }
+
+    if (Object.values(nextFieldErrors).some(Boolean)) {
+      setFieldErrors(nextFieldErrors);
+      setError(
+        nextFieldErrors.patientId ||
+          nextFieldErrors.body ||
+          "Please complete required note fields.",
+      );
       return;
     }
 
+    setFieldErrors({});
     setError(null);
     setIsPending(true);
 
@@ -181,6 +201,7 @@ export function NoteComposerPanel({
         onOpenChange={(open) => {
           if (open) {
             setError(null);
+            setFieldErrors({});
             setValues(initialFormValues);
             setIsOpen(true);
             return;
@@ -230,6 +251,7 @@ export function NoteComposerPanel({
           <form
             className="flex min-h-0 flex-1 flex-col"
             id={formId}
+            noValidate
             onSubmit={saveNote}
           >
             <div className="flex-1 space-y-6 overflow-y-auto px-6 py-6">
@@ -242,9 +264,16 @@ export function NoteComposerPanel({
                   >
                     Patient
                   </Label>
-                  <span className="font-mono text-[11px] text-muted-foreground">
-                    Required association
-                  </span>
+                  {patientError ? (
+                    <span className="inline-flex items-center gap-1 rounded-full border border-destructive/30 bg-destructive/10 px-2 py-0.5 font-mono text-[10px] font-semibold text-destructive animate-in fade-in-0 duration-150">
+                      <AlertCircle aria-hidden className="size-3 shrink-0" />
+                      Required
+                    </span>
+                  ) : (
+                    <span className="font-mono text-[11px] text-muted-foreground">
+                      Required association
+                    </span>
+                  )}
                 </div>
                 {fixedPatient ? (
                   <div className="flex items-center justify-between rounded-[var(--radius-md)] border border-border/70 bg-secondary/30 px-3.5 py-2.5">
@@ -278,10 +307,11 @@ export function NoteComposerPanel({
                 )}
                 {patientError ? (
                   <p
-                    className="text-xs font-medium text-destructive"
+                    className="flex items-center gap-1.5 text-xs font-medium text-destructive animate-in fade-in-0 slide-in-from-top-0.5"
                     id={`${formId}-patient-error`}
                     role="alert"
                   >
+                    <AlertCircle aria-hidden className="size-3.5 shrink-0" />
                     {patientError}
                   </p>
                 ) : null}
@@ -325,9 +355,16 @@ export function NoteComposerPanel({
                   >
                     Note
                   </Label>
-                  <span className="font-mono text-[11px] text-muted-foreground">
-                    Clinical observation
-                  </span>
+                  {bodyError ? (
+                    <span className="inline-flex items-center gap-1 rounded-full border border-destructive/30 bg-destructive/10 px-2 py-0.5 font-mono text-[10px] font-semibold text-destructive animate-in fade-in-0 duration-150">
+                      <AlertCircle aria-hidden className="size-3 shrink-0" />
+                      Required
+                    </span>
+                  ) : (
+                    <span className="font-mono text-[11px] text-muted-foreground">
+                      Clinical observation
+                    </span>
+                  )}
                 </div>
                 <Textarea
                   aria-describedby={
@@ -344,10 +381,11 @@ export function NoteComposerPanel({
                 />
                 {bodyError ? (
                   <p
-                    className="text-xs font-medium text-destructive"
+                    className="flex items-center gap-1.5 text-xs font-medium text-destructive animate-in fade-in-0 slide-in-from-top-0.5"
                     id={`${formId}-body-error`}
                     role="alert"
                   >
+                    <AlertCircle aria-hidden className="size-3.5 shrink-0" />
                     {bodyError}
                   </p>
                 ) : null}
@@ -355,10 +393,11 @@ export function NoteComposerPanel({
 
               {error && !bodyError && !patientError ? (
                 <div
-                  className="rounded-[var(--radius-md)] border border-destructive/30 bg-destructive/10 p-3 text-xs font-medium text-destructive"
+                  className="flex items-center gap-2 rounded-[var(--radius-md)] border border-destructive/30 bg-destructive/10 p-3.5 text-xs font-medium text-destructive"
                   role="alert"
                 >
-                  {error}
+                  <AlertCircle aria-hidden className="size-4 shrink-0" />
+                  <span>{error}</span>
                 </div>
               ) : null}
             </div>
@@ -379,21 +418,30 @@ export function NoteComposerPanel({
       <AlertDialog onOpenChange={setIsDiscardOpen} open={isDiscardOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
+            <div className="flex items-center justify-between">
+              <div className="flex size-11 items-center justify-center rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 ring-8 ring-amber-500/5">
+                <AlertTriangle aria-hidden className="size-5" />
+              </div>
+              <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+                Note composer · Unsaved
+              </span>
+            </div>
             <AlertDialogTitle>Discard changes?</AlertDialogTitle>
             <AlertDialogDescription>
-              Your unsaved note changes will be lost.
+              Your unsaved note changes will be lost and not saved to the
+              patient record.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel autoFocus>Keep editing</AlertDialogCancel>
             <AlertDialogAction
-              className="border border-destructive bg-destructive text-white hover:bg-destructive/90"
+              className="dms-pressable rounded-full border border-destructive/20 bg-destructive px-4 text-xs font-semibold text-destructive-foreground shadow-xs transition-all hover:bg-destructive/90 active:scale-[0.98]"
               onClick={() => {
                 setIsDiscardOpen(false);
                 setIsOpen(false);
               }}
             >
-              <AlertTriangle aria-hidden className="size-4" />
+              <AlertTriangle aria-hidden className="size-3.5" />
               Discard changes
             </AlertDialogAction>
           </AlertDialogFooter>
