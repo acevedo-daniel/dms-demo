@@ -64,7 +64,7 @@ export function TreatmentCatalog({
                         aria-controls={`treatment-details-${treatment.id}`}
                         aria-expanded={expanded}
                         aria-label={`${expanded ? "Hide" : "Show"} details for ${treatment.name}`}
-                        className="inline-flex min-h-11 items-center gap-2 rounded-md px-3 text-sm font-medium text-primary hover:bg-accent focus-visible:outline-none"
+                        className="dms-pressable inline-flex min-h-11 items-center gap-2 rounded-[var(--radius-sm)] px-3 text-sm font-medium text-primary hover:bg-accent-soft focus-visible:outline-none"
                         onClick={() =>
                           setExpandedId(expanded ? null : treatment.id)
                         }
@@ -105,7 +105,7 @@ export function TreatmentCatalog({
               <button
                 aria-controls={`treatment-details-${treatment.id}`}
                 aria-expanded={expanded}
-                className="flex min-h-16 w-full items-center justify-between gap-4 py-4 text-left focus-visible:outline-none"
+                className="dms-pressable flex min-h-16 w-full items-center justify-between gap-4 rounded-[var(--radius-sm)] py-4 text-left hover:bg-secondary/70 focus-visible:outline-none"
                 onClick={() => setExpandedId(expanded ? null : treatment.id)}
                 type="button"
               >

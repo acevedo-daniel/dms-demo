@@ -37,7 +37,7 @@ export default async function DemoAccessPage() {
             <span className="text-sm font-semibold tracking-tight">DMS</span>
           </div>
           <Link
-            className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground"
+            className="dms-pressable inline-flex min-h-11 items-center gap-2 rounded-[var(--radius-sm)] px-2 text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-foreground"
             href="/"
           >
             <ArrowLeft aria-hidden className="size-4" />

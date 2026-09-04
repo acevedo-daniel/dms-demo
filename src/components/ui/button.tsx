@@ -5,18 +5,20 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--radius-sm)] text-sm font-semibold transition-colors disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none aria-invalid:border-destructive",
+  "dms-pressable inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--radius-sm)] text-sm font-semibold disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none aria-invalid:border-destructive",
   {
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground hover:bg-foreground-secondary",
-        destructive: "bg-destructive text-white hover:bg-destructive/90",
-        outline: "border border-input bg-card hover:bg-secondary",
+          "dms-raised-action border border-primary bg-primary text-primary-foreground hover:border-foreground-secondary hover:bg-foreground-secondary",
+        destructive:
+          "dms-raised-action border border-destructive bg-destructive text-white hover:border-destructive/90 hover:bg-destructive/90",
+        outline:
+          "dms-raised-action border border-input bg-card text-foreground hover:bg-secondary",
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-secondary",
-        link: "text-foreground underline-offset-4 hover:underline",
+          "dms-raised-action border border-border bg-card text-foreground hover:bg-secondary",
+        ghost: "hover:bg-secondary active:bg-secondary/80",
+        link: "text-foreground underline-offset-4 hover:underline active:no-underline",
       },
       size: {
         default: "h-[var(--control-md)] px-4 py-2 has-[>svg]:px-3",

@@ -290,7 +290,7 @@ export function ScheduleBoard({
                       return (
                         <button
                           aria-label={`Create appointment for ${dayLabel(day)} at ${slotTime}`}
-                          className="block h-12 w-full border-b border-border text-left transition-colors hover:bg-secondary/70 focus-visible:relative focus-visible:z-20 focus-visible:outline-none"
+                          className="dms-pressable block h-12 w-full border-b border-border text-left hover:bg-secondary/70 focus-visible:relative focus-visible:z-20 focus-visible:outline-none"
                           key={startsAt}
                           onClick={(event) =>
                             openCreate(startsAt, event.currentTarget)
@@ -301,7 +301,7 @@ export function ScheduleBoard({
                     })}
                     {isDemoDay ? (
                       <div className="pointer-events-none absolute top-0 z-10 h-px w-full bg-primary">
-                        <span className="absolute -top-2 left-1 rounded bg-primary px-1 font-mono text-[10px] text-primary-foreground">
+                        <span className="absolute -top-2 left-1 rounded-[var(--radius-sm)] bg-primary px-1 font-mono text-[10px] text-primary-foreground">
                           now
                         </span>
                       </div>
@@ -314,7 +314,7 @@ export function ScheduleBoard({
                       return (
                         <button
                           aria-label={`Open ${appointment.status.toLowerCase()} appointment for ${appointmentName(appointment)} at ${formatDemoTime(new Date(appointment.startsAt))}`}
-                          className={`absolute right-1 left-1 z-10 overflow-hidden rounded-md border bg-card text-left transition-colors hover:border-primary/35 hover:bg-accent/40 focus-visible:outline-none ${isCompact ? "px-1 py-1" : "px-2 py-1.5"}`}
+                          className={`dms-pressable dms-raised-action absolute right-1 left-1 z-10 overflow-hidden rounded-[var(--radius-sm)] border bg-card text-left hover:border-primary/35 hover:bg-accent/40 focus-visible:outline-none ${isCompact ? "px-1 py-1" : "px-2 py-1.5"}`}
                           key={appointment.id}
                           onClick={(event) =>
                             openAppointment(appointment, event.currentTarget)
@@ -409,7 +409,7 @@ export function ScheduleBoard({
                   slotAppointments.map((appointment) => (
                     <button
                       aria-label={`Open ${appointment.status.toLowerCase()} appointment for ${appointmentName(appointment)} at ${formatDemoTime(new Date(appointment.startsAt))}`}
-                      className="min-w-0 flex-1 rounded-md border border-border bg-card px-3 py-2 text-left transition-colors hover:border-primary/35 hover:bg-accent/40 focus-visible:outline-none"
+                      className="dms-pressable dms-raised-action min-w-0 flex-1 rounded-[var(--radius-sm)] border border-border bg-card px-3 py-2 text-left hover:border-primary/35 hover:bg-accent/40 focus-visible:outline-none"
                       key={appointment.id}
                       onClick={(event) =>
                         openAppointment(appointment, event.currentTarget)

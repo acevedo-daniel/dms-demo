@@ -81,9 +81,11 @@
   --focus-ring-color: rgb(15 107 98 / 0.28);
 
   /* Motion */
-  --motion-fast: 120ms cubic-bezier(0.2, 0, 0, 1);
-  --motion-base: 180ms cubic-bezier(0.2, 0, 0, 1);
-  --motion-slow: 240ms cubic-bezier(0.2, 0, 0, 1);
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-fast: 120ms;
+  --motion-base: 180ms;
+  --motion-slow: 240ms;
 
   /* Spacing */
   --space-1: 0.25rem;
@@ -208,5 +210,45 @@
       scroll-behavior: auto !important;
       transition-duration: 0.01ms !important;
     }
+  }
+}
+
+@layer components {
+  .dms-pressable {
+    transition-duration: var(--motion-fast);
+    transition-property:
+      background-color, border-color, box-shadow, color, opacity, transform;
+    transition-timing-function: var(--ease-standard);
+  }
+
+  @media (hover: hover) {
+    .dms-pressable:hover:not(:disabled):not([aria-disabled="true"]) {
+      transform: translateY(-1px);
+    }
+  }
+
+  .dms-pressable:active:not(:disabled):not([aria-disabled="true"]) {
+    transform: translateY(0) scale(0.98);
+  }
+
+  .dms-raised-action {
+    box-shadow: var(--shadow-xs);
+  }
+
+  @media (hover: hover) {
+    .dms-raised-action:hover:not(:disabled):not([aria-disabled="true"]) {
+      box-shadow: var(--shadow-hover);
+    }
+  }
+
+  .dms-raised-action:active:not(:disabled):not([aria-disabled="true"]) {
+    box-shadow: var(--shadow-xs);
+  }
+
+  .dms-field {
+    box-shadow: var(--shadow-xs);
+    transition-duration: var(--motion-fast);
+    transition-property: background-color, border-color, box-shadow, color;
+    transition-timing-function: var(--ease-standard);
   }
 }

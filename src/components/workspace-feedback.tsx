@@ -48,7 +48,7 @@ export function WorkspaceFeedback() {
     <div
       aria-live="polite"
       aria-atomic="true"
-      className="fixed right-4 bottom-4 z-50 flex max-w-sm items-start gap-3 rounded-[var(--radius-md)] border border-border bg-card px-4 py-3 text-sm shadow-[var(--shadow-raised)] sm:right-6 sm:bottom-6"
+      className="fixed right-4 bottom-4 z-50 flex max-w-sm items-start gap-3 rounded-[var(--radius-md)] border border-border bg-card px-4 py-3 text-sm shadow-raised sm:right-6 sm:bottom-6"
       onFocus={() => {
         if (timeoutId.current) {
           window.clearTimeout(timeoutId.current);

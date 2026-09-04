@@ -75,9 +75,9 @@ function WorkspaceNavigation({
         const { href, icon: Icon, label } = item;
         const active = isNavigationItemActive(item, pathname);
         const className = cn(
-          "relative inline-flex items-center gap-2 text-sm transition-colors",
+          "dms-pressable relative inline-flex items-center gap-2 text-sm",
           variant === "desktop"
-            ? "h-full px-3 font-medium text-muted-foreground hover:text-foreground"
+            ? "h-full px-3 font-medium text-muted-foreground hover:translate-y-0 hover:text-foreground active:scale-100"
             : "min-h-[var(--touch-target-min)] w-full rounded-[var(--radius-sm)] px-3 font-medium text-muted-foreground hover:bg-secondary hover:text-foreground",
           active &&
             (variant === "desktop"
@@ -126,7 +126,7 @@ export function WorkspaceShell({ children, userName }: WorkspaceShellProps) {
               <Menu aria-hidden className="size-5" />
             </Button>
             <Link
-              className="flex shrink-0 items-center gap-2 lg:gap-3"
+              className="dms-pressable flex shrink-0 items-center gap-2 rounded-[var(--radius-sm)] lg:gap-3"
               href="/demo/dashboard"
             >
               <DmsLogo className="size-8 lg:size-9" />

@@ -216,7 +216,7 @@ export function PatientDirectory({ initialPatients }: PatientDirectoryProps) {
               <li className="py-5" key={patient.id}>
                 <Link
                   aria-label={`Open patient ${patientName(patient)}`}
-                  className="block rounded-lg focus:outline-none"
+                  className="dms-pressable block rounded-[var(--radius-md)] px-3 py-2 -mx-3 -my-2 hover:bg-secondary/70 focus:outline-none"
                   href={`/demo/patients/${patient.id}`}
                   id={`patient-${patient.id}`}
                 >
