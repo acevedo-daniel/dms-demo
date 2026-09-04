@@ -434,10 +434,14 @@ export function ScheduleBoard({
           </Button>
         </div>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <nav aria-label="Schedule week" className="flex items-center gap-1">
+          <nav
+            aria-label="Schedule week"
+            className="inline-flex items-center rounded-[var(--radius-md)] border border-border bg-surface p-0.5 shadow-xs"
+          >
             <Button
               asChild
               aria-label="Previous week"
+              className="size-8 rounded-[var(--radius-sm)]"
               size="icon"
               variant="ghost"
             >
@@ -445,10 +449,21 @@ export function ScheduleBoard({
                 <ChevronLeft aria-hidden className="size-4" />
               </Link>
             </Button>
-            <Button asChild variant="ghost">
+            <Button
+              asChild
+              className="h-8 rounded-[var(--radius-sm)] px-3 text-xs font-medium"
+              size="sm"
+              variant="ghost"
+            >
               <Link href="/demo/schedule">Today</Link>
             </Button>
-            <Button asChild aria-label="Next week" size="icon" variant="ghost">
+            <Button
+              asChild
+              aria-label="Next week"
+              className="size-8 rounded-[var(--radius-sm)]"
+              size="icon"
+              variant="ghost"
+            >
               <Link href={`/demo/schedule?week=${nextWeek}`}>
                 <ChevronRight aria-hidden className="size-4" />
               </Link>
@@ -542,7 +557,7 @@ export function ScheduleBoard({
                           return (
                             <button
                               aria-label={`Create appointment for ${dayLabel(day)} at ${formatDemoTime(new Date(startsAt))}`}
-                              className="dms-pressable block h-12 w-full border-b border-border-subtle text-left hover:bg-secondary/70 focus-visible:relative focus-visible:z-20 focus-visible:outline-none"
+                              className="dms-pressable block h-12 w-full border-b border-border-subtle text-left transition-colors hover:bg-accent/[0.06] focus-visible:relative focus-visible:z-20 focus-visible:outline-none"
                               key={startsAt}
                               onClick={(event) =>
                                 openCreate(startsAt, event.currentTarget)

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Calendar, FileText } from "lucide-react";
 import { useMemo, useState } from "react";
 import { AppointmentStatusBadge } from "@/components/appointment-status-badge";
 import { Button } from "@/components/ui/button";
@@ -93,11 +94,21 @@ export function PatientRecordActivity({ items }: PatientRecordActivityProps) {
             const date = itemDate(item);
 
             return (
-              <li className="py-5" key={`${item.kind}-${item.id}`}>
+              <li
+                className="-mx-3 rounded-[var(--radius-md)] px-3 py-4 transition-colors hover:bg-secondary/40"
+                key={`${item.kind}-${item.id}`}
+              >
                 <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
-                  <span className="font-medium">
-                    {item.kind === "appointment" ? "Appointment" : "Note"}
-                  </span>
+                  <div className="flex items-center gap-1.5">
+                    {item.kind === "appointment" ? (
+                      <Calendar aria-hidden className="size-3.5 text-primary" />
+                    ) : (
+                      <FileText aria-hidden className="size-3.5 text-primary" />
+                    )}
+                    <span className="font-medium">
+                      {item.kind === "appointment" ? "Appointment" : "Note"}
+                    </span>
+                  </div>
                   <span className="text-muted-foreground">
                     · {formatDemoDate(date)} · {formatDemoTime(date)}
                   </span>

@@ -130,7 +130,7 @@ export function NotesIndex({ notes, patients, treatments }: NotesIndexProps) {
               <ol className="mt-3 divide-y divide-border">
                 {group.notes.map((note) => (
                   <li
-                    className="py-5 first:pt-0 last:pb-0"
+                    className="-mx-3 rounded-[var(--radius-md)] px-3 py-4 transition-colors hover:bg-secondary/40"
                     id={`note-${note.id}`}
                     key={note.id}
                     tabIndex={-1}

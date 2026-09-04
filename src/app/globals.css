@@ -112,6 +112,65 @@
   --ring: var(--accent);
 }
 
+.dark {
+  color-scheme: dark;
+
+  /* Canonical DMS runtime tokens - Dark Mode */
+  --canvas: #121210;
+  --surface: #181816;
+  --surface-subtle: #21211e;
+  --surface-raised: #1e1e1b;
+  --foreground: #f4f4f1;
+  --foreground-secondary: #9e9e97;
+  --foreground-tertiary: #73736d;
+  --foreground-inverse: #171715;
+  --border-subtle: #22221f;
+  --border: #2c2c28;
+  --border-strong: #3f3f39;
+  --primary: #f4f4f1;
+  --primary-foreground: #171715;
+  --accent: #2dd4bf;
+  --accent-foreground: #042f2e;
+  --accent-soft: #10312b;
+  --accent-soft-foreground: #5eead4;
+  --success: #34d399;
+  --success-soft: #0c3929;
+  --success-foreground: #6ee7b7;
+  --warning: #fbbf24;
+  --warning-soft: #381a02;
+  --warning-foreground: #fde68a;
+  --danger: #f87171;
+  --danger-soft: #3d0c0c;
+  --danger-foreground: #fca5a5;
+  --destructive: var(--danger);
+  --destructive-soft: var(--danger-soft);
+  --destructive-foreground: #ffffff;
+  --info: #60a5fa;
+  --info-soft: #142247;
+  --info-foreground: #93c5fd;
+
+  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.4);
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.5), 0 1px 2px -1px rgb(0 0 0 / 0.5);
+  --shadow-hover: 0 4px 14px -2px rgb(0 0 0 / 0.5);
+  --shadow-raised: 0 12px 32px rgb(0 0 0 / 0.6);
+  --shadow-dialog: 0 20px 56px rgb(0 0 0 / 0.7);
+
+  --focus-ring-color: rgb(45 212 191 / 0.35);
+
+  /* Semantic aliases consumed by Tailwind primitives */
+  --background: var(--canvas);
+  --card: var(--surface);
+  --card-foreground: var(--foreground);
+  --popover: var(--surface-raised);
+  --popover-foreground: var(--foreground);
+  --secondary: var(--surface-subtle);
+  --secondary-foreground: var(--foreground);
+  --muted: var(--surface-subtle);
+  --muted-foreground: var(--foreground-secondary);
+  --input: var(--border-strong);
+  --ring: var(--accent);
+}
+
 @theme inline {
   --font-sans: var(--font-sans);
   --font-display: var(--font-display);

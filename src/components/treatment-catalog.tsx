@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { CalendarPlus, ChevronDown } from "lucide-react";
+import { CalendarPlus, ChevronDown, Clock3 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -119,7 +119,7 @@ function TreatmentCatalogGroup({
           return (
             <li
               className={cn(
-                "scroll-mt-28 px-0 py-5 transition-colors",
+                "scroll-mt-28 -mx-3 rounded-[var(--radius-md)] px-3 py-5 transition-colors hover:bg-secondary/40",
                 selected && "bg-accent-soft/60 ring-1 ring-primary/40",
               )}
               id={`treatment-${treatment.id}`}
@@ -131,7 +131,7 @@ function TreatmentCatalogGroup({
                   <button
                     aria-controls={`treatment-details-${treatment.id}`}
                     aria-expanded={expanded}
-                    className="dms-pressable inline-flex min-h-11 items-center gap-2 rounded-[var(--radius-sm)] -ml-2 px-2 text-left text-lg font-semibold tracking-tight hover:text-primary focus-visible:outline-none"
+                    className="dms-pressable -ml-2 inline-flex min-h-11 items-center gap-2 rounded-[var(--radius-sm)] px-2 text-left text-lg font-semibold tracking-tight hover:text-primary focus-visible:outline-none"
                     onClick={() =>
                       onExpandedChange(expanded ? null : treatment.id)
                     }
@@ -151,7 +151,14 @@ function TreatmentCatalogGroup({
                   </p>
                 </div>
                 <div className="flex shrink-0 flex-wrap items-center gap-2 sm:justify-end">
-                  <Badge className="font-mono tabular-nums" variant="outline">
+                  <Badge
+                    className="gap-1 font-mono tabular-nums"
+                    variant="outline"
+                  >
+                    <Clock3
+                      aria-hidden
+                      className="size-3 text-muted-foreground"
+                    />
                     {treatment.defaultDurationMinutes} min
                   </Badge>
                   <Button asChild size="sm" variant="outline">

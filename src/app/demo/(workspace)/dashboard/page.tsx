@@ -3,6 +3,7 @@ import Link from "next/link";
 import { AppointmentStatusBadge } from "@/components/appointment-status-badge";
 import { ConfirmAppointmentButton } from "@/components/confirm-appointment-button";
 import { ExploreDmsGuide } from "@/components/explore-dms-guide";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   formatDemoDate,
@@ -120,10 +121,16 @@ export default async function DashboardPage() {
                   {dashboard.upNext.treatmentName}
                 </Link>
                 <span aria-hidden>·</span>
-                <span className="inline-flex items-center gap-1">
-                  <MapPin aria-hidden className="size-3.5" />
+                <Badge
+                  className="gap-1 font-normal text-xs text-muted-foreground"
+                  variant="secondary"
+                >
+                  <MapPin
+                    aria-hidden
+                    className="size-3 text-muted-foreground"
+                  />
                   Room assignment pending
-                </span>
+                </Badge>
                 <AppointmentStatus status={dashboard.upNext.status} />
               </div>
             </div>
@@ -175,7 +182,7 @@ export default async function DashboardPage() {
             <ol className="mt-5 divide-y divide-border border-y border-border">
               {dashboard.today.map((appointment) => (
                 <li
-                  className="grid gap-4 py-5 sm:grid-cols-[5.25rem_minmax(0,1fr)_auto] sm:items-center"
+                  className="-mx-3 grid gap-4 rounded-[var(--radius-md)] px-3 py-5 transition-colors hover:bg-secondary/40 sm:grid-cols-[5.25rem_minmax(0,1fr)_auto] sm:items-center"
                   key={appointment.id}
                 >
                   <time
@@ -247,7 +254,10 @@ export default async function DashboardPage() {
             </p>
             <ol className="mt-4 divide-y divide-border">
               {dashboard.needsAttention.map((appointment) => (
-                <li className="py-4" key={appointment.id}>
+                <li
+                  className="-mx-3 rounded-[var(--radius-md)] px-3 py-4 transition-colors hover:bg-secondary/40"
+                  key={appointment.id}
+                >
                   <Link
                     className="font-medium hover:text-primary"
                     href={`/demo/patients/${appointment.patientId}`}
@@ -298,7 +308,10 @@ export default async function DashboardPage() {
         {dashboard.recentNotes.length ? (
           <ol className="mt-5 divide-y divide-border border-y border-border">
             {dashboard.recentNotes.map((note) => (
-              <li className="py-4" key={note.id}>
+              <li
+                className="-mx-3 rounded-[var(--radius-md)] px-3 py-4 transition-colors hover:bg-secondary/40"
+                key={note.id}
+              >
                 <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
                   <Link
                     className="font-medium text-foreground hover:text-primary"

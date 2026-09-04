@@ -101,10 +101,10 @@ export default async function PatientPage({ params }: PatientPageProps) {
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <Link
-        className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground"
+        className="dms-pressable inline-flex min-h-9 items-center gap-1.5 rounded-[var(--radius-sm)] border border-transparent px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:border-border hover:bg-secondary hover:text-foreground"
         href="/demo/patients"
       >
-        <ArrowLeft aria-hidden className="size-4" />
+        <ArrowLeft aria-hidden className="size-3.5" />
         Patients
       </Link>
 

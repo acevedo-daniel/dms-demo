@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Search, UserPlus, X } from "lucide-react";
+import { ChevronRight, Search, UserPlus, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   PatientFormPanel,
@@ -18,6 +18,12 @@ function patientName(
   patient: Pick<PatientDirectoryItem, "firstName" | "lastName">,
 ) {
   return `${patient.firstName} ${patient.lastName}`;
+}
+
+function patientInitials(
+  patient: Pick<PatientDirectoryItem, "firstName" | "lastName">,
+) {
+  return `${patient.firstName[0] ?? ""}${patient.lastName[0] ?? ""}`.toUpperCase();
 }
 
 function toDirectoryItem(patient: EditablePatient): PatientDirectoryItem {
@@ -194,33 +200,49 @@ export function PatientDirectory({ initialPatients }: PatientDirectoryProps) {
             <li className="group" key={patient.id}>
               <Link
                 aria-label={`Open patient ${patientName(patient)}`}
-                className="dms-pressable -mx-3 block rounded-[var(--radius-md)] px-3 py-5 hover:bg-secondary/70 focus:outline-none sm:px-5"
+                className="dms-pressable -mx-3 block rounded-[var(--radius-md)] px-3 py-5 transition-colors hover:bg-secondary/70 focus:outline-none sm:px-5"
                 href={`/demo/patients/${patient.id}`}
                 id={`patient-${patient.id}`}
               >
-                <div className="grid gap-4 sm:grid-cols-[minmax(12rem,1fr)_minmax(9rem,.72fr)_minmax(13rem,1fr)] sm:items-center sm:gap-8">
-                  <div>
-                    <p className="text-lg font-semibold tracking-tight group-hover:text-primary">
-                      {patientName(patient)}
-                    </p>
-                    <p className="mt-1 font-mono text-xs text-muted-foreground">
-                      {patient.identifier}
-                    </p>
+                <div className="flex items-center justify-between gap-4">
+                  <div className="grid flex-1 gap-4 sm:grid-cols-[minmax(13rem,1.2fr)_minmax(9rem,.8fr)_minmax(11rem,1fr)] sm:items-center sm:gap-6">
+                    <div className="flex min-w-0 items-center gap-3.5">
+                      <div
+                        aria-hidden
+                        className="flex size-10 shrink-0 items-center justify-center rounded-full border border-border bg-secondary font-mono text-xs font-semibold text-foreground"
+                      >
+                        {patientInitials(patient)}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="truncate text-base font-semibold tracking-tight group-hover:text-primary">
+                          {patientName(patient)}
+                        </p>
+                        <p className="font-mono text-xs text-muted-foreground">
+                          {patient.identifier}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-sm">
+                      <p className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                        Next appointment
+                      </p>
+                      <p className="mt-1 truncate">
+                        {appointmentSummary(patient)}
+                      </p>
+                    </div>
+                    <div className="text-sm">
+                      <p className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                        Treatment
+                      </p>
+                      <p className="mt-1 truncate text-muted-foreground">
+                        {patient.nextAppointment?.treatmentName ?? "—"}
+                      </p>
+                    </div>
                   </div>
-                  <div className="text-sm">
-                    <p className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
-                      Next appointment
-                    </p>
-                    <p className="mt-1">{appointmentSummary(patient)}</p>
-                  </div>
-                  <div className="text-sm">
-                    <p className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
-                      Treatment
-                    </p>
-                    <p className="mt-1 truncate text-muted-foreground">
-                      {patient.nextAppointment?.treatmentName ?? "—"}
-                    </p>
-                  </div>
+                  <ChevronRight
+                    aria-hidden
+                    className="size-4 shrink-0 text-muted-foreground opacity-0 transition-all duration-[var(--motion-fast)] group-hover:translate-x-0.5 group-hover:opacity-70 motion-reduce:transition-none"
+                  />
                 </div>
               </Link>
             </li>
