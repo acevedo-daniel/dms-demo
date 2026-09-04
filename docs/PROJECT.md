@@ -65,4 +65,10 @@ Independent public portfolio demo informed by operational systems delivered with
 ## Related documentation
 
 - [README.md](../README.md) — project entry point, architecture, and local development.
+- [ARCHITECTURE.md](ARCHITECTURE.md) — architectural topology, component boundaries, and technical invariants.
+- [DEVELOPMENT.md](DEVELOPMENT.md) — developer environment setup, database commands, and workflow guide.
+- [TESTING.md](TESTING.md) — verification strategy, test suites, and quality release gates.
 - [SECURITY.md](../.github/SECURITY.md) — vulnerability reporting policy and demo data privacy guidelines.
+- [PROJECT-DESIGN.md](PROJECT-DESIGN.md) — product visual identity, color tokens, and typography (Layer 3).
+- [UI-SPEC.md](UI-SPEC.md) — view-level specifications, wireframes, and reachable states (Layer 3).
+- [DEVELOPMENT-ROADMAP.md](DEVELOPMENT-ROADMAP.md) — phase sequencing, scope boundaries, and exit criteria.

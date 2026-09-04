@@ -15,7 +15,7 @@ export default function DashboardLoading() {
   return (
     <main
       aria-busy="true"
-      aria-label="Loading dashboard"
+      aria-label="Loading Today"
       className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8"
     >
       <div className="animate-pulse border-b border-border pb-7">

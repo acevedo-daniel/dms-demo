@@ -50,33 +50,43 @@ The application is a modular monolith: server-rendered routes and route handlers
 
 ## Technology stack
 
-- **Application:** Next.js App Router, React, TypeScript, and Tailwind CSS.
-- **Data and identity:** PostgreSQL, Drizzle ORM, Drizzle Kit, Better Auth, and Zod.
-- **Tooling:** pnpm, Vitest, Playwright, Prettier, GitHub Actions, and Docker Compose.
+- **Application:** Next.js 16 (App Router), React 19, TypeScript, and Tailwind CSS v4.
+- **UI & Primitives:** Radix UI primitives and Lucide React.
+- **Data & Identity:** PostgreSQL, Drizzle ORM, Drizzle Kit, Better Auth, and Zod.
+- **Testing & Quality:** Vitest, Playwright, `@axe-core/playwright`, Prettier, and ESLint.
+- **Tooling & Runtime:** Node.js 24, pnpm 10, Docker Compose, and GitHub Actions.
 
 ## Repository structure
 
 | Path                   | Responsibility                                                         |
 | ---------------------- | ---------------------------------------------------------------------- |
 | `src/app`              | App Router pages, route handlers, metadata, and workspace routes.      |
-| `src/components`       | Product UI, accessible primitives, and client interactions.            |
-| `src/lib`              | Domain services, validation, authentication, and demo infrastructure.  |
+| `src/components`       | Product UI components, accessible primitives, and client interactions. |
+| `src/lib`              | Domain services, validation schemas, auth config, and demo helpers.    |
 | `src/db` and `drizzle` | Drizzle schema, deterministic seed data, and versioned SQL migrations. |
-| `tests`                | Unit, PostgreSQL integration, end-to-end, and accessibility coverage.  |
+| `tests`                | Unit, PostgreSQL integration, end-to-end, and accessibility suites.    |
+| `docs`                 | Architectural, developmental, testing, and product documentation.      |
 
 ## Local development
 
 Prerequisites: Node.js 24, pnpm 10, and Docker Desktop.
 
 ```bash
+# Clone and setup environment
 cp .env.example .env
 pnpm install
+
+# Start local PostgreSQL database
 docker compose up -d
+
+# Initialize migrations and deterministic sample data
 pnpm db:reset
+
+# Start development server
 pnpm dev
 ```
 
-Open `http://localhost:3000`, then select **Explore demo**. The sample environment is intentionally fictional and resettable.
+Open [http://localhost:3000](http://localhost:3000), then select **Explore demo**. The sample environment is intentionally fictional and resettable.
 
 ## Quality
 
@@ -92,9 +102,12 @@ pnpm db:test:down
 pnpm build
 ```
 
-CI runs formatting, linting, type checking, unit tests, PostgreSQL integration tests, Playwright workflows, accessibility checks, and the production build. The test database is isolated from the local development database.
+Automated CI runs formatting, linting, type checking, unit tests, PostgreSQL integration tests against an isolated container, Playwright end-to-end workflows, automated WCAG accessibility audits, and the production build.
 
 ## Documentation
 
-- [Project scope](docs/PROJECT.md) — product scope, domain rules, and business constraints.
+- [Project scope](docs/PROJECT.md) — product scope, clinical domain rules, and business constraints.
+- [Architecture](docs/ARCHITECTURE.md) — modular monolith topology, component boundaries, and invariants.
+- [Development](docs/DEVELOPMENT.md) — local requirements, environment configuration, and database workflow.
+- [Testing](docs/TESTING.md) — verification strategy, test suites, and quality release gates.
 - [Security policy](.github/SECURITY.md) — responsible disclosure guidance and demo data privacy.

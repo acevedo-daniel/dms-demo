@@ -19,11 +19,17 @@ async function resetDemoWorkspace(page: Page) {
   expect(response.ok()).toBeTruthy();
 }
 
+async function openDemoControls(page: Page) {
+  await page.getByRole("button", { name: "Open demo controls" }).click();
+}
+
 async function openResetDemoWorkspace(page: Page) {
   await openDemoWorkspace(page);
   await resetDemoWorkspace(page);
   await page.reload();
-  await expect(page.getByRole("heading", { name: "Dashboard" })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Today" }),
+  ).toBeVisible();
 }
 
 async function addPatient(page: Page) {
@@ -46,7 +52,9 @@ async function addPatient(page: Page) {
 test("opens a provisioned demo session", async ({ page }) => {
   await openDemoWorkspace(page);
 
-  await expect(page.getByRole("heading", { name: "Dashboard" })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Today" }),
+  ).toBeVisible();
   await expect(
     page
       .getByRole("main")
@@ -213,6 +221,7 @@ test("keeps the workspace available when sign out fails", async ({ page }) => {
     });
   });
 
+  await openDemoControls(page);
   await page.getByRole("button", { name: "Sign out" }).click();
 
   await expect(page).toHaveURL(/\/demo\/dashboard$/);
@@ -224,8 +233,28 @@ test("keeps the workspace available when sign out fails", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Sign out" })).toBeEnabled();
 });
 
+test("resets sample data from the demo controls", async ({ page }) => {
+  await openDemoWorkspace(page);
+  await page.getByRole("link", { name: "Patients" }).click();
+  await addPatient(page);
+
+  await openDemoControls(page);
+  await page.getByRole("button", { name: "Reset sample data" }).click();
+  const confirmation = page.getByRole("alertdialog", {
+    name: "Reset sample data?",
+  });
+  await confirmation.getByRole("button", { name: "Reset sample data" }).click();
+
+  await expect(page).toHaveURL(/\/demo\/dashboard$/);
+  await expect(page.getByRole("status")).toContainText("Sample data reset.");
+  await page.getByRole("link", { name: "Patients" }).click();
+  await page.getByLabel("Find a patient").fill(testPatient.identifier);
+  await expect(page.getByText(/No patients match/)).toBeVisible();
+});
+
 test("signs out and protects the workspace route", async ({ page }) => {
   await openDemoWorkspace(page);
+  await openDemoControls(page);
   await page.getByRole("button", { name: "Sign out" }).click();
 
   await expect(page).toHaveURL(/\/demo\/access$/);

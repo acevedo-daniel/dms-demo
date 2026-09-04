@@ -13,17 +13,17 @@ const appointmentStatusPresentation: Record<
     label: "Scheduled",
   },
   CONFIRMED: {
-    className: "border-primary/25 bg-accent text-primary",
+    className: "border-accent/25 bg-accent-soft text-accent-soft-foreground",
     icon: CheckCircle2,
     label: "Confirmed",
   },
   COMPLETED: {
-    className: "border-[#166534]/25 bg-[#dcfce7] text-[#166534]",
+    className: "border-success/25 bg-success-soft text-success-foreground",
     icon: CheckCircle2,
     label: "Completed",
   },
   CANCELLED: {
-    className: "border-destructive/25 bg-[#fee4e2] text-destructive",
+    className: "border-destructive/25 bg-destructive-soft text-destructive",
     icon: CircleX,
     label: "Cancelled",
   },

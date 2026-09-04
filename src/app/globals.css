@@ -3,70 +3,173 @@
 
 :root {
   color-scheme: light;
-  --background: #f6f8f7;
-  --foreground: #14211f;
-  --card: #ffffff;
-  --card-foreground: #14211f;
-  --popover: #ffffff;
-  --popover-foreground: #14211f;
-  --primary: #0f6b62;
+
+  /* Canonical DMS runtime tokens */
+  --canvas: #f8f8f6;
+  --surface: #ffffff;
+  --surface-subtle: #f4f4f1;
+  --surface-raised: #ffffff;
+  --foreground: #171715;
+  --foreground-secondary: #4d4d49;
+  --foreground-tertiary: #70706a;
+  --foreground-inverse: #ffffff;
+  --border-subtle: #f0efe9;
+  --border: #e7e6e1;
+  --border-strong: #cbc9c2;
+  --primary: #171715;
   --primary-foreground: #ffffff;
-  --secondary: #e8f0ed;
-  --secondary-foreground: #14211f;
-  --muted: #e8f0ed;
-  --muted-foreground: #5a6662;
-  --accent: #d9eee8;
-  --accent-foreground: #14211f;
-  --destructive: #b42318;
+  --accent: #0f6b62;
+  --accent-foreground: #ffffff;
+  --accent-soft: #e7f2ef;
+  --accent-soft-foreground: #114f49;
+  --success: #1f7a4c;
+  --success-soft: #e9f6ee;
+  --success-foreground: #195f3c;
+  --warning: #9a5c00;
+  --warning-soft: #fff3e3;
+  --warning-foreground: #764600;
+  --danger: #b42318;
+  --danger-soft: #fceceb;
+  --danger-foreground: #8f231a;
+  --destructive: var(--danger);
+  --destructive-soft: var(--danger-soft);
   --destructive-foreground: #ffffff;
-  --border: #dce8e4;
-  --input: #7a8e86;
-  --ring: #0f6b62;
-  --radius: 0.75rem;
-  --sidebar: #ffffff;
-  --sidebar-foreground: #14211f;
-  --sidebar-primary: #0f6b62;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #d9eee8;
-  --sidebar-accent-foreground: #14211f;
-  --sidebar-border: #dce8e4;
-  --sidebar-ring: #0f6b62;
+  --info: #275dad;
+  --info-soft: #ebf2fb;
+  --info-foreground: #214f91;
+
+  /* Typography */
+  --font-sans: var(--font-manrope), "Avenir Next", "Segoe UI", sans-serif;
+  --font-display: var(--font-sans);
+  --font-mono: var(--font-geist-mono), "SFMono-Regular", Consolas, monospace;
+
+  /* Geometry */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.75rem;
+  --radius-pill: 9999px;
+
+  /* Controls */
+  --control-sm: 2.25rem;
+  --control-md: 2.75rem;
+  --control-lg: 3rem;
+  --touch-target-min: 2.75rem;
+
+  /* Layout */
+  --header-height: 4rem;
+  --content-max: 84rem;
+  --reading-max: 46rem;
+  --schedule-workspace-max: 100rem;
+  --schedule-grid-min: 64rem;
+  --context-panel-width: 22rem;
+  --gutter-wide: 2rem;
+  --gutter-medium: 1.5rem;
+  --gutter-compact: 1rem;
+
+  /* Elevation */
+  --shadow-xs: 0 1px 2px 0 rgb(23 23 21 / 0.05);
+  --shadow-sm:
+    0 1px 3px 0 rgb(23 23 21 / 0.08), 0 1px 2px -1px rgb(23 23 21 / 0.08);
+  --shadow-hover: 0 4px 12px -2px rgb(23 23 21 / 0.08);
+  --shadow-raised: 0 12px 30px rgb(23 23 21 / 0.08);
+  --shadow-dialog: 0 20px 56px rgb(23 23 21 / 0.14);
+
+  /* Focus */
+  --focus-ring-width: 0.1875rem;
+  --focus-ring-offset: 0.125rem;
+  --focus-ring-color: rgb(15 107 98 / 0.28);
+
+  /* Motion */
+  --motion-fast: 120ms cubic-bezier(0.2, 0, 0, 1);
+  --motion-base: 180ms cubic-bezier(0.2, 0, 0, 1);
+  --motion-slow: 240ms cubic-bezier(0.2, 0, 0, 1);
+
+  /* Spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4.5rem;
+  --space-9: 6rem;
+
+  /* Semantic aliases consumed by Tailwind primitives */
+  --background: var(--canvas);
+  --card: var(--surface);
+  --card-foreground: var(--foreground);
+  --popover: var(--surface-raised);
+  --popover-foreground: var(--foreground);
+  --secondary: var(--surface-subtle);
+  --secondary-foreground: var(--foreground);
+  --muted: var(--surface-subtle);
+  --muted-foreground: var(--foreground-secondary);
+  --input: var(--border-strong);
+  --ring: var(--accent);
 }
 
 @theme inline {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --color-background: var(--background);
+  --font-sans: var(--font-sans);
+  --font-display: var(--font-display);
+  --font-mono: var(--font-mono);
+
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-subtle: var(--surface-subtle);
+  --color-surface-raised: var(--surface-raised);
+
   --color-foreground: var(--foreground);
+  --color-foreground-secondary: var(--foreground-secondary);
+  --color-foreground-tertiary: var(--foreground-tertiary);
+  --color-foreground-inverse: var(--foreground-inverse);
+
+  --color-border-subtle: var(--border-subtle);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-soft-foreground: var(--accent-soft-foreground);
+
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-danger-foreground: var(--danger-foreground);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-info-foreground: var(--info-foreground);
+
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow-hover: var(--shadow-hover);
+  --shadow-raised: var(--shadow-raised);
+  --shadow-dialog: var(--shadow-dialog);
+
+  /* Semantic aliases consumed by Tailwind primitives */
+  --color-background: var(--background);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
+  --color-destructive-soft: var(--destructive-soft);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
 }
 
 @layer base {
@@ -81,17 +184,19 @@
   body {
     @apply bg-background text-foreground;
     font-size: 0.9375rem;
-    line-height: 1.55;
+    line-height: 1.5;
+    font-feature-settings: "tnum" 1;
+    font-variant-numeric: tabular-nums;
   }
 
   :focus-visible {
-    outline: 3px solid var(--ring) !important;
-    outline-offset: 2px !important;
+    outline: var(--focus-ring-width) solid var(--focus-ring-color) !important;
+    outline-offset: var(--focus-ring-offset) !important;
   }
 
   ::selection {
-    background: var(--accent);
-    color: var(--foreground);
+    background: var(--accent-soft);
+    color: var(--accent-soft-foreground);
   }
 
   @media (prefers-reduced-motion: reduce) {

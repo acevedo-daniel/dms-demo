@@ -17,7 +17,9 @@ async function openResetDemoWorkspace(page: Page) {
   await openDemoWorkspace(page);
   await resetDemoWorkspace(page);
   await page.reload();
-  await expect(page.getByRole("heading", { name: "Dashboard" })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Today" }),
+  ).toBeVisible();
 }
 
 async function expectNoWcagViolations(page: Page) {
@@ -107,5 +109,7 @@ test("moves focus to the dashboard content when the walkthrough is dismissed", a
   await dismissGuide.press("Enter");
 
   await expect(dismissGuide).toBeHidden();
-  await expect(page.getByRole("heading", { name: "Today" })).toBeFocused();
+  await expect(
+    page.getByRole("heading", { level: 2, name: "Today" }),
+  ).toBeFocused();
 });

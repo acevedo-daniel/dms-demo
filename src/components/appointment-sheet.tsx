@@ -310,10 +310,7 @@ export function AppointmentSheet({
                     type="button"
                     variant="outline"
                   >
-                    <CheckCircle2
-                      aria-hidden
-                      className="size-4 text-[#166534]"
-                    />
+                    <CheckCircle2 aria-hidden className="size-4 text-success" />
                     Complete
                   </Button>
                   <Button asChild variant="ghost">

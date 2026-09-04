@@ -35,7 +35,7 @@ export default async function DashboardPage() {
           className="max-w-lg border-y border-border py-10"
         >
           <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-primary">
-            Dashboard
+            Today
           </p>
           <h1
             className="mt-3 text-3xl font-semibold tracking-[-0.03em]"
@@ -62,7 +62,7 @@ export default async function DashboardPage() {
             Daily operating view
           </p>
           <h1 className="mt-3 text-3xl font-semibold tracking-[-0.03em]">
-            Dashboard
+            Today
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
             {formatDemoDate(getDemoClock())}

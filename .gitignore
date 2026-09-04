@@ -26,13 +26,18 @@ next-env.d.ts
 Thumbs.db
 Desktop.ini
 
-# Local working resources and temporary assets
+# Local working resources and AI planning
 /temporal/
-/AGENTS.md
+AGENTS.md
+CLAUDE.md
+GEMINI.md
 /ROADMAP.md
 /DMS-FINAL-CURATION-ROADMAP.md
 /DMS-DEPLOYMENT-RUNBOOK.md
 /DESIGN-DIRECTION.md
 /SCREEN-DESIGN.md
+/docs/*ROADMAP*.md
+/docs/PROJECT-DESIGN.md
+/docs/UI-SPEC.md
 /docs/DESIGN*.md
 /docs/templates/
