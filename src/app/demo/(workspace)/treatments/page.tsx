@@ -29,7 +29,7 @@ export default async function TreatmentsPage({
           className="max-w-lg rounded-[var(--radius-lg)] border border-border/80 bg-card/40 p-8 shadow-xs"
         >
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span className="font-medium text-foreground/80">
+            <span className="font-semibold uppercase tracking-wider text-accent">
               Treatment Catalog
             </span>
             <span className="text-muted-foreground/40">·</span>
@@ -63,7 +63,7 @@ export default async function TreatmentsPage({
       <header className="flex flex-col gap-6 border-b border-border/70 pb-8 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span className="font-medium text-foreground/80">
+            <span className="font-semibold uppercase tracking-wider text-accent">
               Treatment Catalog
             </span>
             <span className="text-muted-foreground/40">·</span>

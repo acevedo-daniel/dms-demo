@@ -15,7 +15,6 @@ import { formatDemoDate, formatDemoTime } from "@/lib/demo/format";
 import { NotFoundError } from "@/lib/domain/errors";
 import { getNoteComposerOptions } from "@/lib/notes";
 import { getPatientRecord } from "@/lib/patients";
-import { cn } from "@/lib/utils";
 
 type PatientPageProps = { params: Promise<{ id: string }> };
 
@@ -55,7 +54,7 @@ export default async function PatientPage({ params }: PatientPageProps) {
           className="max-w-lg rounded-[var(--radius-lg)] border border-border/80 bg-card/40 p-8 shadow-xs"
         >
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span className="font-medium text-foreground/80">
+            <span className="font-semibold uppercase tracking-wider text-accent">
               Patient Record
             </span>
             <span className="text-muted-foreground/40">·</span>
@@ -122,7 +121,7 @@ export default async function PatientPage({ params }: PatientPageProps) {
         <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
           <div>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <span className="font-medium text-foreground/80">
+              <span className="font-semibold uppercase tracking-wider text-accent">
                 Patient Record
               </span>
               <span className="text-muted-foreground/40">·</span>
@@ -214,7 +213,7 @@ export default async function PatientPage({ params }: PatientPageProps) {
           <div className="p-4 sm:p-5">
             <div className="flex items-center gap-1.5">
               {hasAlert ? (
-                <span className="size-1.5 rounded-full bg-amber-600 dark:bg-amber-400" />
+                <span className="size-1.5 rounded-full bg-warning" />
               ) : (
                 <span className="size-1.5 rounded-full bg-muted-foreground/50" />
               )}
@@ -222,14 +221,7 @@ export default async function PatientPage({ params }: PatientPageProps) {
                 Clinical Precaution
               </p>
             </div>
-            <p
-              className={cn(
-                "mt-1 text-sm font-semibold tracking-tight",
-                hasAlert
-                  ? "text-amber-800 dark:text-amber-300"
-                  : "text-foreground",
-              )}
-            >
+            <p className="mt-1 text-sm font-semibold tracking-tight text-foreground">
               {patient.clinicalAlert}
             </p>
             <p className="mt-0.5 text-xs text-muted-foreground">

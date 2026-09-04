@@ -135,7 +135,7 @@ export default async function DemoAccessPage() {
             <div className="mt-10 rounded-[var(--radius-xl)] border border-border/80 bg-surface/80 p-6 sm:p-7 shadow-xs backdrop-blur-xs ring-1 ring-black/[0.03]">
               <div className="flex items-center justify-between border-b border-border/70 pb-4">
                 <div className="flex items-center gap-2">
-                  <KeyRound aria-hidden className="size-4 text-primary" />
+                  <KeyRound aria-hidden className="size-4 text-accent" />
                   <p className="text-xs font-semibold uppercase tracking-wider text-foreground">
                     Practice Session Overview
                   </p>
@@ -236,7 +236,7 @@ export default async function DemoAccessPage() {
               {/* Footer strip */}
               <figcaption className="flex flex-wrap justify-between items-center gap-x-4 gap-y-1.5 border-t border-border/60 bg-surface/95 px-4 py-3 text-xs text-muted-foreground sm:px-5">
                 <div className="flex items-center gap-2 font-medium text-foreground">
-                  <CalendarDays aria-hidden className="size-3.5 text-primary" />
+                  <CalendarDays aria-hidden className="size-3.5 text-accent" />
                   <span>Today · Tuesday, 12 May 2026</span>
                 </div>
                 <div className="flex items-center gap-3">

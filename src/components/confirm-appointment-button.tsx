@@ -73,7 +73,7 @@ export function ConfirmAppointmentButton({
           aria-hidden
           className={cn(
             "size-3.5",
-            variant === "default" ? "text-primary-foreground" : "text-primary",
+            variant === "default" ? "text-primary-foreground" : "text-accent",
           )}
         />
         {isPending ? "Confirming…" : "Confirm"}

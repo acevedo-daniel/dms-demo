@@ -21,7 +21,7 @@ export default async function PatientsPage() {
           aria-labelledby="patient-directory-error-title"
           className="max-w-lg border-y border-border py-10"
         >
-          <p className="text-xs font-semibold uppercase tracking-wider text-primary">
+          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Patient directory
           </p>
           <h1

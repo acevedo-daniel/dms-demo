@@ -57,7 +57,7 @@ export default async function DashboardPage() {
           className="max-w-lg rounded-[var(--radius-xl)] border border-border/80 bg-card/60 p-8 sm:p-10 shadow-xs backdrop-blur-xs"
         >
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span className="font-medium text-primary">Today</span>
+            <span className="font-medium text-foreground">Today</span>
             <span className="text-muted-foreground/40">·</span>
             <span>Atelier Dental</span>
           </div>
@@ -150,7 +150,7 @@ export default async function DashboardPage() {
         <div className="p-4 sm:p-5">
           <div className="flex items-center gap-1.5">
             {dashboard.needsAttention.length ? (
-              <span className="size-1.5 rounded-full bg-amber-600 dark:bg-amber-400" />
+              <span className="size-1.5 rounded-full bg-warning" />
             ) : (
               <span className="size-1.5 rounded-full bg-muted-foreground/60" />
             )}
@@ -285,7 +285,7 @@ export default async function DashboardPage() {
         <section aria-labelledby="today-agenda-title">
           <div className="flex items-end justify-between gap-4 border-b border-border/80 pb-4">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-primary">
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Operating day
               </p>
               <h2
@@ -380,7 +380,7 @@ export default async function DashboardPage() {
           >
             <div className="flex items-center justify-between gap-2 border-b border-border/60 pb-3">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-primary">
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                   Follow-up queue
                 </p>
                 <h2

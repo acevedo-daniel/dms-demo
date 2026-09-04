@@ -309,7 +309,7 @@ function TreatmentCatalogGroup({
                     <button
                       aria-controls={`treatment-details-${treatment.id}`}
                       aria-expanded={expanded}
-                      className="dms-pressable -ml-1 inline-flex min-h-8 items-center gap-2 rounded-[var(--radius-sm)] px-1 text-left text-base font-semibold tracking-tight text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                      className="dms-pressable -ml-1 inline-flex min-h-8 items-center gap-2 rounded-[var(--radius-sm)] px-1 text-left text-base font-semibold tracking-tight text-foreground transition-opacity hover:opacity-85 focus-visible:outline-none"
                       onClick={() =>
                         onExpandedChange(expanded ? null : treatment.id)
                       }

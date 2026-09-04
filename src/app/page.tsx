@@ -357,7 +357,7 @@ export default function Home() {
         className="mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8 lg:py-36 border-t border-border"
       >
         <div className="mx-auto max-w-3xl text-center">
-          <p className="text-xs font-semibold uppercase tracking-wider text-primary">
+          <p className="text-xs font-semibold uppercase tracking-wider text-accent">
             Unified Operations System
           </p>
           <h2
@@ -475,7 +475,7 @@ export default function Home() {
                   className="gap-1.5 border-border/80 bg-secondary/50 text-xs font-medium text-foreground/80"
                   variant="outline"
                 >
-                  <span className="size-1.5 rounded-full bg-amber-600/80" />
+                  <span className="size-1.5 rounded-full bg-warning" />
                   Penicillin allergy
                 </Badge>
                 <Badge className="text-xs font-medium" variant="secondary">
@@ -672,7 +672,7 @@ export default function Home() {
         <div className="flex flex-col gap-2 border-b border-border pb-6 sm:flex-row sm:items-baseline sm:justify-between">
           <div>
             <h2
-              className="text-xs font-semibold uppercase tracking-wider text-primary"
+              className="text-xs font-semibold uppercase tracking-wider text-accent"
               id="engineering-signals-title"
             >
               Engineering signals
@@ -811,7 +811,7 @@ export default function Home() {
         {/* 3 Core Practice Tenets */}
         <div className="mx-auto mt-10 grid max-w-5xl gap-6 sm:grid-cols-3">
           <div className="rounded-[var(--radius-lg)] border border-border/70 bg-surface/60 p-6 text-center sm:text-left">
-            <p className="text-xs font-semibold uppercase tracking-wider text-primary">
+            <p className="text-xs font-semibold uppercase tracking-wider text-accent">
               01 · Serene Ergonomics
             </p>
             <h3 className="mt-2 text-base font-semibold text-foreground">
@@ -824,7 +824,7 @@ export default function Home() {
           </div>
 
           <div className="rounded-[var(--radius-lg)] border border-border/70 bg-surface/60 p-6 text-center sm:text-left">
-            <p className="text-xs font-semibold uppercase tracking-wider text-primary">
+            <p className="text-xs font-semibold uppercase tracking-wider text-accent">
               02 · Temporal Rhythm
             </p>
             <h3 className="mt-2 text-base font-semibold text-foreground">
@@ -837,7 +837,7 @@ export default function Home() {
           </div>
 
           <div className="rounded-[var(--radius-lg)] border border-border/70 bg-surface/60 p-6 text-center sm:text-left">
-            <p className="text-xs font-semibold uppercase tracking-wider text-primary">
+            <p className="text-xs font-semibold uppercase tracking-wider text-accent">
               03 · Radical Reliability
             </p>
             <h3 className="mt-2 text-base font-semibold text-foreground">
@@ -859,7 +859,7 @@ export default function Home() {
       >
         <div className="grid gap-12 lg:grid-cols-12 lg:items-center">
           <div className="max-w-xl lg:col-span-6">
-            <p className="text-xs font-semibold uppercase tracking-wider text-primary">
+            <p className="text-xs font-semibold uppercase tracking-wider text-accent">
               Evaluate the live workspace
             </p>
             <h2
@@ -950,7 +950,7 @@ export default function Home() {
                 </div>
                 <div className="text-right">
                   <Badge
-                    className="gap-1 border-accent/30 bg-accent-soft font-mono text-[10px] font-semibold uppercase tracking-wider text-accent-soft-foreground"
+                    className="gap-1 border-border/80 bg-secondary/60 font-mono text-[10px] font-medium uppercase tracking-wider text-foreground/80"
                     variant="outline"
                   >
                     <ShieldCheck aria-hidden className="size-3 text-accent" />

@@ -18,25 +18,25 @@
   --border-strong: #cbc9c2;
   --primary: #171715;
   --primary-foreground: #ffffff;
-  --accent: #0f6b62;
+  --accent: #1a564d;
   --accent-foreground: #ffffff;
-  --accent-soft: #e7f2ef;
-  --accent-soft-foreground: #114f49;
-  --success: #1f7a4c;
-  --success-soft: #e9f6ee;
-  --success-foreground: #195f3c;
-  --warning: #9a5c00;
-  --warning-soft: #fff3e3;
-  --warning-foreground: #764600;
-  --danger: #b42318;
-  --danger-soft: #fceceb;
-  --danger-foreground: #8f231a;
+  --accent-soft: #eef5f2;
+  --accent-soft-foreground: #14423b;
+  --success: #216b47;
+  --success-soft: #eff7f2;
+  --success-foreground: #174f34;
+  --warning: #8f5817;
+  --warning-soft: #fbf5ed;
+  --warning-foreground: #683d0c;
+  --danger: #a23328;
+  --danger-soft: #fcf2f0;
+  --danger-foreground: #7d2218;
   --destructive: var(--danger);
   --destructive-soft: var(--danger-soft);
   --destructive-foreground: #ffffff;
-  --info: #275dad;
-  --info-soft: #ebf2fb;
-  --info-foreground: #214f91;
+  --info: #2a5789;
+  --info-soft: #f1f5fa;
+  --info-foreground: #1d3f66;
 
   /* Typography */
   --font-sans:
@@ -83,7 +83,7 @@
   /* Focus */
   --focus-ring-width: 0.1875rem;
   --focus-ring-offset: 0.125rem;
-  --focus-ring-color: rgb(15 107 98 / 0.28);
+  --focus-ring-color: rgb(26 86 77 / 0.22);
 
   /* Motion */
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
@@ -123,36 +123,36 @@
   /* Canonical DMS runtime tokens - Dark Mode */
   --canvas: #121210;
   --surface: #181816;
-  --surface-subtle: #21211e;
-  --surface-raised: #1e1e1b;
+  --surface-subtle: #20201d;
+  --surface-raised: #252521;
   --foreground: #f4f4f1;
-  --foreground-secondary: #9e9e97;
-  --foreground-tertiary: #73736d;
-  --foreground-inverse: #171715;
-  --border-subtle: #22221f;
-  --border: #2c2c28;
+  --foreground-secondary: #a0a099;
+  --foreground-tertiary: #75756f;
+  --foreground-inverse: #141412;
+  --border-subtle: #20201d;
+  --border: #2d2d29;
   --border-strong: #3f3f39;
   --primary: #f4f4f1;
   --primary-foreground: #171715;
-  --accent: #2dd4bf;
-  --accent-foreground: #042f2e;
-  --accent-soft: #10312b;
-  --accent-soft-foreground: #5eead4;
-  --success: #34d399;
-  --success-soft: #0c3929;
-  --success-foreground: #6ee7b7;
-  --warning: #fbbf24;
-  --warning-soft: #381a02;
-  --warning-foreground: #fde68a;
-  --danger: #f87171;
-  --danger-soft: #3d0c0c;
-  --danger-foreground: #fca5a5;
+  --accent: #459487;
+  --accent-foreground: #09211d;
+  --accent-soft: #162623;
+  --accent-soft-foreground: #85c7bd;
+  --success: #3f966d;
+  --success-soft: #13261c;
+  --success-foreground: #7ec7a1;
+  --warning: #b88232;
+  --warning-soft: #251a0d;
+  --warning-foreground: #dcb274;
+  --danger: #c2544a;
+  --danger-soft: #271412;
+  --danger-foreground: #df867e;
   --destructive: var(--danger);
   --destructive-soft: var(--danger-soft);
   --destructive-foreground: #ffffff;
-  --info: #60a5fa;
-  --info-soft: #142247;
-  --info-foreground: #93c5fd;
+  --info: #4f79a9;
+  --info-soft: #131c28;
+  --info-foreground: #91b3db;
 
   --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.4);
   --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.5), 0 1px 2px -1px rgb(0 0 0 / 0.5);
@@ -160,7 +160,7 @@
   --shadow-raised: 0 12px 32px rgb(0 0 0 / 0.6);
   --shadow-dialog: 0 20px 56px rgb(0 0 0 / 0.7);
 
-  --focus-ring-color: rgb(45 212 191 / 0.35);
+  --focus-ring-color: rgb(69 148 135 / 0.28);
 
   /* Semantic aliases consumed by Tailwind primitives */
   --background: var(--canvas);
@@ -241,6 +241,7 @@
 @layer base {
   * {
     @apply border-border;
+    scrollbar-color: var(--border) transparent;
   }
 
   html {

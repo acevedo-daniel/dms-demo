@@ -102,26 +102,29 @@ export function AppointmentForm({
           <div className="flex flex-wrap items-center gap-2 border-b border-border/80 pb-5">
             {appointment.status === "SCHEDULED" ? (
               <Button
-                className="h-8 gap-1.5 border-accent/40 bg-accent-soft text-xs font-semibold text-accent-soft-foreground hover:border-accent hover:bg-accent-soft/80"
+                className="h-8 gap-1.5 text-xs font-semibold"
                 disabled={isStatusPending}
                 onClick={() => onUpdateStatus("CONFIRMED")}
                 size="sm"
                 type="button"
                 variant="outline"
               >
-                <Check aria-hidden className="size-3.5" />
+                <Check aria-hidden className="size-3.5 text-accent" />
                 Confirm
               </Button>
             ) : null}
             <Button
-              className="h-8 gap-1.5 border-success/40 bg-success-soft text-xs font-semibold text-success-foreground hover:border-success hover:bg-success-soft/80"
+              className="h-8 gap-1.5 text-xs font-semibold"
               disabled={isStatusPending}
               onClick={() => onUpdateStatus("COMPLETED")}
               size="sm"
               type="button"
               variant="outline"
             >
-              <CheckCircle2 aria-hidden className="size-3.5" />
+              <CheckCircle2
+                aria-hidden
+                className="size-3.5 text-foreground/70"
+              />
               Complete
             </Button>
             <Button asChild className="h-8 text-xs" size="sm" variant="ghost">

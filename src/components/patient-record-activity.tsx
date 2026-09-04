@@ -126,7 +126,7 @@ export function PatientRecordActivity({ items }: PatientRecordActivityProps) {
                         "size-2 rounded-full",
                         item.kind === "appointment"
                           ? "bg-foreground/50"
-                          : "bg-amber-600/70 dark:bg-amber-400/70",
+                          : "bg-warning",
                       )}
                     />
                     <div>

@@ -145,7 +145,7 @@ export function PatientDirectory({ initialPatients }: PatientDirectoryProps) {
       <header className="flex flex-col gap-6 border-b border-border/70 pb-8 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span className="font-medium text-foreground/90">
+            <span className="font-semibold uppercase tracking-wider text-accent">
               Patient Directory
             </span>
             <span className="text-muted-foreground/40">·</span>
@@ -195,7 +195,7 @@ export function PatientDirectory({ initialPatients }: PatientDirectoryProps) {
 
         <div className="p-4 sm:p-5">
           <div className="flex items-center gap-1.5">
-            <span className="size-1.5 rounded-full bg-emerald-600/80 dark:bg-emerald-400/80" />
+            <span className="size-1.5 rounded-full bg-accent" />
             <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
               Upcoming Care
             </p>
@@ -371,7 +371,7 @@ export function PatientDirectory({ initialPatients }: PatientDirectoryProps) {
                       </p>
                       {patient.nextAppointment ? (
                         <div className="mt-0.5 flex items-center gap-1.5">
-                          <span className="size-1.5 shrink-0 rounded-full bg-emerald-600/80 dark:bg-emerald-400/80" />
+                          <span className="size-1.5 shrink-0 rounded-full bg-accent" />
                           <p className="truncate text-xs font-medium text-foreground sm:text-sm">
                             {appointmentSummary(patient)}
                           </p>

@@ -405,7 +405,7 @@ export function ScheduleBoard({
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <span className="font-medium text-primary">
+              <span className="font-semibold uppercase tracking-wider text-accent">
                 Appointment Coordination
               </span>
               <span className="text-muted-foreground/40">·</span>
@@ -649,7 +649,7 @@ export function ScheduleBoard({
                         dayKey ? (
                         <div
                           aria-label={`Draft appointment at ${formatDemoTime(new Date(draft.startsAt))} for ${draft.durationMinutes} minutes`}
-                          className="pointer-events-none absolute right-1.5 left-1.5 z-10 overflow-hidden rounded-[var(--radius-md)] border-2 border-dashed border-accent bg-accent-soft/50 px-2.5 py-2 text-left shadow-xs transition-[height] duration-[var(--motion-base)] ease-[var(--ease-emphasized)] backdrop-blur-xs"
+                          className="pointer-events-none absolute right-1.5 left-1.5 z-10 overflow-hidden rounded-[var(--radius-md)] border-2 border-dashed border-accent/60 bg-accent-soft/40 px-2.5 py-2 text-left shadow-xs transition-[height] duration-[var(--motion-base)] ease-[var(--ease-emphasized)] backdrop-blur-xs"
                           role="status"
                           style={{
                             height: `${(draft.durationMinutes / 30) * 3}rem`,
@@ -657,10 +657,10 @@ export function ScheduleBoard({
                           }}
                         >
                           <div className="flex items-center justify-between gap-1">
-                            <span className="block truncate text-xs font-semibold text-accent-soft-foreground">
+                            <span className="block truncate text-xs font-semibold text-foreground/90">
                               Draft appointment
                             </span>
-                            <span className="rounded bg-accent/20 px-1.5 py-0.5 text-[10px] font-medium text-accent-soft-foreground shrink-0">
+                            <span className="rounded border border-border/70 bg-secondary/80 px-1.5 py-0.5 font-mono text-[10px] font-medium text-muted-foreground shrink-0">
                               {draft.durationMinutes} min
                             </span>
                           </div>
@@ -679,8 +679,8 @@ export function ScheduleBoard({
                             className={cn(
                               "dms-pressable dms-raised-action group absolute right-1.5 left-1.5 z-10 overflow-hidden rounded-[var(--radius-md)] border text-left transition-all duration-150 focus-visible:outline-none shadow-xs hover:shadow-sm",
                               confirmed
-                                ? "border-accent/40 border-l-[3.5px] border-l-accent bg-accent-soft/90 text-accent-soft-foreground hover:border-accent hover:bg-accent-soft"
-                                : "border-border/90 border-l-[3.5px] border-l-foreground/40 bg-card text-foreground hover:border-foreground/30",
+                                ? "border-border/90 border-l-[3.5px] border-l-accent bg-card dark:bg-surface-raised/70 dark:hover:bg-surface-raised text-foreground hover:border-foreground/30"
+                                : "border-border/90 border-l-[3.5px] border-l-foreground/30 bg-card dark:bg-surface-raised/70 dark:hover:bg-surface-raised text-foreground hover:border-foreground/30",
                               isSelected &&
                                 "ring-2 ring-primary ring-offset-2 ring-offset-background",
                               isCompact ? "px-2 py-1" : "px-2.5 py-1.5",
@@ -699,7 +699,7 @@ export function ScheduleBoard({
                               <span className="text-xs font-semibold tabular-nums tracking-tight">
                                 {formatDemoTime(new Date(appointment.startsAt))}
                               </span>
-                              <span className="rounded bg-background/50 px-1.5 py-0.5 font-mono text-[10px] opacity-75 tabular-nums">
+                              <span className="rounded border border-border/60 bg-secondary/60 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground tabular-nums">
                                 {appointment.durationMinutes}m
                               </span>
                             </div>
@@ -708,7 +708,7 @@ export function ScheduleBoard({
                             </span>
                             <div className="mt-0.5 flex items-center justify-between gap-1">
                               {!isCompact ? (
-                                <span className="block truncate text-[11px] opacity-80 leading-tight">
+                                <span className="block truncate text-[11px] text-muted-foreground leading-tight">
                                   {appointment.treatmentName}
                                 </span>
                               ) : (
@@ -716,12 +716,24 @@ export function ScheduleBoard({
                               )}
                               <span
                                 className={cn(
-                                  "text-[10px] font-medium tracking-wide opacity-75 shrink-0",
-                                  confirmed &&
-                                    "text-accent font-semibold opacity-100",
+                                  "flex items-center gap-1 text-[10px] font-medium tracking-wide shrink-0",
+                                  confirmed
+                                    ? "text-accent font-semibold"
+                                    : "text-muted-foreground",
                                 )}
                               >
-                                {appointmentStatusLabel(appointment)}
+                                <span
+                                  aria-hidden="true"
+                                  className={cn(
+                                    "size-1 rounded-full",
+                                    confirmed
+                                      ? "bg-accent"
+                                      : "bg-muted-foreground/60",
+                                  )}
+                                />
+                                <span>
+                                  {appointmentStatusLabel(appointment)}
+                                </span>
                               </span>
                             </div>
                           </button>
@@ -819,7 +831,7 @@ export function ScheduleBoard({
                 {isDraft ? (
                   <div
                     aria-live="polite"
-                    className="flex-1 rounded-[var(--radius-md)] border-2 border-dashed border-accent bg-accent-soft/50 px-3 py-2 text-sm text-accent-soft-foreground"
+                    className="flex-1 rounded-[var(--radius-md)] border-2 border-dashed border-accent/60 bg-accent-soft/40 px-3 py-2 text-sm text-foreground/90"
                     role="status"
                   >
                     Draft appointment · {draft.durationMinutes} min
@@ -832,8 +844,8 @@ export function ScheduleBoard({
                       className={cn(
                         "dms-pressable dms-raised-action min-w-0 flex-1 rounded-[var(--radius-md)] border px-3 py-2 text-left focus-visible:outline-none shadow-xs",
                         appointment.status === "CONFIRMED"
-                          ? "border-accent/40 border-l-4 border-l-accent bg-accent-soft"
-                          : "border-border/90 border-l-4 border-l-foreground/40 bg-card",
+                          ? "border-border/90 border-l-4 border-l-accent bg-card dark:bg-surface-raised/70"
+                          : "border-border/90 border-l-4 border-l-foreground/30 bg-card dark:bg-surface-raised/70",
                         appointment.id === selectedAppointmentId &&
                           "ring-2 ring-primary ring-offset-1",
                       )}

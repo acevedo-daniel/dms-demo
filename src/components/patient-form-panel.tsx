@@ -247,7 +247,9 @@ export function PatientFormPanel({
         >
           <DialogHeader className="border-b border-border/80 bg-secondary/15 px-6 py-5 text-left">
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <span className="font-medium text-primary">Patient Intake</span>
+              <span className="font-medium text-foreground">
+                Patient Intake
+              </span>
               <span className="text-muted-foreground/40">·</span>
               <span>Atelier Dental</span>
             </div>

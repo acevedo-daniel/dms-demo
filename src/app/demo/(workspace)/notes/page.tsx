@@ -22,7 +22,7 @@ export default async function NotesPage() {
           className="max-w-lg rounded-[var(--radius-lg)] border border-border/80 bg-card/40 p-8 shadow-xs"
         >
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span className="font-medium text-primary">Clinical Notes</span>
+            <span className="font-medium text-foreground">Clinical Notes</span>
             <span className="text-muted-foreground/40">·</span>
             <span>Atelier Dental</span>
           </div>

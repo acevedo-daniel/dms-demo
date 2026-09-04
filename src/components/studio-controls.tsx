@@ -105,7 +105,7 @@ export function StudioControls({ className = "" }: StudioControlsProps) {
             aria-pressed={currentLocale === "en"}
             className={`rounded-full px-2.5 py-0.5 text-xs font-medium transition-all ${
               currentLocale === "en"
-                ? "bg-surface text-foreground shadow-2xs"
+                ? "bg-surface dark:bg-surface-raised text-foreground shadow-2xs"
                 : "text-muted-foreground hover:text-foreground"
             }`}
             onClick={() => selectLocale("en")}
@@ -118,7 +118,7 @@ export function StudioControls({ className = "" }: StudioControlsProps) {
             aria-pressed={currentLocale === "es"}
             className={`rounded-full px-2.5 py-0.5 text-xs font-medium transition-all ${
               currentLocale === "es"
-                ? "bg-surface text-foreground shadow-2xs"
+                ? "bg-surface dark:bg-surface-raised text-foreground shadow-2xs"
                 : "text-muted-foreground hover:text-foreground"
             }`}
             onClick={() => selectLocale("es")}
@@ -145,7 +145,7 @@ export function StudioControls({ className = "" }: StudioControlsProps) {
           {theme === "light" ? (
             <Moon aria-hidden="true" className="size-3.5" />
           ) : (
-            <Sun aria-hidden="true" className="size-3.5 text-accent" />
+            <Sun aria-hidden="true" className="size-3.5 text-foreground/80" />
           )}
         </button>
       </div>
@@ -157,7 +157,10 @@ export function StudioControls({ className = "" }: StudioControlsProps) {
           className="absolute -bottom-9 right-0 z-50 whitespace-nowrap rounded-full border border-border/80 bg-surface px-3 py-1 text-xs font-medium text-foreground shadow-sm animate-in fade-in slide-in-from-top-1"
         >
           <span className="flex items-center gap-1.5">
-            <Globe aria-hidden="true" className="size-3 text-accent" />
+            <Globe
+              aria-hidden="true"
+              className="size-3 text-muted-foreground"
+            />
             {notice}
           </span>
         </div>

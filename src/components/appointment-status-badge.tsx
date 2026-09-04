@@ -12,7 +12,7 @@ const appointmentStatusPresentation: Record<
     label: "Scheduled",
   },
   CONFIRMED: {
-    dotClass: "bg-emerald-600/90 dark:bg-emerald-400/90",
+    dotClass: "bg-accent",
     label: "Confirmed",
   },
   COMPLETED: {

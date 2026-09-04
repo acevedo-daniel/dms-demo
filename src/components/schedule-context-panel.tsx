@@ -367,7 +367,7 @@ export function ScheduleContextPanel({
             {isOverlay ? (
               <DialogHeader className="border-b border-border/80 px-6 py-6 text-left">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-primary">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                     {isEditing && appointment
                       ? `${practiceTimeInputValue(new Date(appointment.startsAt))} · ${appointment.patientName}`
                       : "New appointment"}
@@ -384,7 +384,7 @@ export function ScheduleContextPanel({
               </DialogHeader>
             ) : (
               <header className="border-b border-border/80 px-6 py-6">
-                <p className="text-xs font-semibold uppercase tracking-wider text-primary">
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                   {isEditing && appointment
                     ? `${practiceTimeInputValue(new Date(appointment.startsAt))} · ${appointment.patientName}`
                     : "Draft appointment"}
