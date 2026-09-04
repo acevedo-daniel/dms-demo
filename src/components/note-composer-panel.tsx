@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useState, type ReactNode } from "react";
-import { FilePenLine } from "lucide-react";
+import { AlertTriangle, FilePenLine } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -192,7 +192,7 @@ export function NoteComposerPanel({
       >
         <DialogTrigger asChild>{trigger}</DialogTrigger>
         <DialogContent
-          className="top-0 right-0 left-auto h-dvh w-full max-w-none translate-x-0 translate-y-0 rounded-none border-y-0 border-r-0 p-0 sm:w-[32rem] sm:max-w-none"
+          className="top-0 right-0 left-auto h-dvh w-full max-w-none translate-x-0 translate-y-0 rounded-none border-y-0 border-r-0 border-l border-border/80 bg-card/95 p-0 backdrop-blur-md shadow-dialog duration-[var(--motion-base)] sm:w-[32rem] sm:max-w-none"
           onEscapeKeyDown={(event) => {
             if (isDirty) {
               event.preventDefault();
@@ -206,12 +206,24 @@ export function NoteComposerPanel({
             }
           }}
         >
-          <DialogHeader className="border-b border-border px-6 py-6 text-left">
-            <DialogTitle>
+          <DialogHeader className="border-b border-border/80 bg-secondary/15 px-6 py-5 text-left">
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
+                Note composer
+              </span>
+              <span className="font-mono text-xs text-muted-foreground/40">
+                /
+              </span>
+              <span className="font-mono text-xs text-muted-foreground">
+                Atelier Dental
+              </span>
+            </div>
+            <DialogTitle className="mt-1.5 text-xl font-semibold tracking-tight text-foreground">
               {isEditing ? "Edit patient note" : "Add patient note"}
             </DialogTitle>
-            <DialogDescription>
-              Record a short operational annotation for the workspace.
+            <DialogDescription className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
+              Record a concise operational or clinical annotation for the
+              workspace.
             </DialogDescription>
           </DialogHeader>
 
@@ -220,13 +232,29 @@ export function NoteComposerPanel({
             id={formId}
             onSubmit={saveNote}
           >
-            <div className="space-y-5 overflow-y-auto px-6 py-6">
+            <div className="flex-1 space-y-6 overflow-y-auto px-6 py-6">
+              {/* Patient Association */}
               <div className="space-y-2">
-                <Label htmlFor={`${formId}-patient`}>Patient</Label>
+                <div className="flex items-center justify-between">
+                  <Label
+                    className="text-xs font-semibold text-foreground"
+                    htmlFor={`${formId}-patient`}
+                  >
+                    Patient
+                  </Label>
+                  <span className="font-mono text-[11px] text-muted-foreground">
+                    Required association
+                  </span>
+                </div>
                 {fixedPatient ? (
-                  <p className="h-11 rounded-md border border-border px-3 py-2.5 text-sm">
-                    {fixedPatient.name} / {fixedPatient.identifier}
-                  </p>
+                  <div className="flex items-center justify-between rounded-[var(--radius-md)] border border-border/70 bg-secondary/30 px-3.5 py-2.5">
+                    <span className="text-sm font-medium text-foreground">
+                      {fixedPatient.name}
+                    </span>
+                    <span className="font-mono text-xs text-muted-foreground">
+                      {fixedPatient.identifier}
+                    </span>
+                  </div>
                 ) : (
                   <Select
                     aria-describedby={
@@ -243,14 +271,14 @@ export function NoteComposerPanel({
                     <option value="">Select patient</option>
                     {patients.map((patient) => (
                       <option key={patient.id} value={patient.id}>
-                        {patient.name} / {patient.identifier}
+                        {patient.name} ({patient.identifier})
                       </option>
                     ))}
                   </Select>
                 )}
                 {patientError ? (
                   <p
-                    className="text-sm text-destructive"
+                    className="text-xs font-medium text-destructive"
                     id={`${formId}-patient-error`}
                     role="alert"
                   >
@@ -259,8 +287,19 @@ export function NoteComposerPanel({
                 ) : null}
               </div>
 
+              {/* Treatment Protocol Association */}
               <div className="space-y-2">
-                <Label htmlFor={`${formId}-treatment`}>Treatment</Label>
+                <div className="flex items-center justify-between">
+                  <Label
+                    className="text-xs font-semibold text-foreground"
+                    htmlFor={`${formId}-treatment`}
+                  >
+                    Treatment
+                  </Label>
+                  <span className="font-mono text-[11px] text-muted-foreground">
+                    Optional context
+                  </span>
+                </div>
                 <Select
                   id={`${formId}-treatment`}
                   onChange={(event) =>
@@ -277,23 +316,35 @@ export function NoteComposerPanel({
                 </Select>
               </div>
 
+              {/* Note Content */}
               <div className="space-y-2">
-                <Label htmlFor={`${formId}-body`}>Note</Label>
+                <div className="flex items-center justify-between">
+                  <Label
+                    className="text-xs font-semibold text-foreground"
+                    htmlFor={`${formId}-body`}
+                  >
+                    Note
+                  </Label>
+                  <span className="font-mono text-[11px] text-muted-foreground">
+                    Clinical observation
+                  </span>
+                </div>
                 <Textarea
                   aria-describedby={
                     bodyError ? `${formId}-body-error` : undefined
                   }
                   aria-invalid={Boolean(bodyError)}
                   autoFocus
+                  className="min-h-[9rem] text-sm leading-relaxed"
                   id={`${formId}-body`}
                   onChange={(event) => updateValue("body", event.target.value)}
-                  placeholder="Add a concise coordination detail"
+                  placeholder="Add a concise coordination detail or treatment observation"
                   required
                   value={values.body}
                 />
                 {bodyError ? (
                   <p
-                    className="text-sm text-destructive"
+                    className="text-xs font-medium text-destructive"
                     id={`${formId}-body-error`}
                     role="alert"
                   >
@@ -301,13 +352,18 @@ export function NoteComposerPanel({
                   </p>
                 ) : null}
               </div>
+
               {error && !bodyError && !patientError ? (
-                <p className="text-sm text-destructive" role="alert">
+                <div
+                  className="rounded-[var(--radius-md)] border border-destructive/30 bg-destructive/10 p-3 text-xs font-medium text-destructive"
+                  role="alert"
+                >
                   {error}
-                </p>
+                </div>
               ) : null}
             </div>
-            <DialogFooter className="mt-auto border-t border-border px-6 py-4 sm:justify-between">
+
+            <DialogFooter className="mt-auto border-t border-border/80 bg-secondary/15 px-6 py-4 sm:justify-between">
               <Button onClick={requestClose} type="button" variant="ghost">
                 Close
               </Button>
@@ -337,6 +393,7 @@ export function NoteComposerPanel({
                 setIsOpen(false);
               }}
             >
+              <AlertTriangle aria-hidden className="size-4" />
               Discard changes
             </AlertDialogAction>
           </AlertDialogFooter>
