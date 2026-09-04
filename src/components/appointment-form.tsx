@@ -168,6 +168,7 @@ export function AppointmentForm({
                 dateTimeError ? `${formId}-date-time-error` : undefined
               }
               aria-invalid={Boolean(dateTimeError)}
+              className="font-mono text-sm tracking-wide"
               id={`${formId}-date`}
               onChange={(event) => onValueChange("date", event.target.value)}
               required
@@ -182,6 +183,7 @@ export function AppointmentForm({
                 dateTimeError ? `${formId}-date-time-error` : undefined
               }
               aria-invalid={Boolean(dateTimeError)}
+              className="font-mono text-sm tracking-wide"
               id={`${formId}-time`}
               onChange={(event) => onValueChange("time", event.target.value)}
               required
@@ -222,6 +224,7 @@ export function AppointmentForm({
               durationError ? `${formId}-duration-error` : undefined
             }
             aria-invalid={Boolean(durationError)}
+            className="font-mono text-sm tracking-wide"
             id={`${formId}-duration`}
             max="180"
             min="15"

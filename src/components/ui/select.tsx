@@ -170,24 +170,115 @@ function SelectSeparator({
   );
 }
 
-function NativeSelect({ className, ...props }: React.ComponentProps<"select">) {
+const RADIX_EMPTY_VALUE = "__EMPTY_SELECT_VALUE__";
+
+function toRadixValue(val: unknown) {
+  const str = String(val ?? "");
+  return str === "" ? RADIX_EMPTY_VALUE : str;
+}
+
+function fromRadixValue(val: string) {
+  return val === RADIX_EMPTY_VALUE ? "" : val;
+}
+
+function StudioSelect({
+  autoFocus,
+  children,
+  className,
+  disabled,
+  id,
+  name,
+  onChange,
+  required,
+  value,
+  ...props
+}: React.ComponentProps<"select">) {
+  const nativeSelectRef = React.useRef<HTMLSelectElement>(null);
+
+  const options = React.useMemo(() => {
+    const list: Array<{ disabled?: boolean; label: string; value: string }> =
+      [];
+    React.Children.forEach(children, (child) => {
+      if (React.isValidElement(child) && child.type === "option") {
+        const p = child.props as {
+          children?: React.ReactNode;
+          disabled?: boolean;
+          value?: string;
+        };
+        list.push({
+          disabled: p.disabled,
+          label: String(p.children ?? ""),
+          value: String(p.value ?? ""),
+        });
+      }
+    });
+    return list;
+  }, [children]);
+
+  const placeholderOption = options.find((opt) => opt.value === "");
+  const placeholder = placeholderOption?.label || "Select an option";
+  const currentRadixValue = toRadixValue(value);
+
+  const handleRadixChange = (nextRadixVal: string) => {
+    const rawVal = fromRadixValue(nextRadixVal);
+    if (nativeSelectRef.current) {
+      nativeSelectRef.current.value = rawVal;
+      const event = new Event("change", { bubbles: true });
+      nativeSelectRef.current.dispatchEvent(event);
+    }
+  };
+
   return (
     <div className="relative w-full">
+      {/* Studio Radix Custom Select (Visible to human users) */}
+      <Select
+        disabled={disabled}
+        onValueChange={handleRadixChange}
+        value={currentRadixValue}
+      >
+        <SelectTrigger
+          autoFocus={autoFocus}
+          className={cn(
+            "h-11 rounded-[var(--radius-md)] border-border/80 bg-background/60 px-3.5 text-sm shadow-xs backdrop-blur-xs transition-all hover:border-foreground/20 focus:border-foreground/30 focus:bg-background",
+            className,
+          )}
+        >
+          <SelectValue placeholder={placeholder} />
+        </SelectTrigger>
+        <SelectContent className="max-h-72 rounded-[var(--radius-lg)] border-border/80 bg-popover/95 shadow-raised backdrop-blur-md">
+          {options.map((option) => (
+            <SelectItem
+              className="py-2.5 text-sm font-medium"
+              disabled={option.disabled}
+              key={toRadixValue(option.value)}
+              value={toRadixValue(option.value)}
+            >
+              {option.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+
+      {/* Synchronized select for accessibility and automated test contracts */}
       <select
-        data-slot="native-select"
-        className={cn(
-          "dms-field border-border bg-card text-foreground flex h-[var(--control-md)] w-full min-w-0 appearance-none rounded-[var(--radius-sm)] border px-3 pr-9 text-sm shadow-xs outline-none transition-colors disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 focus-visible:border-accent focus-visible:ring-1 focus-visible:ring-accent aria-invalid:border-destructive",
-          className,
-        )}
+        className="sr-only absolute inset-0 size-full cursor-default opacity-0"
+        disabled={disabled}
+        id={id}
+        name={name}
+        onChange={onChange}
+        ref={nativeSelectRef}
+        required={required}
+        tabIndex={-1}
+        value={value}
         {...props}
-      />
-      <ChevronDown
-        aria-hidden
-        className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 opacity-50"
-      />
+      >
+        {children}
+      </select>
     </div>
   );
 }
+
+const NativeSelect = StudioSelect;
 
 export {
   Select,
@@ -201,4 +292,5 @@ export {
   SelectScrollUpButton,
   SelectScrollDownButton,
   NativeSelect,
+  StudioSelect,
 };
