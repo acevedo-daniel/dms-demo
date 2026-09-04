@@ -22,6 +22,8 @@ export type PatientDirectoryItem = {
 
 export type PatientRecord = {
   archivedAt: string | null;
+  clinicalAlert: string;
+  completedVisitCount: number;
   email: string | null;
   firstName: string;
   id: string;
@@ -31,6 +33,7 @@ export type PatientRecord = {
     id: string;
     startsAt: string;
     status: "SCHEDULED" | "CONFIRMED";
+    treatmentId: string;
     treatmentName: string;
   } | null;
   phone: string | null;
@@ -38,20 +41,24 @@ export type PatientRecord = {
     category: string;
     defaultDurationMinutes: number;
     description: string;
+    id: string;
     name: string;
   } | null;
+  schedulingPreference: string;
   timeline: Array<
     | {
         id: string;
         kind: "appointment";
         startsAt: string;
         status: "SCHEDULED" | "CONFIRMED" | "COMPLETED" | "CANCELLED";
+        treatmentId: string;
         treatmentName: string;
       }
     | {
         body: string;
         id: string;
         kind: "note";
+        treatmentId: string | null;
         treatmentName: string | null;
         createdAt: string;
       }
@@ -65,6 +72,7 @@ const appointmentProjection = {
   treatmentCategory: treatments.category,
   treatmentDescription: treatments.description,
   treatmentDuration: treatments.defaultDurationMinutes,
+  treatmentId: treatments.id,
   treatmentName: treatments.name,
 };
 
@@ -185,6 +193,7 @@ export async function getPatientRecord(
           body: patientNotes.body,
           createdAt: patientNotes.createdAt,
           id: patientNotes.id,
+          treatmentId: patientNotes.treatmentId,
           treatmentName: treatments.name,
         })
         .from(patientNotes)
@@ -203,6 +212,15 @@ export async function getPatientRecord(
     (appointment) => appointment.status === "COMPLETED",
   );
   const relevantTreatment = nextAppointment ?? completedAppointment ?? null;
+  const completedVisitCount = historicalAppointments.filter(
+    (appointment) => appointment.status === "COMPLETED",
+  ).length;
+  const timingReference = nextAppointment ?? completedAppointment ?? null;
+  const schedulingPreference = timingReference
+    ? timingReference.startsAt.getUTCHours() < 15
+      ? "Prefers morning"
+      : "Prefers afternoon"
+    : "No timing preference recorded";
   const historicalTimeline = [
     ...historicalAppointments.map((appointment) => ({
       id: appointment.id,
@@ -210,6 +228,7 @@ export async function getPatientRecord(
       startsAt: appointment.startsAt,
       status: appointment.status as
         "SCHEDULED" | "CONFIRMED" | "COMPLETED" | "CANCELLED",
+      treatmentId: appointment.treatmentId,
       treatmentName: appointment.treatmentName,
     })),
     ...notes.map((note) => ({
@@ -217,6 +236,7 @@ export async function getPatientRecord(
       createdAt: note.createdAt,
       id: note.id,
       kind: "note" as const,
+      treatmentId: note.treatmentId,
       treatmentName: note.treatmentName,
     })),
   ].sort((left, right) => {
@@ -227,6 +247,8 @@ export async function getPatientRecord(
 
   return {
     archivedAt: patient.archivedAt?.toISOString() ?? null,
+    clinicalAlert: "No clinical alert recorded",
+    completedVisitCount,
     email: patient.email,
     firstName: patient.firstName,
     id: patient.id,
@@ -237,6 +259,7 @@ export async function getPatientRecord(
           id: nextAppointment.id,
           startsAt: nextAppointment.startsAt.toISOString(),
           status: nextAppointment.status as "SCHEDULED" | "CONFIRMED",
+          treatmentId: nextAppointment.treatmentId,
           treatmentName: nextAppointment.treatmentName,
         }
       : null,
@@ -246,24 +269,17 @@ export async function getPatientRecord(
           category: relevantTreatment.treatmentCategory,
           defaultDurationMinutes: relevantTreatment.treatmentDuration,
           description: relevantTreatment.treatmentDescription,
+          id: relevantTreatment.treatmentId,
           name: relevantTreatment.treatmentName,
         }
       : null,
-    timeline: [
-      ...futureAppointments.map((appointment) => ({
-        id: appointment.id,
-        kind: "appointment" as const,
-        startsAt: appointment.startsAt.toISOString(),
-        status: appointment.status as "SCHEDULED" | "CONFIRMED",
-        treatmentName: appointment.treatmentName,
-      })),
-      ...historicalTimeline.map((item) => {
-        if (item.kind === "appointment") {
-          return { ...item, startsAt: item.startsAt.toISOString() };
-        }
+    schedulingPreference,
+    timeline: historicalTimeline.map((item) => {
+      if (item.kind === "appointment") {
+        return { ...item, startsAt: item.startsAt.toISOString() };
+      }
 
-        return { ...item, createdAt: item.createdAt.toISOString() };
-      }),
-    ],
+      return { ...item, createdAt: item.createdAt.toISOString() };
+    }),
   };
 }

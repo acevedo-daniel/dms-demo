@@ -4,19 +4,11 @@ import Link from "next/link";
 import { Search, UserPlus, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  PatientFormDialog,
+  PatientFormPanel,
   type EditablePatient,
-} from "@/components/patient-form-dialog";
+} from "@/components/patient-form-panel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { formatDemoDate, formatDemoTime } from "@/lib/demo/format";
 import type { PatientDirectoryItem } from "@/lib/patients";
 
@@ -32,18 +24,13 @@ function toDirectoryItem(patient: EditablePatient): PatientDirectoryItem {
   return { ...patient, nextAppointment: null };
 }
 
-function AppointmentSummary({ patient }: { patient: PatientDirectoryItem }) {
+function appointmentSummary(patient: PatientDirectoryItem) {
   if (!patient.nextAppointment) {
-    return <span className="text-muted-foreground">—</span>;
+    return "No appointment scheduled";
   }
 
   const startsAt = new Date(patient.nextAppointment.startsAt);
-  return (
-    <span>
-      {formatDemoDate(startsAt).replace(", 2026", "")} ·{" "}
-      {formatDemoTime(startsAt)}
-    </span>
-  );
+  return `${formatDemoDate(startsAt).replace(", 2026", "")} · ${formatDemoTime(startsAt)}`;
 }
 
 function resultLabel(count: number) {
@@ -95,10 +82,35 @@ export function PatientDirectory({ initialPatients }: PatientDirectoryProps) {
     pendingFocusPatientId.current = null;
   }, [patients]);
 
+  useEffect(() => {
+    function handleShortcut(event: KeyboardEvent) {
+      if (
+        event.key === "/" &&
+        !event.ctrlKey &&
+        !event.metaKey &&
+        !event.altKey
+      ) {
+        const target = event.target;
+        if (
+          target instanceof HTMLInputElement ||
+          target instanceof HTMLSelectElement ||
+          target instanceof HTMLTextAreaElement
+        ) {
+          return;
+        }
+
+        event.preventDefault();
+        document.getElementById("patient-directory-search")?.focus();
+      }
+    }
+
+    window.addEventListener("keydown", handleShortcut);
+    return () => window.removeEventListener("keydown", handleShortcut);
+  }, []);
+
   function handlePatientCreated(patient: EditablePatient) {
-    const directoryPatient = toDirectoryItem(patient);
     pendingFocusPatientId.current = patient.id;
-    setPatients((current) => [directoryPatient, ...current]);
+    setPatients((current) => [toDirectoryItem(patient), ...current]);
     setQuery("");
   }
 
@@ -116,8 +128,12 @@ export function PatientDirectory({ initialPatients }: PatientDirectoryProps) {
           >
             Patients
           </h1>
+          <p className="mt-2 max-w-xl text-sm leading-6 text-muted-foreground">
+            Find a person, review their operational context, and continue the
+            scheduling flow without losing the record.
+          </p>
         </div>
-        <PatientFormDialog
+        <PatientFormPanel
           onSaved={handlePatientCreated}
           trigger={
             <Button>
@@ -173,89 +189,50 @@ export function PatientDirectory({ initialPatients }: PatientDirectoryProps) {
       </div>
 
       {filteredPatients.length ? (
-        <>
-          <div className="mt-8 hidden overflow-hidden border-y border-border md:block">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead scope="col">Patient</TableHead>
-                  <TableHead scope="col">Identifier</TableHead>
-                  <TableHead scope="col">Next appointment</TableHead>
-                  <TableHead scope="col">Treatment</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredPatients.map((patient) => (
-                  <TableRow key={patient.id}>
-                    <TableCell>
-                      <Link
-                        className="font-medium text-foreground hover:text-primary"
-                        href={`/demo/patients/${patient.id}`}
-                        id={`patient-${patient.id}`}
-                      >
-                        {patientName(patient)}
-                      </Link>
-                    </TableCell>
-                    <TableCell className="font-mono text-xs text-muted-foreground">
+        <ol className="mt-8 divide-y divide-border border-y border-border">
+          {filteredPatients.map((patient) => (
+            <li className="group" key={patient.id}>
+              <Link
+                aria-label={`Open patient ${patientName(patient)}`}
+                className="dms-pressable -mx-3 block rounded-[var(--radius-md)] px-3 py-5 hover:bg-secondary/70 focus:outline-none sm:px-5"
+                href={`/demo/patients/${patient.id}`}
+                id={`patient-${patient.id}`}
+              >
+                <div className="grid gap-4 sm:grid-cols-[minmax(12rem,1fr)_minmax(9rem,.72fr)_minmax(13rem,1fr)] sm:items-center sm:gap-8">
+                  <div>
+                    <p className="text-lg font-semibold tracking-tight group-hover:text-primary">
+                      {patientName(patient)}
+                    </p>
+                    <p className="mt-1 font-mono text-xs text-muted-foreground">
                       {patient.identifier}
-                    </TableCell>
-                    <TableCell className="text-sm">
-                      <AppointmentSummary patient={patient} />
-                    </TableCell>
-                    <TableCell className="max-w-56 truncate text-sm text-muted-foreground">
-                      {patient.nextAppointment?.treatmentName ?? "—"}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-
-          <ol className="mt-8 divide-y divide-border border-y border-border md:hidden">
-            {filteredPatients.map((patient) => (
-              <li className="py-5" key={patient.id}>
-                <Link
-                  aria-label={`Open patient ${patientName(patient)}`}
-                  className="dms-pressable block rounded-[var(--radius-md)] px-3 py-2 -mx-3 -my-2 hover:bg-secondary/70 focus:outline-none"
-                  href={`/demo/patients/${patient.id}`}
-                  id={`patient-${patient.id}`}
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <p className="font-medium">{patientName(patient)}</p>
-                    <span className="font-mono text-xs text-muted-foreground">
-                      {patient.identifier}
-                    </span>
+                    </p>
                   </div>
-                  <dl className="mt-4 grid gap-3 text-sm">
-                    <div>
-                      <dt className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                        Next appointment
-                      </dt>
-                      <dd className="mt-1">
-                        <AppointmentSummary patient={patient} />
-                      </dd>
-                    </div>
-                    <div>
-                      <dt className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                        Treatment
-                      </dt>
-                      <dd className="mt-1 text-muted-foreground">
-                        {patient.nextAppointment?.treatmentName ?? "—"}
-                      </dd>
-                    </div>
-                  </dl>
-                </Link>
-              </li>
-            ))}
-          </ol>
-        </>
+                  <div className="text-sm">
+                    <p className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                      Next appointment
+                    </p>
+                    <p className="mt-1">{appointmentSummary(patient)}</p>
+                  </div>
+                  <div className="text-sm">
+                    <p className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                      Treatment
+                    </p>
+                    <p className="mt-1 truncate text-muted-foreground">
+                      {patient.nextAppointment?.treatmentName ?? "—"}
+                    </p>
+                  </div>
+                </div>
+              </Link>
+            </li>
+          ))}
+        </ol>
       ) : query ? (
         <section
-          className="mt-8 border-y border-border py-12 text-center"
           aria-labelledby="no-patient-results-title"
+          className="mt-8 border-y border-border py-12 text-center"
         >
           <h2 className="font-medium" id="no-patient-results-title">
-            No patients match “{query}”.
+            No patients match this search.
           </h2>
           <Button
             className="mt-4"
@@ -267,11 +244,11 @@ export function PatientDirectory({ initialPatients }: PatientDirectoryProps) {
         </section>
       ) : (
         <section
-          className="mt-8 border-y border-border py-12 text-center"
           aria-labelledby="no-patients-title"
+          className="mt-8 border-y border-border py-12 text-center"
         >
           <h2 className="font-medium" id="no-patients-title">
-            No patients are available in this workspace.
+            No active patients are available.
           </h2>
           <p className="mt-2 text-sm text-muted-foreground">
             Add a patient to start building the directory.

@@ -45,7 +45,7 @@ async function addPatient(page: Page) {
 
   await expect(dialog).toBeHidden();
   await expect(
-    page.getByRole("link", { name: "E2E Patient", exact: true }),
+    page.getByRole("link", { name: "Open patient E2E Patient", exact: true }),
   ).toBeVisible();
 }
 
@@ -144,7 +144,9 @@ test("keeps archive confirmation open when archiving fails", async ({
   await openResetDemoWorkspace(page);
   await page.getByRole("link", { name: "Patients" }).click();
   await addPatient(page);
-  await page.getByRole("link", { name: "E2E Patient", exact: true }).click();
+  await page
+    .getByRole("link", { name: "Open patient E2E Patient", exact: true })
+    .click();
   await page.route("**/api/demo/patients/*/archive", async (route) => {
     await route.fulfill({
       body: JSON.stringify({
@@ -276,6 +278,89 @@ test("adds a note from a patient record", async ({ page }) => {
   await expect(dialog).toBeHidden();
   await expect(page.getByText("Created by end-to-end test.")).toBeVisible();
   await expect(page.getByRole("status")).toContainText("Patient note saved.");
+});
+
+test("connects patient summary, historical activity, and schedule context", async ({
+  page,
+}) => {
+  await openResetDemoWorkspace(page);
+  await page.goto(`/demo/patients/${alexQuinnId}`);
+
+  await expect(page.getByLabel("Patient summary")).toContainText("1 visit");
+  await expect(page.getByLabel("Patient summary")).toContainText(
+    "Prefers morning",
+  );
+  await expect(page.getByLabel("Patient summary")).toContainText(
+    "No clinical alert recorded",
+  );
+  await expect(
+    page.getByText("Appointment preparation details reviewed."),
+  ).toBeVisible();
+
+  await page.getByRole("button", { name: "Appointments", exact: true }).click();
+  await expect(
+    page.getByText("Appointment preparation details reviewed."),
+  ).toBeHidden();
+  await page.getByRole("button", { name: "Notes", exact: true }).click();
+  await expect(
+    page.getByText("Appointment preparation details reviewed."),
+  ).toBeVisible();
+
+  const viewInSchedule = page.getByRole("link", { name: "View in schedule" });
+  await expect(viewInSchedule).toHaveAttribute("href", /appointment=/);
+  await viewInSchedule.click();
+  await expect(
+    page.getByRole("dialog", { name: "Appointment details" }),
+  ).toBeVisible();
+});
+
+test("keeps archived patient records read-only while preserving history", async ({
+  page,
+}) => {
+  await openResetDemoWorkspace(page);
+  await page.getByRole("link", { name: "Patients" }).click();
+  await addPatient(page);
+
+  const patientRecord = page.getByRole("link", {
+    name: "Open patient E2E Patient",
+    exact: true,
+  });
+  const patientRecordHref = await patientRecord.getAttribute("href");
+  expect(patientRecordHref).toBeTruthy();
+  await patientRecord.click();
+  await page.getByRole("button", { name: "Archive" }).click();
+  await page
+    .getByRole("alertdialog", { name: "Archive E2E Patient?" })
+    .getByRole("button", { name: "Archive patient" })
+    .click();
+
+  await expect(page).toHaveURL(/\/demo\/patients$/);
+  await page.goto(patientRecordHref!);
+  await expect(page.getByText("Archived", { exact: true })).toBeVisible();
+  await expect(
+    page.getByText(/read-only and remains available for reference/),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Create appointment" }),
+  ).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Edit" })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Add note" })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Archive" })).toHaveCount(0);
+});
+
+test("keeps the archive prerequisite explicit for patients with active appointments", async ({
+  page,
+}) => {
+  await openResetDemoWorkspace(page);
+  await page.goto(`/demo/patients/${alexQuinnId}`);
+
+  await expect(
+    page.getByText(
+      "Cancel or complete active appointments before archiving this patient.",
+      { exact: true },
+    ),
+  ).toBeVisible();
+  await expect(page.getByRole("button", { name: "Archive" })).toHaveCount(0);
 });
 
 test("keeps the workspace available when sign out fails", async ({ page }) => {

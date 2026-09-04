@@ -89,7 +89,7 @@ test("uses the intended navigation, directory, and schedule compositions", async
     await expectViewportFit(page);
 
     await page.goto("/demo/patients");
-    await expect(page.getByRole("table")).toBeHidden();
+    await expect(page.getByRole("table")).toHaveCount(0);
     await expect(
       page.getByRole("link", { name: /Open patient / }).first(),
     ).toBeVisible();
@@ -119,12 +119,12 @@ test("uses the intended navigation, directory, and schedule compositions", async
     await expectViewportFit(page);
 
     await page.goto("/demo/patients");
-    await expect(page.getByRole("table")).toBeVisible();
+    await expect(page.getByRole("table")).toHaveCount(0);
     await expectViewportFit(page);
 
     await page.goto(`/demo/patients/${alexQuinnId}`);
     await expect(
-      page.getByRole("heading", { name: "Relevant treatment" }),
+      page.getByRole("heading", { name: "Related treatment" }),
     ).toBeVisible();
     await expectViewportFit(page);
   }

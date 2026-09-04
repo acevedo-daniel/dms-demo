@@ -99,7 +99,7 @@ export function ArchivePatientButton({
         <AlertDialogFooter>
           <AlertDialogCancel autoFocus>Keep patient active</AlertDialogCancel>
           <Button
-            className="bg-destructive text-white hover:bg-destructive/90"
+            className="border border-destructive bg-destructive text-white hover:bg-destructive/90"
             disabled={isPending}
             onClick={archivePatient}
             type="button"
