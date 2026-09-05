@@ -1,45 +1,52 @@
-import { CheckCircle2, CircleX, Clock3 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 type AppointmentStatus = "SCHEDULED" | "CONFIRMED" | "COMPLETED" | "CANCELLED";
 
 const appointmentStatusPresentation: Record<
   AppointmentStatus,
-  { className: string; icon: typeof Clock3; label: string }
+  { dotClass: string; label: string }
 > = {
   SCHEDULED: {
-    className: "border-input bg-card text-muted-foreground",
-    icon: Clock3,
+    dotClass: "bg-muted-foreground/60",
     label: "Scheduled",
   },
   CONFIRMED: {
-    className: "border-primary/25 bg-accent text-primary",
-    icon: CheckCircle2,
+    dotClass: "bg-accent",
     label: "Confirmed",
   },
   COMPLETED: {
-    className: "border-[#166534]/25 bg-[#dcfce7] text-[#166534]",
-    icon: CheckCircle2,
+    dotClass: "bg-foreground/70",
     label: "Completed",
   },
   CANCELLED: {
-    className: "border-destructive/25 bg-[#fee4e2] text-destructive",
-    icon: CircleX,
+    dotClass: "bg-destructive/70",
     label: "Cancelled",
   },
 };
 
-function AppointmentStatusBadge({ status }: { status: AppointmentStatus }) {
-  const {
-    className,
-    icon: Icon,
-    label,
-  } = appointmentStatusPresentation[status];
+function AppointmentStatusBadge({
+  className,
+  status,
+}: {
+  className?: string;
+  status: AppointmentStatus;
+}) {
+  const { dotClass, label } = appointmentStatusPresentation[status];
 
   return (
-    <Badge className={className} variant="outline">
-      <Icon aria-hidden />
-      {label}
+    <Badge
+      className={cn(
+        "gap-1.5 border-border/80 bg-secondary/40 px-2.5 py-0.5 text-[11px] font-medium text-foreground/80 shadow-2xs backdrop-blur-xs transition-colors hover:bg-secondary/60",
+        className,
+      )}
+      variant="outline"
+    >
+      <span
+        aria-hidden="true"
+        className={cn("size-1.5 shrink-0 rounded-full", dotClass)}
+      />
+      <span>{label}</span>
     </Badge>
   );
 }

@@ -36,7 +36,7 @@ export function ExploreDmsGuide() {
   function dismissGuide() {
     setIsVisible(false);
     window.requestAnimationFrame(() => {
-      document.getElementById("today-title")?.focus();
+      document.getElementById("today-agenda-title")?.focus();
     });
   }
 
@@ -47,23 +47,31 @@ export function ExploreDmsGuide() {
   return (
     <section
       aria-labelledby="explore-title"
-      className="mt-10 border-y border-border py-7"
+      className="mt-12 rounded-[var(--radius-xl)] border border-border/80 bg-card/60 p-6 sm:p-7 shadow-xs backdrop-blur-xs"
     >
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-primary">
-            Suggested walkthrough
-          </p>
-          <h2 className="mt-2 font-medium" id="explore-title">
+          <div className="inline-flex items-center gap-2">
+            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Practice walkthrough
+            </span>
+            <span className="rounded-full border border-border/70 bg-secondary/60 px-2.5 py-0.5 font-mono text-[10px] font-medium text-muted-foreground">
+              4 steps
+            </span>
+          </div>
+          <h2
+            className="mt-2 text-lg font-semibold tracking-tight sm:text-xl text-foreground"
+            id="explore-title"
+          >
             Explore DMS
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            A short path through the sample workspace.
+            A short, curated path through daily practice operations.
           </p>
         </div>
         <Button
           aria-label="Dismiss Explore DMS guide"
-          className="-mt-2 -mr-2"
+          className="size-8 rounded-full border border-border/70 hover:bg-secondary/70 hover:text-foreground"
           onClick={dismissGuide}
           size="icon"
           variant="ghost"
@@ -71,23 +79,30 @@ export function ExploreDmsGuide() {
           <X aria-hidden className="size-4" />
         </Button>
       </div>
-      <ol className="mt-6 grid gap-x-8 gap-y-5 sm:grid-cols-2">
+      <ol className="mt-6 grid gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
         {guideItems.map((item, index) => (
-          <li className="flex gap-3" key={item.label}>
-            <span className="pt-0.5 font-mono text-xs text-muted-foreground">
-              0{index + 1}
-            </span>
+          <li key={item.label}>
             <Link
-              className="group min-w-0 font-medium text-primary"
+              className="group flex h-full flex-col justify-between rounded-[var(--radius-lg)] border border-border/70 bg-background/60 p-5 transition-all duration-200 hover:border-foreground/25 hover:bg-card hover:shadow-xs"
               href={item.href}
             >
-              <span className="inline-flex items-center gap-1 underline-offset-4 group-hover:underline">
-                {item.label}
-                <ArrowUpRight aria-hidden className="size-3.5" />
-              </span>
-              <span className="mt-1 block text-sm font-normal leading-6 text-muted-foreground">
-                {item.description}
-              </span>
+              <div>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="flex size-6 items-center justify-center rounded-full border border-border/70 bg-secondary/80 font-mono text-xs font-semibold text-foreground/80 transition-colors group-hover:border-foreground/40 group-hover:bg-foreground group-hover:text-background">
+                    {index + 1}
+                  </span>
+                  <ArrowUpRight
+                    aria-hidden
+                    className="size-4 text-muted-foreground transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-foreground"
+                  />
+                </div>
+                <p className="mt-3.5 text-sm font-semibold tracking-tight text-foreground">
+                  {item.label}
+                </p>
+                <p className="mt-1.5 text-xs leading-5 text-muted-foreground">
+                  {item.description}
+                </p>
+              </div>
             </Link>
           </li>
         ))}

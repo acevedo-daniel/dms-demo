@@ -89,7 +89,7 @@ test("uses the intended navigation, directory, and schedule compositions", async
     await expectViewportFit(page);
 
     await page.goto("/demo/patients");
-    await expect(page.getByRole("table")).toBeHidden();
+    await expect(page.getByRole("table")).toHaveCount(0);
     await expect(
       page.getByRole("link", { name: /Open patient / }).first(),
     ).toBeVisible();
@@ -119,12 +119,12 @@ test("uses the intended navigation, directory, and schedule compositions", async
     await expectViewportFit(page);
 
     await page.goto("/demo/patients");
-    await expect(page.getByRole("table")).toBeVisible();
+    await expect(page.getByRole("table")).toHaveCount(0);
     await expectViewportFit(page);
 
     await page.goto(`/demo/patients/${alexQuinnId}`);
     await expect(
-      page.getByRole("heading", { name: "Relevant treatment" }),
+      page.getByText("Related treatment", { exact: true }),
     ).toBeVisible();
     await expectViewportFit(page);
   }
@@ -142,4 +142,36 @@ test("uses the intended navigation, directory, and schedule compositions", async
   await expect(
     page.getByRole("navigation", { name: "Workspace navigation" }),
   ).toBeVisible();
+});
+
+test("uses the schedule inspector without compressing the week grid", async ({
+  page,
+}) => {
+  await openDemoWorkspace(page);
+
+  await page.setViewportSize({ height: 960, width: 1280 });
+  await page.goto("/demo/schedule");
+  await page
+    .getByRole("button", { name: /Open scheduled appointment/ })
+    .first()
+    .click();
+  await expect(
+    page.getByRole("dialog", { name: "Appointment details" }),
+  ).toBeVisible();
+  await expect(
+    page.locator('[aria-label="Scrollable week schedule"]'),
+  ).toBeVisible();
+
+  await page.setViewportSize({ height: 1080, width: 1920 });
+  await page.goto("/demo/schedule");
+  await page
+    .getByRole("button", { name: /Open scheduled appointment/ })
+    .first()
+    .click();
+  await expect(
+    page.getByRole("complementary", { name: "Appointment context" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("dialog", { name: "Appointment details" }),
+  ).toBeHidden();
 });

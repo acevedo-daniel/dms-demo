@@ -19,6 +19,7 @@ const appointmentSelection = {
   patientName: sql<string>`${patients.firstName} || ' ' || ${patients.lastName}`,
   startsAt: appointments.startsAt,
   status: appointments.status,
+  treatmentId: treatments.id,
   treatmentName: treatments.name,
 };
 
@@ -108,6 +109,7 @@ export async function getDashboardData() {
         id: patientNotes.id,
         patientId: patients.id,
         patientName: sql<string>`${patients.firstName} || ' ' || ${patients.lastName}`,
+        treatmentId: treatments.id,
         treatmentName: treatments.name,
       })
       .from(patientNotes)
@@ -117,6 +119,10 @@ export async function getDashboardData() {
       .orderBy(desc(patientNotes.createdAt))
       .limit(3),
   ]);
+
+  const upNext = today.find(
+    (appointment) => appointment.startsAt >= getDemoClock(),
+  );
 
   return {
     needsAttention: needsAttention.map((appointment) => ({
@@ -128,5 +134,8 @@ export async function getDashboardData() {
       ...appointment,
       status: appointment.status as DashboardAppointmentStatus,
     })),
+    upNext: upNext
+      ? { ...upNext, status: upNext.status as DashboardAppointmentStatus }
+      : null,
   };
 }

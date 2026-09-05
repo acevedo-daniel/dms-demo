@@ -9,7 +9,7 @@ export function DmsLogo({ className }: DmsLogoProps) {
     <span
       aria-hidden="true"
       className={cn(
-        "grid size-10 shrink-0 place-items-center rounded-lg bg-primary text-primary-foreground",
+        "grid size-10 shrink-0 place-items-center rounded-[var(--radius-md)] bg-primary text-primary-foreground",
         className,
       )}
     >

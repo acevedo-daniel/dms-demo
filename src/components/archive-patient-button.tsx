@@ -76,8 +76,8 @@ export function ArchivePatientButton({
     <AlertDialog onOpenChange={setIsOpen} open={isOpen}>
       <AlertDialogTrigger asChild>
         <Button
-          className="text-destructive hover:text-destructive"
-          variant="ghost"
+          className="h-10 font-semibold text-destructive hover:bg-destructive/10 hover:text-destructive shadow-2xs"
+          variant="outline"
         >
           <Archive aria-hidden className="size-4" />
           Archive
@@ -85,12 +85,30 @@ export function ArchivePatientButton({
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
+          <div className="flex items-center justify-between">
+            <div className="flex size-10 items-center justify-center rounded-full border border-border/80 bg-secondary/80 text-foreground/80">
+              <Archive aria-hidden className="size-4 text-foreground/80" />
+            </div>
+            <span className="text-xs font-medium text-muted-foreground">
+              Archive Patient Chart
+            </span>
+          </div>
           <AlertDialogTitle>Archive {patientName}?</AlertDialogTitle>
           <AlertDialogDescription>
-            This removes the patient from default directory results while
-            preserving their record and history.
+            This action changes the active operational status of this patient
+            chart.
           </AlertDialogDescription>
         </AlertDialogHeader>
+        <div className="rounded-[var(--radius-lg)] border border-border/70 bg-secondary/40 p-4 text-xs leading-relaxed text-muted-foreground">
+          <p>
+            <strong className="font-semibold text-foreground">
+              Record preservation:
+            </strong>{" "}
+            {patientName} will be hidden from the active patient directory,
+            while all historical appointments, treatment logs, and notes remain
+            permanently on file.
+          </p>
+        </div>
         {error ? (
           <p className="text-sm text-destructive" role="alert">
             {error}
@@ -99,7 +117,7 @@ export function ArchivePatientButton({
         <AlertDialogFooter>
           <AlertDialogCancel autoFocus>Keep patient active</AlertDialogCancel>
           <Button
-            className="bg-destructive text-white hover:bg-destructive/90"
+            className="dms-pressable rounded-full border border-destructive/20 bg-destructive px-4 text-xs font-semibold text-destructive-foreground shadow-xs transition-all hover:bg-destructive/90 active:scale-[0.98]"
             disabled={isPending}
             onClick={archivePatient}
             type="button"

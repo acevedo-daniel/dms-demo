@@ -3,10 +3,19 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { getDemoClock } from "@/lib/demo/constants";
 import { parseScheduleWeek, scheduleWeekStart } from "@/lib/demo/schedule";
-import { getScheduleData } from "@/lib/schedule-data";
+import {
+  getActiveScheduleAppointment,
+  getScheduleData,
+} from "@/lib/schedule-data";
 
 type SchedulePageProps = {
-  searchParams: Promise<{ create?: string; patient?: string; week?: string }>;
+  searchParams: Promise<{
+    appointment?: string;
+    create?: string;
+    patient?: string;
+    treatment?: string;
+    week?: string;
+  }>;
 };
 
 async function loadSchedule(week: Date) {
@@ -21,8 +30,12 @@ export default async function SchedulePage({
   searchParams,
 }: SchedulePageProps) {
   const parameters = await searchParams;
-  const weekStart =
-    parseScheduleWeek(parameters.week) ?? scheduleWeekStart(getDemoClock());
+  const selectedAppointment = await getActiveScheduleAppointment(
+    parameters.appointment,
+  );
+  const weekStart = selectedAppointment
+    ? scheduleWeekStart(new Date(selectedAppointment.startsAt))
+    : (parseScheduleWeek(parameters.week) ?? scheduleWeekStart(getDemoClock()));
   const schedule = await loadSchedule(weekStart);
 
   if (!schedule) {
@@ -32,7 +45,7 @@ export default async function SchedulePage({
           aria-labelledby="schedule-error-title"
           className="max-w-lg border-y border-border py-10"
         >
-          <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-primary">
+          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Schedule
           </p>
           <h1
@@ -55,13 +68,31 @@ export default async function SchedulePage({
   const patientIsAvailable = schedule.patients.some(
     (patient) => patient.id === parameters.patient,
   );
+  const treatmentIsAvailable = schedule.treatments.some(
+    (treatment) => treatment.id === parameters.treatment,
+  );
 
   return (
-    <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <main className="mx-auto w-full max-w-[var(--schedule-workspace-max)] px-4 py-8 sm:px-6 lg:px-8">
       <ScheduleBoard
         appointments={schedule.appointments}
-        initialPatientId={patientIsAvailable ? parameters.patient : undefined}
-        initialSheetOpen={parameters.create === "1"}
+        initialAppointmentId={selectedAppointment?.id}
+        initialCreate={parameters.create === "1" && !selectedAppointment}
+        initialPatientId={
+          parameters.create === "1" &&
+          patientIsAvailable &&
+          !selectedAppointment
+            ? parameters.patient
+            : undefined
+        }
+        initialTreatmentId={
+          parameters.create === "1" &&
+          treatmentIsAvailable &&
+          !selectedAppointment
+            ? parameters.treatment
+            : undefined
+        }
+        key={`${weekStart.toISOString()}:${selectedAppointment?.id ?? ""}:${parameters.create ?? ""}:${parameters.patient ?? ""}:${parameters.treatment ?? ""}`}
         patients={schedule.patients}
         treatments={schedule.treatments}
         weekStart={weekStart.toISOString()}

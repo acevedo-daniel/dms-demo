@@ -3,11 +3,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AppointmentStatusBadge } from "@/components/appointment-status-badge";
 import { ArchivePatientButton } from "@/components/archive-patient-button";
-import { PatientNoteAction } from "@/components/patient-note-action";
 import {
-  PatientFormDialog,
+  PatientFormPanel,
   type EditablePatient,
-} from "@/components/patient-form-dialog";
+} from "@/components/patient-form-panel";
+import { PatientNoteAction } from "@/components/patient-note-action";
+import { PatientRecordActivity } from "@/components/patient-record-activity";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatDemoDate, formatDemoTime } from "@/lib/demo/format";
@@ -19,6 +20,10 @@ type PatientPageProps = { params: Promise<{ id: string }> };
 
 function patientName(patient: { firstName: string; lastName: string }) {
   return `${patient.firstName} ${patient.lastName}`;
+}
+
+function patientInitials(patient: { firstName: string; lastName: string }) {
+  return `${patient.firstName[0] ?? ""}${patient.lastName[0] ?? ""}`.toUpperCase();
 }
 
 async function loadPatientRecord(id: string) {
@@ -46,22 +51,26 @@ export default async function PatientPage({ params }: PatientPageProps) {
       <main className="mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-7xl items-center px-4 py-8 sm:px-6 lg:px-8">
         <section
           aria-labelledby="patient-record-error-title"
-          className="max-w-lg border-y border-border py-10"
+          className="max-w-lg rounded-[var(--radius-lg)] border border-border/80 bg-card/40 p-8 shadow-xs"
         >
-          <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-primary">
-            Patient record
-          </p>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <span className="font-semibold uppercase tracking-wider text-accent">
+              Patient Record
+            </span>
+            <span className="text-muted-foreground/40">·</span>
+            <span>Atelier Dental</span>
+          </div>
           <h1
-            className="mt-3 text-3xl font-semibold tracking-[-0.03em]"
+            className="mt-3 text-2xl font-semibold tracking-tight text-foreground"
             id="patient-record-error-title"
           >
             This patient record could not be loaded.
           </h1>
-          <p className="mt-3 leading-7 text-muted-foreground">
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
             The sample data is temporarily unavailable. Try again or return to
             the patient directory.
           </p>
-          <Button asChild className="mt-6" variant="outline">
+          <Button asChild className="mt-6 font-semibold" variant="outline">
             <Link href="/demo/patients">Back to patients</Link>
           </Button>
         </section>
@@ -89,225 +98,293 @@ export default async function PatientPage({ params }: PatientPageProps) {
     lastName: patient.lastName,
     phone: patient.phone,
   };
+  const scheduleAppointmentHref = `/demo/schedule?create=1&patient=${patient.id}`;
+  const hasAlert =
+    Boolean(patient.clinicalAlert) &&
+    patient.clinicalAlert.toLowerCase() !== "no clinical alert recorded";
 
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      <Link
-        className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground"
-        href="/demo/patients"
-      >
-        <ArrowLeft aria-hidden className="size-4" />
-        Patients
-      </Link>
+      {/* Return Link Capsule */}
+      <div>
+        <Link
+          className="dms-pressable inline-flex h-8 items-center gap-1.5 rounded-full border border-border/70 bg-secondary/50 px-3 text-xs font-medium text-muted-foreground transition-all hover:border-foreground/20 hover:bg-secondary hover:text-foreground"
+          href="/demo/patients"
+        >
+          <ArrowLeft aria-hidden className="size-3.5" />
+          <span>Patients</span>
+        </Link>
+      </div>
 
-      <header className="mt-4 flex flex-col gap-6 border-b border-border pb-7 xl:flex-row xl:items-end xl:justify-between">
-        <div>
-          <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-primary">
-            Patient record
-          </p>
-          <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2">
-            <h1 className="text-3xl font-semibold tracking-[-0.03em]">
-              {name}
-            </h1>
-            <span className="font-mono text-xs text-muted-foreground">
-              {patient.identifier}
-            </span>
-            {patient.archivedAt ? (
-              <Badge variant="outline">Archived</Badge>
-            ) : null}
+      {/* Clinical Header */}
+      <header className="mt-4 border-b border-border/70 pb-8">
+        <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
+          <div>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <span className="font-semibold uppercase tracking-wider text-accent">
+                Patient Record
+              </span>
+              <span className="text-muted-foreground/40">·</span>
+              <span>Atelier Dental</span>
+            </div>
+
+            <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center">
+              <div
+                aria-hidden
+                className="flex size-14 shrink-0 items-center justify-center rounded-full border border-border bg-secondary/60 text-base font-semibold text-foreground/80"
+              >
+                {patientInitials(patient)}
+              </div>
+              <div>
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <h1 className="text-3xl font-semibold tracking-[-0.035em] text-foreground sm:text-4xl">
+                    {name}
+                  </h1>
+                  <span className="rounded border border-border/70 bg-secondary/60 px-2 py-0.5 font-mono text-[11px] font-medium text-muted-foreground">
+                    {patient.identifier}
+                  </span>
+                  {patient.archivedAt ? (
+                    <Badge
+                      className="border-destructive/30 bg-destructive/5 text-xs font-medium text-destructive"
+                      variant="outline"
+                    >
+                      Archived
+                    </Badge>
+                  ) : null}
+                </div>
+                {patient.email || patient.phone ? (
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {[patient.email, patient.phone].filter(Boolean).join(" · ")}
+                  </p>
+                ) : null}
+              </div>
+            </div>
           </div>
-          {patient.email || patient.phone ? (
-            <p className="mt-3 text-sm text-muted-foreground">
-              {[patient.email, patient.phone].filter(Boolean).join(" · ")}
+
+          {!patient.archivedAt ? (
+            <div className="flex flex-wrap items-center gap-2.5 xl:justify-end">
+              <Button asChild className="h-10 px-4 font-semibold shadow-xs">
+                <Link href={scheduleAppointmentHref}>
+                  <CalendarPlus aria-hidden className="size-4" />
+                  Create appointment
+                </Link>
+              </Button>
+              <PatientFormPanel
+                patient={editablePatient}
+                trigger={
+                  <Button
+                    className="h-10 font-semibold shadow-xs"
+                    variant="outline"
+                  >
+                    <Pencil aria-hidden className="size-4" />
+                    Edit
+                  </Button>
+                }
+              />
+              {noteOptions ? (
+                <PatientNoteAction
+                  patientId={patient.id}
+                  patients={noteOptions.patients}
+                  treatments={noteOptions.treatments}
+                />
+              ) : null}
+              <ArchivePatientButton
+                isBlocked={Boolean(patient.nextAppointment)}
+                patientId={patient.id}
+                patientName={name}
+              />
+            </div>
+          ) : null}
+        </div>
+
+        {patient.archivedAt ? (
+          <p className="mt-5 rounded-[var(--radius-md)] border border-destructive/20 bg-destructive/5 p-3.5 text-xs font-medium leading-relaxed text-muted-foreground">
+            Archived {formatDemoDate(new Date(patient.archivedAt))}. This record
+            is read-only and remains available for reference.
+          </p>
+        ) : null}
+
+        {/* Patient Summary Clinical Vitals Strip (Editorial, No generic icons) */}
+        <section
+          aria-label="Patient summary"
+          className="mt-6 grid grid-cols-1 divide-y divide-border/60 rounded-[var(--radius-lg)] border border-border/80 bg-card/40 shadow-xs sm:grid-cols-3 sm:divide-x sm:divide-y-0"
+        >
+          {/* Clinical Alert Section */}
+          <div className="p-4 sm:p-5">
+            <div className="flex items-center gap-1.5">
+              {hasAlert ? (
+                <span className="size-1.5 rounded-full bg-warning" />
+              ) : (
+                <span className="size-1.5 rounded-full bg-muted-foreground/50" />
+              )}
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                Clinical Precaution
+              </p>
+            </div>
+            <p className="mt-1 text-sm font-semibold tracking-tight text-foreground">
+              {patient.clinicalAlert}
             </p>
-          ) : null}
-        </div>
-        <div className="flex flex-wrap items-center gap-2 xl:justify-end">
-          <Button asChild>
-            <Link href={`/demo/schedule?create=1&patient=${patient.id}`}>
-              <CalendarPlus aria-hidden className="size-4" />
-              Create appointment
-            </Link>
-          </Button>
-          {!patient.archivedAt ? (
-            <PatientFormDialog
-              patient={editablePatient}
-              trigger={
-                <Button variant="outline">
-                  <Pencil aria-hidden className="size-4" />
-                  Edit
-                </Button>
-              }
-            />
-          ) : null}
-          {!patient.archivedAt ? (
-            <ArchivePatientButton
-              isBlocked={Boolean(patient.nextAppointment)}
-              patientId={patient.id}
-              patientName={name}
-            />
-          ) : null}
-        </div>
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              {hasAlert
+                ? "Review clinical precautions prior to treatment"
+                : "Standard practice protocol applies"}
+            </p>
+          </div>
+
+          {/* Visit History Section */}
+          <div className="p-4 sm:p-5">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+              Visit History
+            </p>
+            <p className="mt-1 text-sm font-semibold tracking-tight text-foreground">
+              <span className="tabular-nums">
+                {patient.completedVisitCount}
+              </span>{" "}
+              {patient.completedVisitCount === 1 ? "visit" : "visits"}
+            </p>
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              Completed consultations at Atelier Dental
+            </p>
+          </div>
+
+          {/* Scheduling Profile Section */}
+          <div className="p-4 sm:p-5">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+              Scheduling Profile
+            </p>
+            <p className="mt-1 text-sm font-semibold tracking-tight text-foreground">
+              {patient.schedulingPreference}
+            </p>
+            <p className="mt-0.5 text-xs text-muted-foreground">
+              Patient preferred appointment timing
+            </p>
+          </div>
+        </section>
       </header>
 
-      {patient.archivedAt ? (
-        <p className="mt-4 text-sm text-muted-foreground">
-          Archived {formatDemoDate(new Date(patient.archivedAt))}. This record
-          remains available for reference.
-        </p>
-      ) : null}
-
-      <section
-        aria-labelledby="next-appointment-title"
-        className="border-b border-border py-6"
-      >
-        <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-primary">
-          Next appointment
-        </p>
-        {patient.nextAppointment ? (
-          <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h2 className="text-lg font-semibold" id="next-appointment-title">
+      {/* Upcoming Care & Related Treatment Section */}
+      {patient.nextAppointment ? (
+        <section
+          aria-label="Upcoming care and related treatment"
+          className="border-b border-border/70 py-8"
+        >
+          <div className="grid gap-6 md:grid-cols-2">
+            <div className="rounded-[var(--radius-lg)] border border-border/80 bg-card/40 p-5 shadow-xs transition-all hover:border-foreground/20 hover:bg-card">
+              <div className="flex items-center justify-between">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                  Upcoming appointment
+                </p>
+                <AppointmentStatusBadge
+                  status={patient.nextAppointment.status}
+                />
+              </div>
+              <h2
+                className="mt-3 text-lg font-semibold tracking-tight text-foreground"
+                id="next-appointment-title"
+              >
                 {formatDemoDate(new Date(patient.nextAppointment.startsAt))} ·{" "}
                 {formatDemoTime(new Date(patient.nextAppointment.startsAt))}
               </h2>
               <p className="mt-1 text-sm text-muted-foreground">
                 {patient.nextAppointment.treatmentName}
               </p>
+              <div className="mt-5">
+                <Button
+                  asChild
+                  className="font-semibold shadow-xs"
+                  size="sm"
+                  variant="outline"
+                >
+                  <Link
+                    href={`/demo/schedule?appointment=${patient.nextAppointment.id}`}
+                  >
+                    View in schedule
+                  </Link>
+                </Button>
+              </div>
             </div>
-            <AppointmentStatusBadge status={patient.nextAppointment.status} />
-          </div>
-        ) : (
-          <div className="mt-3">
-            <h2 className="text-lg font-semibold" id="next-appointment-title">
-              No upcoming appointment
-            </h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Create an appointment from the schedule workspace when needed.
-            </p>
-          </div>
-        )}
-      </section>
 
-      <div className="mt-8 grid gap-10 xl:grid-cols-[minmax(0,1fr)_18rem]">
-        {patient.relevantTreatment ? (
-          <aside
-            aria-labelledby="relevant-treatment-title"
-            className="order-1 border-y border-border py-5 xl:order-2 xl:self-start"
-          >
-            <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-primary">
-              Catalog context
-            </p>
-            <h2
-              className="mt-3 text-lg font-semibold"
-              id="relevant-treatment-title"
-            >
-              Relevant treatment
-            </h2>
-            <p className="mt-3 font-medium">{patient.relevantTreatment.name}</p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {patient.relevantTreatment.category} ·{" "}
-              {patient.relevantTreatment.defaultDurationMinutes} minutes
-            </p>
-            <p className="mt-4 text-sm leading-6 text-muted-foreground">
-              {patient.relevantTreatment.description}
-            </p>
-            <div className="mt-5 flex items-center gap-2 text-sm text-muted-foreground">
-              <ClipboardList aria-hidden className="size-4" />
-              Catalog reference
-            </div>
-          </aside>
-        ) : null}
-
-        <section
-          aria-labelledby="activity-title"
-          className="order-2 xl:order-1"
-        >
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <p className="font-mono text-xs font-medium uppercase tracking-[0.16em] text-primary">
-                Operational history
-              </p>
-              <h2
-                className="mt-3 text-xl font-semibold tracking-tight"
-                id="activity-title"
-              >
-                Activity
-              </h2>
-            </div>
-            {noteOptions ? (
-              <PatientNoteAction
-                patientId={patient.id}
-                patients={noteOptions.patients}
-                treatments={noteOptions.treatments}
-              />
-            ) : null}
-          </div>
-          {patient.timeline.length ? (
-            <ol className="mt-5 divide-y divide-border border-y border-border">
-              {patient.timeline.map((item) => {
-                const date = new Date(
-                  item.kind === "appointment" ? item.startsAt : item.createdAt,
-                );
-
-                return (
-                  <li className="py-5" key={`${item.kind}-${item.id}`}>
-                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
-                      <span className="font-medium">
-                        {item.kind === "appointment" ? "Appointment" : "Note"}
-                      </span>
-                      <span className="text-muted-foreground">
-                        · {formatDemoDate(date)} · {formatDemoTime(date)}
-                      </span>
-                    </div>
-                    {item.kind === "appointment" ? (
-                      <div className="mt-2 flex flex-wrap items-center gap-2">
-                        <p className="text-sm text-muted-foreground">
-                          {item.treatmentName}
-                        </p>
-                        <AppointmentStatusBadge status={item.status} />
-                      </div>
-                    ) : (
-                      <>
-                        <p className="mt-2 text-sm leading-6">{item.body}</p>
-                        {item.treatmentName ? (
-                          <p className="mt-1 text-sm text-muted-foreground">
-                            {item.treatmentName}
-                          </p>
-                        ) : null}
-                      </>
-                    )}
-                  </li>
-                );
-              })}
-            </ol>
-          ) : (
-            <div className="mt-5 border-y border-border py-12 text-center">
-              <p className="font-medium">
-                No appointments or notes have been recorded yet.
-              </p>
-              {!patient.archivedAt ? (
-                <div className="mt-4 flex flex-wrap justify-center gap-2">
-                  <Button asChild variant="outline">
+            {patient.relevantTreatment ? (
+              <div className="rounded-[var(--radius-lg)] border border-border/80 bg-card/40 p-5 shadow-xs transition-all hover:border-foreground/20 hover:bg-card">
+                <div className="flex items-center justify-between">
+                  <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                    Related treatment
+                  </p>
+                  <span className="rounded border border-border/70 bg-secondary/60 px-2 py-0.5 font-mono text-[10px] font-medium tabular-nums text-muted-foreground">
+                    {patient.relevantTreatment.defaultDurationMinutes} min
+                  </span>
+                </div>
+                <h2
+                  className="mt-3 text-lg font-semibold tracking-tight text-foreground"
+                  id="relevant-treatment-title"
+                >
+                  {patient.relevantTreatment.name}
+                </h2>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  {patient.relevantTreatment.category}
+                </p>
+                <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
+                  {patient.relevantTreatment.description}
+                </p>
+                <div className="mt-5">
+                  <Button
+                    asChild
+                    className="font-semibold shadow-xs"
+                    size="sm"
+                    variant="outline"
+                  >
                     <Link
-                      href={`/demo/schedule?create=1&patient=${patient.id}`}
+                      href={`/demo/treatments?treatment=${patient.relevantTreatment.id}`}
                     >
-                      <CalendarPlus aria-hidden className="size-4" />
-                      Create appointment
+                      <ClipboardList aria-hidden className="size-4" />
+                      Open treatment
                     </Link>
                   </Button>
-                  {noteOptions ? (
-                    <PatientNoteAction
-                      patientId={patient.id}
-                      patients={noteOptions.patients}
-                      treatments={noteOptions.treatments}
-                    />
-                  ) : null}
                 </div>
-              ) : null}
-            </div>
-          )}
+              </div>
+            ) : null}
+          </div>
         </section>
+      ) : (
+        <section
+          aria-labelledby="next-appointment-title"
+          className="border-b border-border/70 py-8"
+        >
+          <div className="flex flex-col gap-4 rounded-[var(--radius-lg)] border border-border/80 bg-card/40 p-5 shadow-xs sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                Upcoming care
+              </p>
+              <h2
+                className="mt-1 text-base font-semibold tracking-tight text-foreground"
+                id="next-appointment-title"
+              >
+                No upcoming appointment scheduled.
+              </h2>
+              <p className="mt-0.5 text-sm text-muted-foreground">
+                Future care will appear here and stays separate from the
+                activity history.
+              </p>
+            </div>
+            {!patient.archivedAt ? (
+              <Button
+                asChild
+                className="font-semibold shadow-xs"
+                variant="outline"
+              >
+                <Link href={scheduleAppointmentHref}>
+                  <CalendarPlus aria-hidden className="size-4" />
+                  Schedule appointment
+                </Link>
+              </Button>
+            ) : null}
+          </div>
+        </section>
+      )}
+
+      {/* Operational Activity History */}
+      <div className="mt-8">
+        <PatientRecordActivity items={patient.timeline} />
       </div>
     </main>
   );
