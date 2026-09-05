@@ -36,6 +36,7 @@ type ScheduleBoardProps = {
   initialAppointmentId?: string;
   initialCreate?: boolean;
   initialPatientId?: string;
+  initialOperatory?: "ALL" | "1" | "2";
   initialTreatmentId?: string;
   patients: SchedulePatient[];
   treatments: ScheduleTreatment[];
@@ -50,9 +51,11 @@ type ContextState =
       patientId?: string;
       startsAt?: string;
       treatmentId?: string;
+      operatory?: number;
     };
 
-type StatusFilter = "ALL" | "CONFIRMED" | "SCHEDULED";
+type StatusFilter = "ALL" | "CONFIRMED" | "SCHEDULED" | "ARRIVED";
+type OperatoryFilter = "ALL" | "1" | "2";
 
 function dayLabel(date: Date) {
   return new Intl.DateTimeFormat("en-GB", {
@@ -93,6 +96,7 @@ function appointmentName(appointment: ScheduleAppointment) {
 }
 
 function appointmentStatusLabel(appointment: ScheduleAppointment) {
+  if (appointment.status === "ARRIVED") return "Arrived";
   return appointment.status === "CONFIRMED" ? "Confirmed" : "Scheduled";
 }
 
@@ -101,6 +105,7 @@ function initialContext({
   initialAppointmentId,
   initialCreate,
   initialPatientId,
+  initialOperatory,
   initialTreatmentId,
   treatments,
 }: Pick<
@@ -109,6 +114,7 @@ function initialContext({
   | "initialAppointmentId"
   | "initialCreate"
   | "initialPatientId"
+  | "initialOperatory"
   | "initialTreatmentId"
   | "treatments"
 >): ContextState | null {
@@ -130,6 +136,10 @@ function initialContext({
         30,
       kind: "create",
       patientId: initialPatientId,
+      operatory:
+        initialOperatory && initialOperatory !== "ALL"
+          ? Number(initialOperatory)
+          : undefined,
       treatmentId: treatment?.id,
     };
   }
@@ -158,6 +168,7 @@ export function ScheduleBoard({
   initialAppointmentId,
   initialCreate = false,
   initialPatientId,
+  initialOperatory,
   initialTreatmentId,
   patients,
   treatments,
@@ -169,6 +180,9 @@ export function ScheduleBoard({
     [weekStart],
   );
   const [filter, setFilter] = useState<StatusFilter>("ALL");
+  const [operatoryFilter, setOperatoryFilter] = useState<OperatoryFilter>(
+    initialOperatory ?? "ALL",
+  );
   const [mobileDayIndex, setMobileDayIndex] = useState(() => {
     const demoDate = practiceDateInputValue(getDemoClock());
     const index = days.findIndex(
@@ -182,16 +196,19 @@ export function ScheduleBoard({
       initialAppointmentId,
       initialCreate,
       initialPatientId,
+      initialOperatory,
       initialTreatmentId,
       treatments,
     }),
   );
   const returnFocusTarget = useRef<HTMLElement | null>(null);
   const isIntegrated = useIntegratedContextPanel();
-  const filteredAppointments =
-    filter === "ALL"
-      ? appointments
-      : appointments.filter((appointment) => appointment.status === filter);
+  const filteredAppointments = appointments.filter(
+    (appointment) =>
+      (filter === "ALL" || appointment.status === filter) &&
+      (operatoryFilter === "ALL" ||
+        String(appointment.operatory) === operatoryFilter),
+  );
   const appointmentsByDay = new Map<string, ScheduleAppointment[]>();
 
   for (const appointment of filteredAppointments) {
@@ -203,6 +220,8 @@ export function ScheduleBoard({
 
   const previousWeek = scheduleWeekKey(addPracticeDays(days[0], -7));
   const nextWeek = scheduleWeekKey(addPracticeDays(days[0], 7));
+  const operatoryQuery =
+    operatoryFilter === "ALL" ? "" : `&operatory=${operatoryFilter}`;
   const selectedMobileDay = days[mobileDayIndex];
   const selectedMobileAppointments =
     appointmentsByDay.get(practiceDateInputValue(selectedMobileDay)) ?? [];
@@ -235,11 +254,17 @@ export function ScheduleBoard({
         if (nextContext.treatmentId) {
           parameters.set("treatment", nextContext.treatmentId);
         }
+        if (nextContext.operatory) {
+          parameters.set("operatory", String(nextContext.operatory));
+        }
+      }
+      if (operatoryFilter !== "ALL") {
+        parameters.set("operatory", operatoryFilter);
       }
 
       window.history.pushState(null, "", `/demo/schedule?${parameters}`);
     },
-    [days],
+    [days, operatoryFilter],
   );
 
   const openCreate = useCallback(
@@ -257,11 +282,21 @@ export function ScheduleBoard({
         patientId: initialPatientId,
         startsAt,
         treatmentId: initialTreatmentId,
+        operatory:
+          initialOperatory && initialOperatory !== "ALL"
+            ? Number(initialOperatory)
+            : undefined,
       };
       setContext(nextContext);
       writeContextHistory(nextContext);
     },
-    [initialPatientId, initialTreatmentId, treatments, writeContextHistory],
+    [
+      initialOperatory,
+      initialPatientId,
+      initialTreatmentId,
+      treatments,
+      writeContextHistory,
+    ],
   );
 
   function openAppointment(
@@ -448,7 +483,9 @@ export function ScheduleBoard({
               size="icon"
               variant="ghost"
             >
-              <Link href={`/demo/schedule?week=${previousWeek}`}>
+              <Link
+                href={`/demo/schedule?week=${previousWeek}${operatoryQuery}`}
+              >
                 <ChevronLeft aria-hidden className="size-4" />
               </Link>
             </Button>
@@ -458,7 +495,11 @@ export function ScheduleBoard({
               size="sm"
               variant="ghost"
             >
-              <Link href="/demo/schedule">Today</Link>
+              <Link
+                href={`/demo/schedule${operatoryFilter === "ALL" ? "" : `?operatory=${operatoryFilter}`}`}
+              >
+                Today
+              </Link>
             </Button>
             <Button
               asChild
@@ -467,12 +508,12 @@ export function ScheduleBoard({
               size="icon"
               variant="ghost"
             >
-              <Link href={`/demo/schedule?week=${nextWeek}`}>
+              <Link href={`/demo/schedule?week=${nextWeek}${operatoryQuery}`}>
                 <ChevronRight aria-hidden className="size-4" />
               </Link>
             </Button>
           </nav>
-          <div className="flex items-center gap-2">
+          <div className="flex max-w-full flex-wrap items-center gap-2">
             <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Filter
             </span>
@@ -485,6 +526,7 @@ export function ScheduleBoard({
                 [
                   { label: "All active", value: "ALL" },
                   { label: "Confirmed", value: "CONFIRMED" },
+                  { label: "Arrived", value: "ARRIVED" },
                   { label: "Scheduled", value: "SCHEDULED" },
                 ] as const
               ).map((tab) => (
@@ -502,6 +544,29 @@ export function ScheduleBoard({
                   type="button"
                 >
                   {tab.label}
+                </button>
+              ))}
+            </div>
+            <div
+              aria-label="Filter by operatory"
+              className="inline-flex items-center rounded-full border border-border/80 bg-surface p-1 shadow-xs"
+              role="radiogroup"
+            >
+              {(["ALL", "1", "2"] as const).map((value) => (
+                <button
+                  aria-checked={operatoryFilter === value}
+                  className={cn(
+                    "dms-pressable rounded-full px-3 py-1 text-xs font-medium",
+                    operatoryFilter === value
+                      ? "bg-secondary font-semibold text-foreground shadow-2xs"
+                      : "text-muted-foreground hover:text-foreground",
+                  )}
+                  key={value}
+                  onClick={() => setOperatoryFilter(value)}
+                  role="radio"
+                  type="button"
+                >
+                  {value === "ALL" ? "All chairs" : `Operatory ${value}`}
                 </button>
               ))}
             </div>

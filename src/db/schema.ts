@@ -15,6 +15,7 @@ import { DEMO_ADMIN_ROLE, DEMO_PRACTICE_ID } from "@/lib/demo/constants";
 export const appointmentStatus = pgEnum("appointment_status", [
   "SCHEDULED",
   "CONFIRMED",
+  "ARRIVED",
   "COMPLETED",
   "CANCELLED",
 ]);
@@ -155,6 +156,7 @@ export const patients = pgTable(
     lastName: text("last_name").notNull(),
     email: text("email"),
     phone: text("phone"),
+    clinicalAlert: text("clinical_alert"),
     archivedAt: timestamp("archived_at", { withTimezone: true, mode: "date" }),
     createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })
       .notNull()
@@ -220,6 +222,7 @@ export const appointments = pgTable(
       mode: "date",
     }).notNull(),
     durationMinutes: integer("duration_minutes").notNull(),
+    operatory: integer("operatory").notNull().default(1),
     status: appointmentStatus("status").notNull().default("SCHEDULED"),
     note: text("note"),
     createdAt: timestamp("created_at", { withTimezone: true, mode: "date" })

@@ -29,6 +29,7 @@ DMS brings appointments, patient records, a treatment catalog, and operational n
 ## Key capabilities
 
 - **Appointment coordination:** Create, reschedule, confirm, complete, or cancel appointments while preventing conflicting active slots.
+- **Clinical flow controls:** Mark patients as arrived, filter the schedule by operatory, open the global `⌘K` command menu, and print a daily huddle brief.
 - **Patient directory:** Find, add, edit, archive, and review patients within the sample practice.
 - **Connected records:** Keep appointment activity, treatment context, and concise operational notes together on each patient record.
 - **Guided public access:** Open a server-provisioned demo session without a public sign-up flow. The resettable fictional dataset can be restored to its curated baseline when needed.
@@ -39,6 +40,7 @@ DMS brings appointments, patient records, a treatment catalog, and operational n
 - **The public demo is intentionally bounded.** A deterministic clock and resettable seed keep every walkthrough, screenshot, and test run consistent.
 - **Authentication is purpose-built for exploration.** Better Auth provisions a server-side demo identity and protects workspace routes without exposing credentials in the interface.
 - **Quality checks cover the important boundaries.** Vitest verifies rules and PostgreSQL integration; Playwright covers the main workflow and automated WCAG checks; GitHub Actions runs CI quality checks.
+- **The demo closes the loop.** A deterministic clinical huddle, operatory-aware schedule, and arrival lifecycle make the portfolio walkthrough operationally complete.
 
 ## Architecture
 

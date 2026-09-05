@@ -22,6 +22,13 @@
       "when": 1787653883168,
       "tag": "0002_prevent_active_appointment_overlap",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1787654883168,
+      "tag": "0003_clinical_workspace_features",
+      "breakpoints": true
     }
   ]
 }

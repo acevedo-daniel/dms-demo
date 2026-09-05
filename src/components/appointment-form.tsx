@@ -35,6 +35,7 @@ export type AppointmentFormState = {
   durationMinutes: string;
   note: string;
   patientId: string;
+  operatory: string;
   time: string;
   treatmentId: string;
 };
@@ -50,7 +51,9 @@ export type AppointmentFormProps = {
   isStatusPending: boolean;
   onRequestClose: () => void;
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
-  onUpdateStatus: (status: "CONFIRMED" | "COMPLETED" | "CANCELLED") => void;
+  onUpdateStatus: (
+    status: "CONFIRMED" | "ARRIVED" | "COMPLETED" | "CANCELLED",
+  ) => void;
   onValueChange: (field: keyof AppointmentFormState, value: string) => void;
   patients: SchedulePatient[];
   treatments: ScheduleTreatment[];
@@ -75,7 +78,9 @@ export function AppointmentForm({
   values,
 }: AppointmentFormProps) {
   const canManageStatus =
-    appointment?.status === "SCHEDULED" || appointment?.status === "CONFIRMED";
+    appointment?.status === "SCHEDULED" ||
+    appointment?.status === "CONFIRMED" ||
+    appointment?.status === "ARRIVED";
 
   const patientError = error?.toLowerCase().includes("patient") ? error : null;
   const treatmentError = error?.toLowerCase().includes("treatment")
@@ -111,6 +116,19 @@ export function AppointmentForm({
               >
                 <Check aria-hidden className="size-3.5 text-accent" />
                 Confirm
+              </Button>
+            ) : null}
+            {appointment.status === "CONFIRMED" ? (
+              <Button
+                className="h-8 gap-1.5 text-xs font-semibold"
+                disabled={isStatusPending}
+                onClick={() => onUpdateStatus("ARRIVED")}
+                size="sm"
+                type="button"
+                variant="outline"
+              >
+                <Check aria-hidden className="size-3.5 text-cyan-600" /> Mark
+                arrived
               </Button>
             ) : null}
             <Button
@@ -178,6 +196,18 @@ export function AppointmentForm({
               {patientError}
             </p>
           ) : null}
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor={`${formId}-operatory`}>Operatory</Label>
+          <Select
+            id={`${formId}-operatory`}
+            onChange={(event) => onValueChange("operatory", event.target.value)}
+            value={values.operatory}
+          >
+            <option value="1">Operatory 1</option>
+            <option value="2">Operatory 2</option>
+          </Select>
         </div>
 
         {/* Treatment Protocol Selection Field */}

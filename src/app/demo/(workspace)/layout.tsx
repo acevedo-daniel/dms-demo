@@ -3,6 +3,8 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { WorkspaceShell } from "@/components/workspace-shell";
 import { authorizeDemoRequest } from "@/lib/auth/authorization";
+import { getPatientDirectory } from "@/lib/patients";
+import { getTreatmentCatalog } from "@/lib/treatments";
 
 export const dynamic = "force-dynamic";
 
@@ -24,8 +26,16 @@ export default async function DemoWorkspaceLayout({
     redirect("/demo/access");
   }
 
+  const [patients, treatments] = await Promise.all([
+    getPatientDirectory(),
+    getTreatmentCatalog(),
+  ]);
+
   return (
-    <WorkspaceShell userName={authorization.session.user.name}>
+    <WorkspaceShell
+      commandData={{ patients, treatments }}
+      userName={authorization.session.user.name}
+    >
       {children}
     </WorkspaceShell>
   );

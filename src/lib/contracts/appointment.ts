@@ -3,6 +3,7 @@ import { z } from "zod";
 export const appointmentStatusSchema = z.enum([
   "SCHEDULED",
   "CONFIRMED",
+  "ARRIVED",
   "COMPLETED",
   "CANCELLED",
 ]);
@@ -13,9 +14,15 @@ const appointmentFields = {
   patientId: z.uuid(),
   startsAt: z.coerce.date(),
   treatmentId: z.uuid(),
+  operatory: z.number().int().min(1).max(2),
 };
 
-export const createAppointmentSchema = z.object(appointmentFields).strict();
+export const createAppointmentSchema = z
+  .object({
+    ...appointmentFields,
+    operatory: appointmentFields.operatory.default(1),
+  })
+  .strict();
 
 export const updateAppointmentSchema = z
   .object({
@@ -25,6 +32,7 @@ export const updateAppointmentSchema = z
     startsAt: appointmentFields.startsAt.optional(),
     status: appointmentStatusSchema.optional(),
     treatmentId: appointmentFields.treatmentId.optional(),
+    operatory: appointmentFields.operatory.optional(),
   })
   .strict()
   .refine(

@@ -7,16 +7,18 @@ import { DEMO_PRACTICE_ID, getDemoClock } from "@/lib/demo/constants";
 export { formatDemoDate, formatDemoTime } from "@/lib/demo/format";
 
 const practiceTimeZone = "America/Argentina/Buenos_Aires";
-const activeAppointmentStatuses = ["SCHEDULED", "CONFIRMED"] as const;
+import { activeAppointmentStatuses } from "@/lib/domain/schedule";
 
 export type DashboardAppointmentStatus =
-  "SCHEDULED" | "CONFIRMED" | "COMPLETED" | "CANCELLED";
+  "SCHEDULED" | "CONFIRMED" | "ARRIVED" | "COMPLETED" | "CANCELLED";
 
 const appointmentSelection = {
   durationMinutes: appointments.durationMinutes,
   id: appointments.id,
   patientId: patients.id,
   patientName: sql<string>`${patients.firstName} || ' ' || ${patients.lastName}`,
+  clinicalAlert: patients.clinicalAlert,
+  operatory: appointments.operatory,
   startsAt: appointments.startsAt,
   status: appointments.status,
   treatmentId: treatments.id,

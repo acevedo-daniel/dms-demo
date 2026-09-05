@@ -334,3 +334,32 @@
     transition-timing-function: var(--ease-standard);
   }
 }
+
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+  [data-daily-huddle-print],
+  [data-daily-huddle-print] * {
+    visibility: visible !important;
+  }
+  [data-daily-huddle-print] {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    color: #000 !important;
+    background: #fff !important;
+  }
+  .daily-huddle-dialog {
+    position: static !important;
+    transform: none !important;
+    max-width: none !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+  [data-slot="dialog-overlay"],
+  [data-slot="dialog-close"],
+  .print\:hidden {
+    display: none !important;
+  }
+}
