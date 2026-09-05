@@ -75,6 +75,7 @@ Every pull request and push to `main` triggers GitHub Actions (`.github/workflow
 
 ## Related documentation
 
+- [README.md](../README.md) — project overview, screenshots, and live demo link.
+- [PROJECT.md](PROJECT.md) — product scope and clinical business rules.
 - [ARCHITECTURE.md](ARCHITECTURE.md) — architectural boundaries and runtime topology.
 - [DEVELOPMENT.md](DEVELOPMENT.md) — local setup and development workflow.
-- [UI-SPEC.md](UI-SPEC.md) — interface interaction rules and state expectations.

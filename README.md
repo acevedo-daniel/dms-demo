@@ -20,6 +20,8 @@ DMS brings appointments, patient records, a treatment catalog, and operational n
 
 ![DMS Today view showing the demo day's appointments, follow-up work, and recent notes](docs/screenshots/today.webp)
 
+![DMS printable daily huddle briefing showing appointments, operatories, statuses, and a fictional clinical alert](docs/screenshots/daily-huddle.webp)
+
 ### Core workflows
 
 | Weekly schedule                                                                   | Patient record                                                                                              |

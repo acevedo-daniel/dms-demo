@@ -54,8 +54,7 @@ Browser -> Next.js App Router (RSC + Client Components) -> Better Auth / Zod Bou
 
 ## Related documentation
 
+- [README.md](../README.md) — project entry point, architecture, and local development.
 - [PROJECT.md](PROJECT.md) — product scope and domain business rules.
-- [PROJECT-DESIGN.md](PROJECT-DESIGN.md) — visual system, typography, and token registry.
-- [UI-SPEC.md](UI-SPEC.md) — route specifications, wireframes, and reachable states.
-- [TESTING.md](TESTING.md) — testing strategy, test layers, and verification commands.
 - [DEVELOPMENT.md](DEVELOPMENT.md) — local setup, developer workflow, and environment config.
+- [TESTING.md](TESTING.md) — testing strategy, test layers, and verification commands.
