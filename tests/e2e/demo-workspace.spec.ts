@@ -287,7 +287,7 @@ test("uses Today as an immediate, connected operating view", async ({
   await openResetDemoWorkspace(page);
 
   await expect(page.getByRole("heading", { name: "Alex Quinn" })).toBeVisible();
-  await expect(page.getByText("Room assignment pending")).toBeVisible();
+  await expect(page.getByText(/Operatory 1.*Assigned/)).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "Today's agenda" }),
   ).toBeVisible();

@@ -20,10 +20,10 @@ test("uses finished workspace states as public product proof", async ({
   ).toBeVisible();
 
   for (const signal of [
-    "100% Deterministic Seed",
-    "Real PostgreSQL",
-    "Automated WCAG AA Coverage",
-    "Resettable Privacy Boundary",
+    "Synchronized schedule",
+    "Relational integrity",
+    "Accessible by design",
+    "Protected workspace",
   ]) {
     await expect(page.getByText(signal, { exact: true })).toBeVisible();
   }

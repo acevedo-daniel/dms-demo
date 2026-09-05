@@ -293,7 +293,9 @@ export function PatientDirectory({ initialPatients }: PatientDirectoryProps) {
             type="button"
           >
             <span>All</span>
-            <span className="ml-1 opacity-70">({patients.length})</span>
+            <span className="ml-1 text-muted-foreground">
+              ({patients.length})
+            </span>
           </button>
           <button
             aria-pressed={statusFilter === "upcoming"}
@@ -307,7 +309,9 @@ export function PatientDirectory({ initialPatients }: PatientDirectoryProps) {
             type="button"
           >
             <span>Upcoming</span>
-            <span className="ml-1 opacity-70">({upcomingCount})</span>
+            <span className="ml-1 text-muted-foreground">
+              ({upcomingCount})
+            </span>
           </button>
           <button
             aria-pressed={statusFilter === "unscheduled"}
@@ -321,7 +325,9 @@ export function PatientDirectory({ initialPatients }: PatientDirectoryProps) {
             type="button"
           >
             <span>No visit scheduled</span>
-            <span className="ml-1 opacity-70">({unscheduledCount})</span>
+            <span className="ml-1 text-muted-foreground">
+              ({unscheduledCount})
+            </span>
           </button>
         </div>
       </div>

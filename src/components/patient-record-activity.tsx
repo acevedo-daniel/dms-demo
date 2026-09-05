@@ -100,7 +100,7 @@ export function PatientRecordActivity({ items }: PatientRecordActivityProps) {
               type="button"
             >
               <span>{option.label}</span>
-              <span aria-hidden="true" className="ml-1 opacity-70">
+              <span aria-hidden="true" className="ml-1 text-muted-foreground">
                 ({option.count})
               </span>
             </button>

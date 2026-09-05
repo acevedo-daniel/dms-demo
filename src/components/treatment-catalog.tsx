@@ -166,12 +166,12 @@ export function TreatmentCatalog({
         {/* Category Pills (Subtle, Sobrio) */}
         <nav
           aria-label="Filter treatments by category"
-          className="inline-flex items-center rounded-full border border-border/80 bg-surface/80 p-1 shadow-xs backdrop-blur-xs self-start lg:self-end overflow-x-auto"
+          className="inline-flex min-w-0 max-w-full items-center self-start overflow-x-auto rounded-full border border-border/80 bg-surface/80 p-1 shadow-xs backdrop-blur-xs lg:self-end"
         >
           <button
             aria-pressed={selectedCategory === "all"}
             className={cn(
-              "dms-pressable rounded-full px-3 py-1 text-xs font-medium transition-all whitespace-nowrap",
+              "dms-pressable shrink-0 rounded-full px-3 py-1 text-xs font-medium whitespace-nowrap transition-all",
               selectedCategory === "all"
                 ? "bg-secondary text-foreground font-semibold shadow-2xs"
                 : "text-muted-foreground hover:text-foreground",
@@ -180,13 +180,15 @@ export function TreatmentCatalog({
             type="button"
           >
             <span>All protocols</span>
-            <span className="ml-1 opacity-70">({treatments.length})</span>
+            <span className="ml-1 text-muted-foreground">
+              ({treatments.length})
+            </span>
           </button>
           {groups.map((group) => (
             <button
               aria-pressed={selectedCategory === group.category}
               className={cn(
-                "dms-pressable rounded-full px-3 py-1 text-xs font-medium transition-all whitespace-nowrap",
+                "dms-pressable shrink-0 rounded-full px-3 py-1 text-xs font-medium whitespace-nowrap transition-all",
                 selectedCategory === group.category
                   ? "bg-secondary text-foreground font-semibold shadow-2xs"
                   : "text-muted-foreground hover:text-foreground",
@@ -196,7 +198,7 @@ export function TreatmentCatalog({
               type="button"
             >
               <span>{group.category}</span>
-              <span className="ml-1 opacity-70">
+              <span className="ml-1 text-muted-foreground">
                 ({group.treatments.length})
               </span>
             </button>
