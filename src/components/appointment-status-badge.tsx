@@ -17,7 +17,7 @@ const appointmentStatusPresentation: Record<
     label: "Confirmed",
   },
   ARRIVED: {
-    dotClass: "bg-cyan-500",
+    dotClass: "bg-info",
     label: "Arrived",
   },
   COMPLETED: {

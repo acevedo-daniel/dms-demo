@@ -1,6 +1,7 @@
 "use client";
 
 import { UserCheck } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { announceWorkspaceFeedback } from "@/components/workspace-feedback";
@@ -15,7 +16,9 @@ export function ArriveAppointmentButton({
   patientName: string;
   size?: "sm" | "default";
 }) {
+  const router = useRouter();
   const [pending, setPending] = useState(false);
+
   async function markArrived() {
     setPending(true);
     try {
@@ -26,12 +29,14 @@ export function ArriveAppointmentButton({
       });
       if (!response.ok) throw new Error("Unable to update appointment.");
       announceWorkspaceFeedback(`${patientName} marked as arrived.`);
-      window.location.reload();
+      router.refresh();
     } catch {
       announceWorkspaceFeedback("Unable to update the appointment.");
+    } finally {
       setPending(false);
     }
   }
+
   return (
     <Button
       aria-label={`Mark ${patientName} as arrived`}
@@ -41,7 +46,7 @@ export function ArriveAppointmentButton({
       size={size}
       variant="outline"
     >
-      <UserCheck aria-hidden className="size-3.5 text-cyan-600" />
+      <UserCheck aria-hidden className="size-3.5 text-info" />
       {pending ? "Updating…" : "Mark arrived"}
     </Button>
   );

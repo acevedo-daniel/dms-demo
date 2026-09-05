@@ -260,6 +260,12 @@ export default async function DashboardPage() {
                   patientName={dashboard.upNext.patientName}
                   size="sm"
                 />
+              ) : dashboard.upNext.status === "CONFIRMED" ? (
+                <ArriveAppointmentButton
+                  appointmentId={dashboard.upNext.id}
+                  patientName={dashboard.upNext.patientName}
+                  size="sm"
+                />
               ) : null}
               <Button
                 asChild

@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { AppointmentStatusBadge } from "@/components/appointment-status-badge";
+import { formatDemoTime } from "@/lib/demo/format";
 
 type HuddleAppointment = {
   id: string;
@@ -134,11 +135,7 @@ function HuddleTable({
               items.map((item) => (
                 <tr key={item.id}>
                   <td className="px-3 py-2 font-mono">
-                    {new Intl.DateTimeFormat("en-US", {
-                      hour: "numeric",
-                      minute: "2-digit",
-                      timeZone: "America/Argentina/Buenos_Aires",
-                    }).format(new Date(item.startsAt))}
+                    {formatDemoTime(new Date(item.startsAt))}
                   </td>
                   <td className="px-3 py-2 font-medium">{item.patientName}</td>
                   <td className="px-3 py-2">{item.treatmentName}</td>

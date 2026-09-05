@@ -735,7 +735,8 @@ export function ScheduleBoard({
                         const isCompact = appointment.durationMinutes <= 30;
                         const isSelected =
                           appointment.id === selectedAppointmentId;
-                        const confirmed = appointment.status === "CONFIRMED";
+                        const isConfirmed = appointment.status === "CONFIRMED";
+                        const isArrived = appointment.status === "ARRIVED";
 
                         return (
                           <button
@@ -743,9 +744,11 @@ export function ScheduleBoard({
                             aria-pressed={isSelected}
                             className={cn(
                               "dms-pressable dms-raised-action group absolute right-1.5 left-1.5 z-10 overflow-hidden rounded-[var(--radius-md)] border text-left transition-all duration-150 focus-visible:outline-none shadow-xs hover:shadow-sm",
-                              confirmed
-                                ? "border-border/90 border-l-[3.5px] border-l-accent bg-card dark:bg-surface-raised/70 dark:hover:bg-surface-raised text-foreground hover:border-foreground/30"
-                                : "border-border/90 border-l-[3.5px] border-l-foreground/30 bg-card dark:bg-surface-raised/70 dark:hover:bg-surface-raised text-foreground hover:border-foreground/30",
+                              isArrived
+                                ? "border-border/90 border-l-[3.5px] border-l-info bg-card dark:bg-surface-raised/70 dark:hover:bg-surface-raised text-foreground hover:border-foreground/30"
+                                : isConfirmed
+                                  ? "border-border/90 border-l-[3.5px] border-l-accent bg-card dark:bg-surface-raised/70 dark:hover:bg-surface-raised text-foreground hover:border-foreground/30"
+                                  : "border-border/90 border-l-[3.5px] border-l-foreground/30 bg-card dark:bg-surface-raised/70 dark:hover:bg-surface-raised text-foreground hover:border-foreground/30",
                               isSelected &&
                                 "ring-2 ring-primary ring-offset-2 ring-offset-background",
                               isCompact ? "px-2 py-1" : "px-2.5 py-1.5",
@@ -782,18 +785,22 @@ export function ScheduleBoard({
                               <span
                                 className={cn(
                                   "flex items-center gap-1 text-[10px] font-medium tracking-wide shrink-0",
-                                  confirmed
-                                    ? "text-accent font-semibold"
-                                    : "text-muted-foreground",
+                                  isArrived
+                                    ? "text-info font-semibold"
+                                    : isConfirmed
+                                      ? "text-accent font-semibold"
+                                      : "text-muted-foreground",
                                 )}
                               >
                                 <span
                                   aria-hidden="true"
                                   className={cn(
                                     "size-1 rounded-full",
-                                    confirmed
-                                      ? "bg-accent"
-                                      : "bg-muted-foreground/60",
+                                    isArrived
+                                      ? "bg-info"
+                                      : isConfirmed
+                                        ? "bg-accent"
+                                        : "bg-muted-foreground/60",
                                   )}
                                 />
                                 <span>
@@ -908,9 +915,11 @@ export function ScheduleBoard({
                       aria-pressed={appointment.id === selectedAppointmentId}
                       className={cn(
                         "dms-pressable dms-raised-action min-w-0 flex-1 rounded-[var(--radius-md)] border px-3 py-2 text-left focus-visible:outline-none shadow-xs",
-                        appointment.status === "CONFIRMED"
-                          ? "border-border/90 border-l-4 border-l-accent bg-card dark:bg-surface-raised/70"
-                          : "border-border/90 border-l-4 border-l-foreground/30 bg-card dark:bg-surface-raised/70",
+                        appointment.status === "ARRIVED"
+                          ? "border-border/90 border-l-4 border-l-info bg-card dark:bg-surface-raised/70"
+                          : appointment.status === "CONFIRMED"
+                            ? "border-border/90 border-l-4 border-l-accent bg-card dark:bg-surface-raised/70"
+                            : "border-border/90 border-l-4 border-l-foreground/30 bg-card dark:bg-surface-raised/70",
                         appointment.id === selectedAppointmentId &&
                           "ring-2 ring-primary ring-offset-1",
                       )}
