@@ -32,7 +32,7 @@ export type PatientRecord = {
   nextAppointment: {
     id: string;
     startsAt: string;
-    status: "SCHEDULED" | "CONFIRMED";
+    status: "SCHEDULED" | "CONFIRMED" | "ARRIVED";
     treatmentId: string;
     treatmentName: string;
   } | null;
@@ -50,7 +50,8 @@ export type PatientRecord = {
         id: string;
         kind: "appointment";
         startsAt: string;
-        status: "SCHEDULED" | "CONFIRMED" | "COMPLETED" | "CANCELLED";
+        status:
+          "SCHEDULED" | "CONFIRMED" | "ARRIVED" | "COMPLETED" | "CANCELLED";
         treatmentId: string;
         treatmentName: string;
       }
@@ -247,7 +248,7 @@ export async function getPatientRecord(
 
   return {
     archivedAt: patient.archivedAt?.toISOString() ?? null,
-    clinicalAlert: "No clinical alert recorded",
+    clinicalAlert: patient.clinicalAlert ?? "No clinical alert recorded",
     completedVisitCount,
     email: patient.email,
     firstName: patient.firstName,
@@ -258,7 +259,8 @@ export async function getPatientRecord(
       ? {
           id: nextAppointment.id,
           startsAt: nextAppointment.startsAt.toISOString(),
-          status: nextAppointment.status as "SCHEDULED" | "CONFIRMED",
+          status: nextAppointment.status as
+            "SCHEDULED" | "CONFIRMED" | "ARRIVED",
           treatmentId: nextAppointment.treatmentId,
           treatmentName: nextAppointment.treatmentName,
         }

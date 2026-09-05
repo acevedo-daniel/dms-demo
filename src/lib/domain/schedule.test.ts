@@ -47,7 +47,10 @@ describe("schedule rules", () => {
       assertAppointmentTransition("SCHEDULED", "CONFIRMED"),
     ).not.toThrow();
     expect(() =>
-      assertAppointmentTransition("CONFIRMED", "COMPLETED"),
+      assertAppointmentTransition("CONFIRMED", "ARRIVED"),
+    ).not.toThrow();
+    expect(() =>
+      assertAppointmentTransition("ARRIVED", "COMPLETED"),
     ).not.toThrow();
     expect(() => assertAppointmentTransition("COMPLETED", "SCHEDULED")).toThrow(
       ConflictError,

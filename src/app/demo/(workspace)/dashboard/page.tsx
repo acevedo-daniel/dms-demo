@@ -2,6 +2,8 @@ import { CalendarPlus, Clock, Clock3, FileText, MapPin } from "lucide-react";
 import Link from "next/link";
 import { AppointmentStatusBadge } from "@/components/appointment-status-badge";
 import { ConfirmAppointmentButton } from "@/components/confirm-appointment-button";
+import { ArriveAppointmentButton } from "@/components/arrive-appointment-button";
+import { DailyHuddleDialog } from "@/components/daily-huddle-dialog";
 import { ExploreDmsGuide } from "@/components/explore-dms-guide";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -124,6 +126,12 @@ export default async function DashboardPage() {
           </p>
         </div>
         <div className="flex items-center gap-3">
+          <DailyHuddleDialog
+            appointments={dashboard.today.map((appointment) => ({
+              ...appointment,
+              startsAt: appointment.startsAt.toISOString(),
+            }))}
+          />
           <Button asChild className="h-10 px-4 font-semibold shadow-xs">
             <Link href="/demo/schedule?create=1">
               <CalendarPlus aria-hidden className="size-4" />
@@ -240,7 +248,7 @@ export default async function DashboardPage() {
                     aria-hidden
                     className="size-3 text-muted-foreground"
                   />
-                  Operatory 1 · Assigned
+                  Operatory {dashboard.upNext.operatory} · Assigned
                 </Badge>
                 <AppointmentStatus status={dashboard.upNext.status} />
               </div>
@@ -248,6 +256,12 @@ export default async function DashboardPage() {
             <div className="mt-6 flex shrink-0 flex-wrap items-center gap-2.5 sm:mt-0">
               {dashboard.upNext.status === "SCHEDULED" ? (
                 <ConfirmAppointmentButton
+                  appointmentId={dashboard.upNext.id}
+                  patientName={dashboard.upNext.patientName}
+                  size="sm"
+                />
+              ) : dashboard.upNext.status === "CONFIRMED" ? (
+                <ArriveAppointmentButton
                   appointmentId={dashboard.upNext.id}
                   patientName={dashboard.upNext.patientName}
                   size="sm"
@@ -335,6 +349,12 @@ export default async function DashboardPage() {
                   </div>
                   <div className="flex flex-wrap items-center gap-2 sm:justify-end">
                     <AppointmentStatus status={appointment.status} />
+                    {appointment.status === "CONFIRMED" ? (
+                      <ArriveAppointmentButton
+                        appointmentId={appointment.id}
+                        patientName={appointment.patientName}
+                      />
+                    ) : null}
                     <Button
                       asChild
                       size="sm"

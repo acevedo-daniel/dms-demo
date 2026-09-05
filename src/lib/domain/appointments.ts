@@ -173,10 +173,13 @@ export async function updateAppointment(appointmentId: string, input: unknown) {
     startsAt: updates.startsAt ?? current.startsAt,
     status: updates.status ?? current.status,
     treatmentId: updates.treatmentId ?? current.treatmentId,
+    operatory: updates.operatory ?? current.operatory,
   };
 
   if (
-    activeAppointmentStatuses.includes(next.status as "SCHEDULED" | "CONFIRMED")
+    activeAppointmentStatuses.includes(
+      next.status as (typeof activeAppointmentStatuses)[number],
+    )
   ) {
     assertScheduleSlot(next.startsAt, next.durationMinutes);
     await assertNoScheduleConflict(

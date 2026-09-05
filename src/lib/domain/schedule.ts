@@ -19,7 +19,11 @@ const timeFormatter = new Intl.DateTimeFormat("en-US", {
   weekday: "short",
 });
 
-export const activeAppointmentStatuses = ["SCHEDULED", "CONFIRMED"] as const;
+export const activeAppointmentStatuses = [
+  "SCHEDULED",
+  "CONFIRMED",
+  "ARRIVED",
+] as const;
 
 export function appointmentEnd(startsAt: Date, durationMinutes: number) {
   return new Date(startsAt.getTime() + durationMinutes * 60_000);
@@ -70,8 +74,9 @@ export function assertAppointmentTransition(current: string, next: string) {
   }
 
   const transitions: Record<string, readonly string[]> = {
-    CONFIRMED: ["COMPLETED", "CANCELLED"],
-    SCHEDULED: ["CONFIRMED", "COMPLETED", "CANCELLED"],
+    ARRIVED: ["COMPLETED", "CANCELLED"],
+    CONFIRMED: ["ARRIVED", "COMPLETED", "CANCELLED"],
+    SCHEDULED: ["CONFIRMED", "ARRIVED", "CANCELLED"],
   };
 
   if (!transitions[current]?.includes(next)) {

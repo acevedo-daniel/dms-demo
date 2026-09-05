@@ -81,6 +81,7 @@ function initialValues({
     ),
     note: appointment?.note ?? "",
     patientId: appointment?.patientId ?? initialPatientId ?? "",
+    operatory: String(appointment?.operatory ?? 1),
     time: practiceTimeInputValue(startsAt),
     treatmentId: appointment?.treatmentId ?? initialTreatmentId ?? "",
   };
@@ -277,6 +278,7 @@ export function ScheduleContextPanel({
             patientId: values.patientId,
             startsAt: startsAt.toISOString(),
             treatmentId: values.treatmentId,
+            operatory: Number(values.operatory),
           }),
           headers: { "Content-Type": "application/json" },
           method: appointment ? "PATCH" : "POST",
@@ -309,7 +311,9 @@ export function ScheduleContextPanel({
     }
   }
 
-  async function updateStatus(status: "CONFIRMED" | "COMPLETED" | "CANCELLED") {
+  async function updateStatus(
+    status: "CONFIRMED" | "ARRIVED" | "COMPLETED" | "CANCELLED",
+  ) {
     if (!appointment) {
       return;
     }
@@ -340,7 +344,9 @@ export function ScheduleContextPanel({
             ? "Appointment cancelled."
             : status === "COMPLETED"
               ? "Appointment completed."
-              : "Appointment confirmed.",
+              : status === "ARRIVED"
+                ? "Patient marked as arrived."
+                : "Appointment confirmed.",
         startsAt: payload.appointment?.startsAt ?? appointment.startsAt,
       });
     } catch (cause) {

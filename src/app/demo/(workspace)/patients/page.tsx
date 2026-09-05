@@ -11,7 +11,12 @@ async function loadPatientDirectory() {
   }
 }
 
-export default async function PatientsPage() {
+export default async function PatientsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ create?: string }>;
+}) {
+  const parameters = await searchParams;
   const patients = await loadPatientDirectory();
 
   if (!patients) {
@@ -43,7 +48,10 @@ export default async function PatientsPage() {
 
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      <PatientDirectory initialPatients={patients} />
+      <PatientDirectory
+        initialCreate={parameters.create === "1"}
+        initialPatients={patients}
+      />
     </main>
   );
 }

@@ -17,6 +17,7 @@ import type {
 } from "@/lib/notes";
 
 type NotesIndexProps = {
+  initialCreate?: boolean;
   notes: PatientNoteItem[];
   patients: NoteComposerPatient[];
   treatments: NoteComposerTreatment[];
@@ -44,7 +45,12 @@ type NoteGroup = {
   notes: PatientNoteItem[];
 };
 
-export function NotesIndex({ notes, patients, treatments }: NotesIndexProps) {
+export function NotesIndex({
+  initialCreate = false,
+  notes,
+  patients,
+  treatments,
+}: NotesIndexProps) {
   const [displayNotes, setDisplayNotes] = useState(notes);
   const [query, setQuery] = useState("");
   const [resultAnnouncement, setResultAnnouncement] = useState("");
@@ -207,6 +213,7 @@ export function NotesIndex({ notes, patients, treatments }: NotesIndexProps) {
             </div>
           </div>
           <NoteComposerPanel
+            defaultOpen={initialCreate}
             onSaved={handleSaved}
             patients={patients}
             treatments={treatments}

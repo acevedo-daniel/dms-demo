@@ -14,7 +14,8 @@ type DemoDatabase = NodePgDatabase<typeof schema>;
 const practiceId = DEMO_PRACTICE_ID;
 const demoAdminId = "demo-admin";
 
-type AppointmentStatus = "SCHEDULED" | "CONFIRMED" | "COMPLETED" | "CANCELLED";
+type AppointmentStatus =
+  "SCHEDULED" | "CONFIRMED" | "ARRIVED" | "COMPLETED" | "CANCELLED";
 
 function appointment(
   idSuffix: string,
@@ -24,6 +25,7 @@ function appointment(
   durationMinutes: number,
   status: AppointmentStatus,
   note?: string,
+  operatory = Number(idSuffix) % 2 === 0 ? 2 : 1,
 ) {
   const timestamp = getDemoClock();
 
@@ -35,6 +37,7 @@ function appointment(
     startsAt: new Date(startsAt),
     durationMinutes,
     status,
+    operatory,
     ...(note ? { note } : {}),
     createdAt: timestamp,
     updatedAt: timestamp,
@@ -195,6 +198,7 @@ export async function seedDemoWorkspace(db: DemoDatabase) {
         lastName: "Ellis",
         email: "patient-1003@example.com",
         phone: "+54 11 0000-1003",
+        clinicalAlert: "Penicillin allergy — verify before treatment.",
         createdAt: demoClock,
         updatedAt: demoClock,
       },
@@ -366,7 +370,7 @@ export async function seedDemoWorkspace(db: DemoDatabase) {
           "001",
           "2026-05-12T13:30:00.000Z",
           30,
-          "CONFIRMED",
+          "ARRIVED",
         ),
         appointment(
           "009",

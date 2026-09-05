@@ -12,7 +12,7 @@ type ActivityItem =
       id: string;
       kind: "appointment";
       startsAt: string;
-      status: "SCHEDULED" | "CONFIRMED" | "COMPLETED" | "CANCELLED";
+      status: "SCHEDULED" | "CONFIRMED" | "ARRIVED" | "COMPLETED" | "CANCELLED";
       treatmentId: string;
       treatmentName: string;
     }

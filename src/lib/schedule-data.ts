@@ -11,10 +11,11 @@ export type ScheduleAppointment = {
   durationMinutes: number;
   id: string;
   note: string | null;
+  operatory: number;
   patientId: string;
   patientName: string;
   startsAt: string;
-  status: "SCHEDULED" | "CONFIRMED";
+  status: "SCHEDULED" | "CONFIRMED" | "ARRIVED";
   treatmentId: string;
   treatmentName: string;
 };
@@ -64,6 +65,7 @@ export async function getActiveScheduleAppointment(appointmentId?: string) {
       durationMinutes: appointments.durationMinutes,
       id: appointments.id,
       note: appointments.note,
+      operatory: appointments.operatory,
       patientId: patients.id,
       patientName: sql<string>`${patients.firstName} || ' ' || ${patients.lastName}`,
       startsAt: appointments.startsAt,
@@ -96,6 +98,7 @@ export async function getScheduleData(weekStart: Date) {
           durationMinutes: appointments.durationMinutes,
           id: appointments.id,
           note: appointments.note,
+          operatory: appointments.operatory,
           patientId: patients.id,
           patientName: sql<string>`${patients.firstName} || ' ' || ${patients.lastName}`,
           startsAt: appointments.startsAt,

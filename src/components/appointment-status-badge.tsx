@@ -1,7 +1,8 @@
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
-type AppointmentStatus = "SCHEDULED" | "CONFIRMED" | "COMPLETED" | "CANCELLED";
+type AppointmentStatus =
+  "SCHEDULED" | "CONFIRMED" | "ARRIVED" | "COMPLETED" | "CANCELLED";
 
 const appointmentStatusPresentation: Record<
   AppointmentStatus,
@@ -14,6 +15,10 @@ const appointmentStatusPresentation: Record<
   CONFIRMED: {
     dotClass: "bg-accent",
     label: "Confirmed",
+  },
+  ARRIVED: {
+    dotClass: "bg-info",
+    label: "Arrived",
   },
   COMPLETED: {
     dotClass: "bg-foreground/70",

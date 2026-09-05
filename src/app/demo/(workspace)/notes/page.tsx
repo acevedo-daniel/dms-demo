@@ -11,7 +11,12 @@ async function loadNotes() {
   }
 }
 
-export default async function NotesPage() {
+export default async function NotesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ create?: string }>;
+}) {
+  const parameters = await searchParams;
   const data = await loadNotes();
 
   if (!data) {
@@ -49,6 +54,7 @@ export default async function NotesPage() {
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <NotesIndex
+        initialCreate={parameters.create === "1"}
         notes={notes}
         patients={options.patients}
         treatments={options.treatments}

@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useState, type ComponentType, type ReactNode } from "react";
 import { DemoUserControls } from "@/components/demo-user-controls";
+import { CommandMenu } from "@/components/command-menu";
 import { DmsLogo } from "@/components/dms-logo";
 import { NavigationSheet } from "@/components/navigation-sheet";
 import { StudioControls } from "@/components/studio-controls";
@@ -21,6 +22,15 @@ import { WorkspaceFeedback } from "@/components/workspace-feedback";
 import { cn } from "@/lib/utils";
 
 type WorkspaceShellProps = {
+  commandData: {
+    patients: Array<{
+      id: string;
+      identifier: string;
+      firstName: string;
+      lastName: string;
+    }>;
+    treatments: Array<{ id: string; name: string; category: string }>;
+  };
   children: ReactNode;
   userName: string;
 };
@@ -105,7 +115,11 @@ function WorkspaceNavigation({
   );
 }
 
-export function WorkspaceShell({ children, userName }: WorkspaceShellProps) {
+export function WorkspaceShell({
+  children,
+  commandData,
+  userName,
+}: WorkspaceShellProps) {
   const [isNavigationOpen, setIsNavigationOpen] = useState(false);
   const pathname = usePathname();
   const pageTitle = workspacePageTitle(pathname);
@@ -151,6 +165,7 @@ export function WorkspaceShell({ children, userName }: WorkspaceShellProps) {
             </div>
           </div>
           <div className="flex items-center gap-1 sm:gap-2">
+            <CommandMenu {...commandData} />
             {hasCompactCreateAction ? (
               <Button asChild className="px-3 text-xs lg:hidden" size="sm">
                 <Link

@@ -13,7 +13,10 @@ import { formatDemoDate, formatDemoTime } from "@/lib/demo/format";
 import type { PatientDirectoryItem } from "@/lib/patients";
 import { cn } from "@/lib/utils";
 
-type PatientDirectoryProps = { initialPatients: PatientDirectoryItem[] };
+type PatientDirectoryProps = {
+  initialCreate?: boolean;
+  initialPatients: PatientDirectoryItem[];
+};
 type StatusFilter = "all" | "upcoming" | "unscheduled";
 
 function patientName(
@@ -45,7 +48,10 @@ function resultLabel(count: number) {
   return `${count} ${count === 1 ? "patient" : "patients"}`;
 }
 
-export function PatientDirectory({ initialPatients }: PatientDirectoryProps) {
+export function PatientDirectory({
+  initialCreate = false,
+  initialPatients,
+}: PatientDirectoryProps) {
   const [patients, setPatients] = useState(initialPatients);
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
@@ -165,6 +171,7 @@ export function PatientDirectory({ initialPatients }: PatientDirectoryProps) {
         </div>
         <div className="flex items-center gap-3">
           <PatientFormPanel
+            defaultOpen={initialCreate}
             onSaved={handlePatientCreated}
             trigger={
               <Button className="h-10 px-4 font-semibold shadow-xs">

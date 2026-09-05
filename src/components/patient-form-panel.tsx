@@ -37,6 +37,7 @@ export type EditablePatient = {
 };
 
 type PatientFormPanelProps = {
+  defaultOpen?: boolean;
   onSaved?: (patient: EditablePatient) => void;
   patient?: EditablePatient;
   trigger: ReactNode;
@@ -77,6 +78,7 @@ function getServerMessage(payload: unknown, fallback: string) {
 }
 
 export function PatientFormPanel({
+  defaultOpen = false,
   onSaved,
   patient,
   trigger,
@@ -84,7 +86,7 @@ export function PatientFormPanel({
   const router = useRouter();
   const formId = useId();
   const [isDiscardOpen, setIsDiscardOpen] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(defaultOpen);
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [values, setValues] = useState(() => toFormState(patient));

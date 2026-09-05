@@ -38,6 +38,7 @@ export type SavedPatientNote = Pick<
 >;
 
 export type NoteComposerPanelProps = {
+  defaultOpen?: boolean;
   fixedPatientId?: string;
   note?: PatientNoteItem;
   onSaved?: (note: SavedPatientNote) => void;
@@ -82,6 +83,7 @@ function getServerError(payload: unknown, fallback: string) {
 }
 
 export function NoteComposerPanel({
+  defaultOpen = false,
   fixedPatientId,
   note,
   onSaved,
@@ -91,7 +93,7 @@ export function NoteComposerPanel({
 }: NoteComposerPanelProps) {
   const formId = useId();
   const isEditing = Boolean(note);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(defaultOpen);
   const [isDiscardOpen, setIsDiscardOpen] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<{
     body?: string;
