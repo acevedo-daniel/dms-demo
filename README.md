@@ -10,17 +10,15 @@ DMS brings appointments, patient records, treatment context, and operational not
 
 ## Screenshots
 
-### Public entry
+### Public introduction
 
-| Public introduction                                                                            | Demo access                                                                                             |
-| ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| ![DMS public introduction to the dental practice workspace](docs/screenshots/public-home.webp) | ![DMS demo access screen for the fictional Atelier Dental workspace](docs/screenshots/demo-access.webp) |
+![DMS public introduction to the dental practice workspace](docs/screenshots/public-home.webp)
 
-### Daily operations
+### Enter and orient
 
-![DMS Today view showing appointments, follow-up work, and recent notes](docs/screenshots/today.webp)
-
-![DMS Daily Huddle brief showing appointments, operatories, statuses, and a fictional clinical alert](docs/screenshots/daily-huddle.webp)
+| Demo access                                                                                             | Today dashboard                                                                                         |
+| ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| ![DMS demo access screen for the fictional Atelier Dental workspace](docs/screenshots/demo-access.webp) | ![DMS Today dashboard with appointments, follow-up work, and recent notes](docs/screenshots/today.webp) |
 
 ### Core workflows
 
