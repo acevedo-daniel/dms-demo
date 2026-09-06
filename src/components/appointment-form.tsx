@@ -24,6 +24,7 @@ import { Label } from "@/components/ui/label";
 import { NativeSelect as Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { useI18n, getLocalizedTreatment } from "@/lib/i18n";
 import type {
   ScheduleAppointment,
   SchedulePatient,
@@ -77,15 +78,22 @@ export function AppointmentForm({
   treatments,
   values,
 }: AppointmentFormProps) {
+  const { locale, t } = useI18n();
   const canManageStatus =
     appointment?.status === "SCHEDULED" ||
     appointment?.status === "CONFIRMED" ||
     appointment?.status === "ARRIVED";
 
-  const patientError = error?.toLowerCase().includes("patient") ? error : null;
-  const treatmentError = error?.toLowerCase().includes("treatment")
-    ? error
-    : null;
+  const patientError =
+    error?.toLowerCase().includes("patient") ||
+    error?.toLowerCase().includes("paciente")
+      ? error
+      : null;
+  const treatmentError =
+    error?.toLowerCase().includes("treatment") ||
+    error?.toLowerCase().includes("tratamiento")
+      ? error
+      : null;
   const generalError =
     error &&
     !dateTimeError &&
@@ -115,7 +123,7 @@ export function AppointmentForm({
                 variant="outline"
               >
                 <Check aria-hidden className="size-3.5 text-accent" />
-                Confirm
+                {locale === "es" ? "Confirmar" : "Confirm"}
               </Button>
             ) : null}
             {appointment.status === "CONFIRMED" ? (
@@ -127,8 +135,8 @@ export function AppointmentForm({
                 type="button"
                 variant="outline"
               >
-                <Check aria-hidden className="size-3.5 text-cyan-600" /> Mark
-                arrived
+                <Check aria-hidden className="size-3.5 text-cyan-600" />
+                {locale === "es" ? "Marcar llegada" : "Mark arrived"}
               </Button>
             ) : null}
             <Button
@@ -143,11 +151,11 @@ export function AppointmentForm({
                 aria-hidden
                 className="size-3.5 text-foreground/70"
               />
-              Complete
+              {locale === "es" ? "Completar" : "Complete"}
             </Button>
             <Button asChild className="h-8 text-xs" size="sm" variant="ghost">
               <Link href={`/demo/patients/${appointment.patientId}`}>
-                Open patient
+                {locale === "es" ? "Ver ficha" : "View record"}
               </Link>
             </Button>
           </div>
@@ -156,15 +164,17 @@ export function AppointmentForm({
         {/* Patient Selection Field */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label htmlFor={`${formId}-patient`}>Patient</Label>
+            <Label htmlFor={`${formId}-patient`}>
+              {t.schedule.form.patient}
+            </Label>
             {patientError ? (
               <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive animate-in fade-in-0 duration-150">
                 <AlertCircle aria-hidden className="size-3 shrink-0" />
-                Required
+                {locale === "es" ? "Obligatorio" : "Required"}
               </span>
             ) : (
               <span className="text-xs text-muted-foreground">
-                Directory chart
+                {locale === "es" ? "Ficha del directorio" : "Directory file"}
               </span>
             )}
           </div>
@@ -179,7 +189,7 @@ export function AppointmentForm({
             required
             value={values.patientId}
           >
-            <option value="">Select patient</option>
+            <option value="">{t.schedule.form.selectPatient}</option>
             {patients.map((patient) => (
               <option key={patient.id} value={patient.id}>
                 {patient.name} · {patient.identifier}
@@ -199,29 +209,37 @@ export function AppointmentForm({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor={`${formId}-operatory`}>Operatory</Label>
+          <Label htmlFor={`${formId}-operatory`}>
+            {t.schedule.form.operatory}
+          </Label>
           <Select
             id={`${formId}-operatory`}
             onChange={(event) => onValueChange("operatory", event.target.value)}
             value={values.operatory}
           >
-            <option value="1">Operatory 1</option>
-            <option value="2">Operatory 2</option>
+            <option value="1">
+              {locale === "es" ? "Sillón 1" : "Operatory 1"}
+            </option>
+            <option value="2">
+              {locale === "es" ? "Sillón 2" : "Operatory 2"}
+            </option>
           </Select>
         </div>
 
         {/* Treatment Protocol Selection Field */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label htmlFor={`${formId}-treatment`}>Treatment</Label>
+            <Label htmlFor={`${formId}-treatment`}>
+              {t.schedule.form.treatment}
+            </Label>
             {treatmentError ? (
               <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive animate-in fade-in-0 duration-150">
                 <AlertCircle aria-hidden className="size-3 shrink-0" />
-                Required
+                {locale === "es" ? "Obligatorio" : "Required"}
               </span>
             ) : (
               <span className="text-xs text-muted-foreground">
-                Clinical protocol
+                {locale === "es" ? "Protocolo clínico" : "Clinical protocol"}
               </span>
             )}
           </div>
@@ -246,12 +264,15 @@ export function AppointmentForm({
             required
             value={values.treatmentId}
           >
-            <option value="">Select treatment</option>
-            {treatments.map((treatment) => (
-              <option key={treatment.id} value={treatment.id}>
-                {treatment.name} · {treatment.defaultDurationMinutes} min
-              </option>
-            ))}
+            <option value="">{t.schedule.form.selectTreatment}</option>
+            {treatments.map((treatment) => {
+              const localized = getLocalizedTreatment(treatment, locale);
+              return (
+                <option key={treatment.id} value={treatment.id}>
+                  {localized.name} · {treatment.defaultDurationMinutes} min
+                </option>
+              );
+            })}
           </Select>
           {treatmentError ? (
             <p
@@ -269,15 +290,22 @@ export function AppointmentForm({
         <div className="grid gap-5 sm:grid-cols-2">
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label htmlFor={`${formId}-date`}>Date</Label>
+              <Label htmlFor={`${formId}-date`}>{t.schedule.form.date}</Label>
               {dateTimeError &&
               (dateTimeError.toLowerCase().includes("date") ||
+                dateTimeError.toLowerCase().includes("fecha") ||
+                dateTimeError.toLowerCase().includes("lunes") ||
                 dateTimeError.toLowerCase().includes("monday")) ? (
                 <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive animate-in fade-in-0 duration-150">
                   <AlertCircle aria-hidden className="size-3 shrink-0" />
-                  {dateTimeError.includes("Monday")
-                    ? "Weekday only"
-                    : "Required"}
+                  {dateTimeError.toLowerCase().includes("monday") ||
+                  dateTimeError.toLowerCase().includes("lunes")
+                    ? locale === "es"
+                      ? "Solo días hábiles"
+                      : "Weekdays only"
+                    : locale === "es"
+                      ? "Obligatorio"
+                      : "Required"}
                 </span>
               ) : null}
             </div>
@@ -295,13 +323,14 @@ export function AppointmentForm({
           </div>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label htmlFor={`${formId}-time`}>Time</Label>
+              <Label htmlFor={`${formId}-time`}>{t.schedule.form.time}</Label>
               {dateTimeError &&
               (dateTimeError.toLowerCase().includes("time") ||
+                dateTimeError.toLowerCase().includes("hora") ||
                 dateTimeError.toLowerCase().includes("slot")) ? (
                 <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive animate-in fade-in-0 duration-150">
                   <AlertCircle aria-hidden className="size-3 shrink-0" />
-                  Required
+                  {locale === "es" ? "Obligatorio" : "Required"}
                 </span>
               ) : null}
             </div>
@@ -326,13 +355,14 @@ export function AppointmentForm({
           >
             <AlertCircle aria-hidden className="size-3.5 shrink-0" />
             <span>{dateTimeError}</span>
-            {error?.includes("overlaps") ? (
+            {error?.toLowerCase().includes("superpone") ||
+            error?.toLowerCase().includes("overlaps") ? (
               <button
                 className="ml-2 font-medium underline underline-offset-4"
                 onClick={onRequestClose}
                 type="button"
               >
-                Return to schedule
+                {locale === "es" ? "Volver a la agenda" : "Back to schedule"}
               </button>
             ) : null}
           </p>
@@ -341,7 +371,9 @@ export function AppointmentForm({
         {/* Duration Field */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label htmlFor={`${formId}-duration`}>Duration (minutes)</Label>
+            <Label htmlFor={`${formId}-duration`}>
+              {t.schedule.form.durationMinutes}
+            </Label>
             {durationError ? (
               <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive animate-in fade-in-0 duration-150">
                 <AlertCircle aria-hidden className="size-3 shrink-0" />
@@ -398,17 +430,21 @@ export function AppointmentForm({
             </p>
           ) : null}
           <p className="text-xs text-muted-foreground">
-            Choose 15–180 minutes in 15-minute increments.
+            {locale === "es"
+              ? "Seleccioná entre 15 y 180 minutos en bloques de 15 min."
+              : "Select between 15 and 180 minutes in 15-minute intervals."}
           </p>
         </div>
 
         {/* Operational Note Field */}
         <div className="space-y-2">
-          <Label htmlFor={`${formId}-note`}>Operational note</Label>
+          <Label htmlFor={`${formId}-note`}>
+            {t.schedule.form.coordinationNote}
+          </Label>
           <Textarea
             id={`${formId}-note`}
             onChange={(event) => onValueChange("note", event.target.value)}
-            placeholder="Optional coordination detail"
+            placeholder={t.schedule.form.coordinationNotePlaceholder}
             value={values.note}
           />
         </div>
@@ -434,7 +470,7 @@ export function AppointmentForm({
                   variant="ghost"
                 >
                   <Trash2 aria-hidden className="size-4" />
-                  Cancel appointment
+                  {t.schedule.form.cancelAppointment}
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
@@ -447,25 +483,26 @@ export function AppointmentForm({
                       />
                     </div>
                     <span className="text-xs font-medium text-muted-foreground">
-                      Cancel Appointment
+                      {t.schedule.form.cancelAppointment}
                     </span>
                   </div>
-                  <AlertDialogTitle>Cancel appointment?</AlertDialogTitle>
+                  <AlertDialogTitle>
+                    {t.schedule.form.confirmCancelTitle}
+                  </AlertDialogTitle>
                   <AlertDialogDescription>
-                    This appointment will be released from the schedule board
-                    and permanently preserved in patient history as Cancelled.
+                    {t.schedule.form.confirmCancelDesc}
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel autoFocus>
-                    Keep appointment
+                    {t.schedule.form.continueEditing}
                   </AlertDialogCancel>
                   <AlertDialogAction
                     className="dms-pressable rounded-full border border-destructive/20 bg-destructive px-4 text-xs font-semibold text-destructive-foreground shadow-xs transition-all hover:bg-destructive/90 active:scale-[0.98]"
                     disabled={isStatusPending}
                     onClick={() => onUpdateStatus("CANCELLED")}
                   >
-                    Cancel appointment
+                    {t.schedule.form.confirmCancelAction}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
@@ -475,14 +512,16 @@ export function AppointmentForm({
       </div>
       <DialogFooter className="mt-auto border-t border-border px-6 py-4 sm:justify-between">
         <Button onClick={onRequestClose} type="button" variant="ghost">
-          Close
+          {locale === "es" ? "Cerrar" : "Close"}
         </Button>
         <Button disabled={isPending || isStatusPending} type="submit">
           {isPending
-            ? "Saving…"
+            ? isEditing
+              ? t.schedule.form.saving
+              : t.schedule.form.creating
             : isEditing
-              ? "Save changes"
-              : "Create appointment"}
+              ? t.schedule.form.submitEdit
+              : t.schedule.form.submitCreate}
         </Button>
       </DialogFooter>
     </form>

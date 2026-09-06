@@ -2,6 +2,7 @@
 
 import { useSyncExternalStore, useState } from "react";
 import { Globe, Moon, Sun } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 
 interface StudioControlsProps {
   className?: string;
@@ -24,24 +25,6 @@ function getServerThemeSnapshot(): "light" | "dark" {
   return "light";
 }
 
-function subscribeLocale(callback: () => void) {
-  window.addEventListener("storage", callback);
-  return () => window.removeEventListener("storage", callback);
-}
-
-function getLocaleSnapshot(): "en" | "es" {
-  try {
-    const saved = localStorage.getItem("dms-locale");
-    return saved === "es" ? "es" : "en";
-  } catch {
-    return "en";
-  }
-}
-
-function getServerLocaleSnapshot(): "en" | "es" {
-  return "en";
-}
-
 export function StudioControls({ className = "" }: StudioControlsProps) {
   const theme = useSyncExternalStore(
     subscribeTheme,
@@ -49,13 +32,7 @@ export function StudioControls({ className = "" }: StudioControlsProps) {
     getServerThemeSnapshot,
   );
 
-  const savedLocale = useSyncExternalStore(
-    subscribeLocale,
-    getLocaleSnapshot,
-    getServerLocaleSnapshot,
-  );
-
-  const [activeLocale, setActiveLocale] = useState<"en" | "es">(savedLocale);
+  const { locale, setLocale } = useI18n();
   const [notice, setNotice] = useState<string | null>(null);
 
   const toggleTheme = () => {
@@ -72,23 +49,12 @@ export function StudioControls({ className = "" }: StudioControlsProps) {
     }
   };
 
-  const selectLocale = (selectedLocale: "en" | "es") => {
-    setActiveLocale(selectedLocale);
-    try {
-      localStorage.setItem("dms-locale", selectedLocale);
-    } catch {
-      // Ignore storage errors
-    }
-
-    if (selectedLocale === "es") {
-      setNotice("Español seleccionado · Próximamente en v1.1");
-      setTimeout(() => setNotice(null), 3000);
-    } else {
-      setNotice(null);
-    }
+  const handleSelectLocale = (selectedLocale: "en" | "es") => {
+    if (selectedLocale === locale) return;
+    setLocale(selectedLocale);
+    setNotice(selectedLocale === "en" ? "English active" : "Español activado");
+    setTimeout(() => setNotice(null), 2500);
   };
-
-  const currentLocale = activeLocale || savedLocale;
 
   return (
     <div className={`relative inline-flex items-center ${className}`}>
@@ -96,35 +62,39 @@ export function StudioControls({ className = "" }: StudioControlsProps) {
       <div className="flex h-8 items-center gap-1 rounded-full border border-border/80 bg-surface/90 p-0.5 shadow-2xs backdrop-blur-xs transition-colors">
         {/* Language Segmented Switch */}
         <div
-          aria-label="Language selection"
+          aria-label={
+            locale === "es" ? "Selección de idioma" : "Language selection"
+          }
           className="flex items-center rounded-full bg-secondary/50 p-0.5"
           role="group"
         >
           <button
-            aria-label="English language"
-            aria-pressed={currentLocale === "en"}
+            aria-label={locale === "es" ? "Idioma español" : "Spanish language"}
+            aria-pressed={locale === "es"}
             className={`rounded-full px-2.5 py-0.5 text-xs font-medium transition-all ${
-              currentLocale === "en"
+              locale === "es"
                 ? "bg-surface dark:bg-surface-raised text-foreground shadow-2xs"
                 : "text-muted-foreground hover:text-foreground"
             }`}
-            onClick={() => selectLocale("en")}
-            type="button"
-          >
-            EN
-          </button>
-          <button
-            aria-label="Spanish language"
-            aria-pressed={currentLocale === "es"}
-            className={`rounded-full px-2.5 py-0.5 text-xs font-medium transition-all ${
-              currentLocale === "es"
-                ? "bg-surface dark:bg-surface-raised text-foreground shadow-2xs"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-            onClick={() => selectLocale("es")}
+            data-testid="locale-es"
+            onClick={() => handleSelectLocale("es")}
             type="button"
           >
             ES
+          </button>
+          <button
+            aria-label={locale === "es" ? "Idioma inglés" : "English language"}
+            aria-pressed={locale === "en"}
+            className={`rounded-full px-2.5 py-0.5 text-xs font-medium transition-all ${
+              locale === "en"
+                ? "bg-surface dark:bg-surface-raised text-foreground shadow-2xs"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+            data-testid="locale-en"
+            onClick={() => handleSelectLocale("en")}
+            type="button"
+          >
+            EN
           </button>
         </div>
 
@@ -133,12 +103,24 @@ export function StudioControls({ className = "" }: StudioControlsProps) {
         {/* Dark Mode Toggle */}
         <button
           aria-label={
-            theme === "light" ? "Switch to dark theme" : "Switch to light theme"
+            theme === "light"
+              ? locale === "es"
+                ? "Cambiar a modo oscuro"
+                : "Switch to dark theme"
+              : locale === "es"
+                ? "Cambiar a modo claro"
+                : "Switch to light theme"
           }
           className="flex size-7 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary/60 hover:text-foreground"
           onClick={toggleTheme}
           title={
-            theme === "light" ? "Activate Dark Mode" : "Activate Light Mode"
+            theme === "light"
+              ? locale === "es"
+                ? "Activar modo oscuro"
+                : "Activate Dark Mode"
+              : locale === "es"
+                ? "Activar modo claro"
+                : "Activate Light Mode"
           }
           type="button"
         >

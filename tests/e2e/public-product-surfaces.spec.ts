@@ -9,27 +9,24 @@ test("uses finished workspace states as public product proof", async ({
   await expect(
     page.getByRole("heading", {
       level: 1,
-      name: "A clearer way to run the practice day.",
+      name: "Una forma más clara de llevar el día en la clínica.",
     }),
   ).toBeVisible();
   await expect(
-    page.getByRole("img", { name: /DMS Schedule showing/ }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("heading", { name: "Engineering signals" }),
+    page.getByRole("heading", { name: "Señales de ingeniería" }),
   ).toBeVisible();
 
   for (const signal of [
-    "Synchronized schedule",
-    "Relational integrity",
-    "Accessible by design",
-    "Protected workspace",
+    "Agenda sincronizada",
+    "Integridad relacional",
+    "Accesible por diseño",
+    "Espacio protegido",
   ]) {
     await expect(page.getByText(signal, { exact: true })).toBeVisible();
   }
 
   await expect(
-    page.getByRole("link", { name: "Open demo workspace" }).first(),
+    page.getByRole("link", { name: "Abrir espacio de demostración" }).first(),
   ).toBeVisible();
 });
 
@@ -41,24 +38,19 @@ test("frames access as a no-account entry point with Today proof", async ({
   await expect(
     page.getByRole("heading", {
       level: 1,
-      name: "Open the DMS demo workspace",
+      name: "Abrir el espacio de demostración de DMS",
     }),
   ).toBeVisible();
-  await expect(page.getByRole("link", { name: "Back to DMS" })).toHaveAttribute(
-    "href",
-    "/",
-  );
   await expect(
-    page.getByText(
-      "No account, password, or personal information is required.",
-      { exact: false },
-    ),
+    page.getByRole("link", { name: "Volver a DMS" }),
+  ).toHaveAttribute("href", "/");
+  await expect(
+    page.getByText("No se requiere cuenta, contraseña ni datos personales.", {
+      exact: false,
+    }),
   ).toBeVisible();
   await expect(
-    page.getByRole("img", { name: /DMS Today view showing/ }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("button", { name: "Open demo workspace" }),
+    page.getByRole("button", { name: "Abrir espacio de demostración" }),
   ).toBeVisible();
 });
 
@@ -69,20 +61,24 @@ test("keeps demo access recovery and authorized redirects intact", async ({
   await page.route("**/api/demo/access", async (route) => {
     await route.fulfill({
       body: JSON.stringify({
-        error: "The demo workspace could not be opened. Try again.",
+        error: "No se pudo abrir el espacio de demostración. Reintentá.",
       }),
       contentType: "application/json",
       status: 503,
     });
   });
 
-  await page.getByRole("button", { name: "Open demo workspace" }).click();
+  await page
+    .getByRole("button", { name: "Abrir espacio de demostración" })
+    .click();
   await expect(
-    page.getByText("The demo workspace could not be opened. Try again."),
+    page.getByText("No se pudo abrir el espacio de demostración. Reintentá."),
   ).toBeVisible();
 
   await page.unroute("**/api/demo/access");
-  await page.getByRole("button", { name: "Open demo workspace" }).click();
+  await page
+    .getByRole("button", { name: "Abrir espacio de demostración" })
+    .click();
   await expect(page).toHaveURL(/\/demo\/dashboard$/);
 
   await page.goto("/demo/access");

@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { useI18n, getLocalizedTreatment } from "@/lib/i18n";
 
 type CommandPatient = {
   id: string;
@@ -55,6 +56,7 @@ export function CommandMenu({
   treatments: CommandTreatment[];
 }) {
   const router = useRouter();
+  const { t, locale } = useI18n();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
@@ -100,11 +102,12 @@ export function CommandMenu({
   const matchingTreatments = useMemo(
     () =>
       treatments
+        .map((item) => getLocalizedTreatment(item, locale))
         .filter((item) =>
           `${item.name} ${item.category}`.toLowerCase().includes(normalized),
         )
         .slice(0, 5),
-    [normalized, treatments],
+    [locale, normalized, treatments],
   );
 
   const allEntries: NavigableItem[] = useMemo(() => {
@@ -114,43 +117,43 @@ export function CommandMenu({
           href: "/demo/schedule?create=1",
           icon: <CalendarPlus aria-hidden className="size-4" />,
           id: "action-create-appointment",
-          label: "New appointment",
-          meta: "Schedule",
+          label: t.schedule.newAppointment,
+          meta: t.nav.schedule,
         },
         {
           href: "/demo/dashboard",
           icon: <CalendarDays aria-hidden className="size-4" />,
           id: "action-today",
-          label: "Go to Today",
-          meta: "Overview",
+          label: locale === "es" ? "Ir a Hoy" : "Go to Today",
+          meta: locale === "es" ? "Resumen" : "Summary",
         },
         {
           href: "/demo/schedule",
           icon: <CalendarDays aria-hidden className="size-4" />,
           id: "action-schedule",
-          label: "Open Schedule",
-          meta: "Calendar",
+          label: locale === "es" ? "Abrir Agenda" : "Open Schedule",
+          meta: locale === "es" ? "Semanal" : "Weekly",
         },
         {
           href: "/demo/patients",
           icon: <UsersRound aria-hidden className="size-4" />,
           id: "action-patients",
-          label: "Open Patients",
-          meta: "Directory",
+          label: locale === "es" ? "Abrir Pacientes" : "Open Patients",
+          meta: locale === "es" ? "Directorio" : "Directory",
         },
         {
           href: "/demo/patients?create=1",
           icon: <FilePlus2 aria-hidden className="size-4" />,
           id: "action-add-patient",
-          label: "Add patient",
-          meta: "New record",
+          label: t.patients.addPatient,
+          meta: locale === "es" ? "Registro" : "Registration",
         },
         {
           href: "/demo/notes?create=1",
           icon: <NotebookPen aria-hidden className="size-4" />,
           id: "action-log-note",
-          label: "Log clinical note",
-          meta: "Clinical",
+          label: t.notes.newNote,
+          meta: locale === "es" ? "Evolución" : "Evolution",
         },
       ];
     }
@@ -174,7 +177,7 @@ export function CommandMenu({
     );
 
     return [...patientEntries, ...treatmentEntries];
-  }, [matchingPatients, matchingTreatments, normalized]);
+  }, [locale, matchingPatients, matchingTreatments, normalized, t]);
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
     if (!allEntries.length) return;
@@ -201,7 +204,11 @@ export function CommandMenu({
     <>
       {/* Mobile / Tablet Compact Search Trigger */}
       <button
-        aria-label={`Open command menu (${shortcutLabel})`}
+        aria-label={
+          locale === "es"
+            ? `Abrir menú de comandos (${shortcutLabel})`
+            : `Open command menu (${shortcutLabel})`
+        }
         className="flex h-9 w-9 items-center justify-center rounded-full border border-border/80 bg-background/70 text-muted-foreground shadow-2xs transition-colors hover:border-foreground/30 hover:bg-secondary/50 hover:text-foreground md:hidden"
         onClick={() => {
           setQuery("");
@@ -215,7 +222,11 @@ export function CommandMenu({
 
       {/* Desktop / Laptop Command Capsule */}
       <button
-        aria-label={`Open command menu (${shortcutLabel})`}
+        aria-label={
+          locale === "es"
+            ? `Abrir menú de comandos (${shortcutLabel})`
+            : `Open command menu (${shortcutLabel})`
+        }
         className="hidden h-9 min-w-44 items-center justify-between gap-3 rounded-full border border-border/80 bg-background/70 px-3 text-left text-xs text-muted-foreground shadow-2xs transition-colors hover:border-foreground/30 hover:bg-secondary/40 hover:text-foreground md:flex lg:min-w-56"
         onClick={() => {
           setQuery("");
@@ -226,7 +237,9 @@ export function CommandMenu({
       >
         <span className="flex items-center gap-2">
           <Search aria-hidden className="size-3.5 text-muted-foreground" />
-          <span>Search workspace</span>
+          <span>
+            {locale === "es" ? "Buscar en el espacio" : "Search workspace"}
+          </span>
         </span>
         <kbd className="rounded border border-border/80 bg-secondary/80 px-1.5 py-0.5 font-mono text-[10px] font-medium text-foreground/80">
           {shortcutLabel}
@@ -236,9 +249,13 @@ export function CommandMenu({
       <Dialog onOpenChange={setOpen} open={open}>
         <DialogContent className="max-w-xl overflow-hidden p-0">
           <DialogHeader className="border-b border-border/80 px-5 py-4">
-            <DialogTitle>Search workspace</DialogTitle>
+            <DialogTitle>
+              {locale === "es" ? "Buscar en el espacio" : "Search workspace"}
+            </DialogTitle>
             <DialogDescription>
-              Jump to a patient, treatment, or common action.
+              {locale === "es"
+                ? "Acceso directo a pacientes, tratamientos o acciones frecuentes."
+                : "Direct access to patients, treatments, or frequent actions."}
             </DialogDescription>
           </DialogHeader>
           <div className="p-4">
@@ -256,14 +273,22 @@ export function CommandMenu({
                 }
                 aria-autocomplete="list"
                 aria-controls="cmd-listbox"
-                aria-label="Search patients, treatments, and actions"
+                aria-label={
+                  locale === "es"
+                    ? "Buscar pacientes, tratamientos y acciones"
+                    : "Search patients, treatments, and actions"
+                }
                 className="h-10 pl-9 pr-4 text-sm"
                 onChange={(event) => {
                   setQuery(event.target.value);
                   setActiveIndex(0);
                 }}
                 onKeyDown={handleKeyDown}
-                placeholder="Search patients, treatments, or actions…"
+                placeholder={
+                  locale === "es"
+                    ? "Buscar pacientes, tratamientos o acciones…"
+                    : "Search patients, treatments, or actions…"
+                }
                 value={query}
               />
             </div>
@@ -288,7 +313,9 @@ export function CommandMenu({
 
               {normalized && !allEntries.length ? (
                 <p className="px-3 py-8 text-center text-sm text-muted-foreground">
-                  No matching workspace results.
+                  {locale === "es"
+                    ? "No se encontraron resultados en el espacio."
+                    : "No results found in the workspace."}
                 </p>
               ) : null}
             </div>
@@ -302,20 +329,22 @@ export function CommandMenu({
                 <kbd className="rounded border border-border/80 bg-secondary/80 px-1 py-0.5 font-mono text-[10px] text-foreground/80">
                   ↓
                 </kbd>
-                <span>to navigate</span>
+                <span>{locale === "es" ? "para navegar" : "to navigate"}</span>
               </span>
               <span className="inline-flex items-center gap-1">
-                <kbd className="rounded border border-border/80 bg-secondary/80 px-1.5 py-0.5 font-mono text-[10px] text-foreground/80">
+                <kbd className="rounded border border-border/80 bg-secondary/80 px-1.5 py-0.5 font-mono text-[10px] font-medium text-foreground/80">
                   ↵
                 </kbd>
-                <span>to select</span>
+                <span>
+                  {locale === "es" ? "para seleccionar" : "to select"}
+                </span>
               </span>
             </div>
             <span className="inline-flex items-center gap-1">
-              <kbd className="rounded border border-border/80 bg-secondary/80 px-1.5 py-0.5 font-mono text-[10px] text-foreground/80">
+              <kbd className="rounded border border-border/80 bg-secondary/80 px-1.5 py-0.5 font-mono text-[10px] font-medium text-foreground/80">
                 esc
               </kbd>
-              <span>to close</span>
+              <span>{locale === "es" ? "para cerrar" : "to close"}</span>
             </span>
           </div>
         </DialogContent>

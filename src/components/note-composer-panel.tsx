@@ -26,6 +26,7 @@ import { Label } from "@/components/ui/label";
 import { NativeSelect as Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { announceWorkspaceFeedback } from "@/components/workspace-feedback";
+import { useI18n } from "@/lib/i18n";
 import type {
   NoteComposerPatient,
   NoteComposerTreatment,
@@ -91,6 +92,7 @@ export function NoteComposerPanel({
   treatments,
   trigger,
 }: NoteComposerPanelProps) {
+  const { locale, t } = useI18n();
   const formId = useId();
   const isEditing = Boolean(note);
   const [isOpen, setIsOpen] = useState(defaultOpen);
@@ -107,9 +109,17 @@ export function NoteComposerPanel({
   const [initialFormValues, setInitialFormValues] = useState(values);
   const isDirty = JSON.stringify(values) !== JSON.stringify(initialFormValues);
   const bodyError =
-    fieldErrors.body || (error?.includes("note") ? error : null);
+    fieldErrors.body ||
+    (error?.toLowerCase().includes("note") ||
+    error?.toLowerCase().includes("nota")
+      ? error
+      : null);
   const patientError =
-    fieldErrors.patientId || (error?.includes("patient") ? error : null);
+    fieldErrors.patientId ||
+    (error?.toLowerCase().includes("patient") ||
+    error?.toLowerCase().includes("paciente")
+      ? error
+      : null);
 
   function requestClose() {
     if (isPending) {
@@ -137,11 +147,17 @@ export function NoteComposerPanel({
     const nextFieldErrors: { body?: string; patientId?: string } = {};
 
     if (!values.patientId) {
-      nextFieldErrors.patientId = "Select a patient before saving this note.";
+      nextFieldErrors.patientId =
+        locale === "es"
+          ? "Seleccioná un paciente antes de guardar la nota."
+          : "Please select a patient before saving.";
     }
 
     if (!values.body.trim()) {
-      nextFieldErrors.body = "A note is required.";
+      nextFieldErrors.body =
+        locale === "es"
+          ? "El contenido de la nota es obligatorio."
+          : "Note content is required.";
     }
 
     if (Object.values(nextFieldErrors).some(Boolean)) {
@@ -149,7 +165,9 @@ export function NoteComposerPanel({
       setError(
         nextFieldErrors.patientId ||
           nextFieldErrors.body ||
-          "Please complete required note fields.",
+          (locale === "es"
+            ? "Por favor completá los campos obligatorios."
+            : "Please fill in all required fields."),
       );
       return;
     }
@@ -171,7 +189,12 @@ export function NoteComposerPanel({
 
       if (!response.ok) {
         throw new Error(
-          getServerError(payload, "The patient note could not be saved."),
+          getServerError(
+            payload,
+            locale === "es"
+              ? "No se pudo guardar la nota del paciente."
+              : "Could not save patient note.",
+          ),
         );
       }
 
@@ -180,13 +203,19 @@ export function NoteComposerPanel({
       setIsOpen(false);
       onSaved?.(savedNote);
       announceWorkspaceFeedback(
-        isEditing ? "Patient note updated." : "Patient note saved.",
+        isEditing
+          ? locale === "es"
+            ? "Nota de paciente actualizada."
+            : "Patient note updated."
+          : t.notes.composer.feedbackSaved,
       );
     } catch (cause) {
       setError(
         cause instanceof Error
           ? cause.message
-          : "The patient note could not be saved.",
+          : locale === "es"
+            ? "No se pudo guardar la nota del paciente."
+            : "Could not save patient note.",
       );
     } finally {
       setIsPending(false);
@@ -231,16 +260,21 @@ export function NoteComposerPanel({
         >
           <DialogHeader className="border-b border-border/80 bg-secondary/15 px-6 py-5 text-left">
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <span className="font-medium text-foreground">Note Composer</span>
+              <span className="font-medium text-foreground">
+                {locale === "es" ? "Editor de notas" : "Note Editor"}
+              </span>
               <span className="text-muted-foreground/40">·</span>
               <span>Atelier Dental</span>
             </div>
             <DialogTitle className="mt-1.5 text-xl font-semibold tracking-tight text-foreground">
-              {isEditing ? "Edit patient note" : "Add patient note"}
+              {isEditing
+                ? locale === "es"
+                  ? "Editar nota de paciente"
+                  : "Edit patient note"
+                : t.notes.composer.title}
             </DialogTitle>
             <DialogDescription className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
-              Record a concise operational or clinical annotation for the
-              workspace.
+              {t.notes.composer.description}
             </DialogDescription>
           </DialogHeader>
 
@@ -258,16 +292,18 @@ export function NoteComposerPanel({
                     className="text-xs font-semibold text-foreground"
                     htmlFor={`${formId}-patient`}
                   >
-                    Patient
+                    {t.notes.composer.patient}
                   </Label>
                   {patientError ? (
                     <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive animate-in fade-in-0 duration-150">
                       <AlertCircle aria-hidden className="size-3 shrink-0" />
-                      Required
+                      {locale === "es" ? "Obligatorio" : "Required"}
                     </span>
                   ) : (
                     <span className="text-xs text-muted-foreground">
-                      Required association
+                      {locale === "es"
+                        ? "Asociación requerida"
+                        : "Association required"}
                     </span>
                   )}
                 </div>
@@ -293,7 +329,7 @@ export function NoteComposerPanel({
                     required
                     value={values.patientId}
                   >
-                    <option value="">Select patient</option>
+                    <option value="">{t.notes.composer.selectPatient}</option>
                     {patients.map((patient) => (
                       <option key={patient.id} value={patient.id}>
                         {patient.name} ({patient.identifier})
@@ -320,10 +356,10 @@ export function NoteComposerPanel({
                     className="text-xs font-semibold text-foreground"
                     htmlFor={`${formId}-treatment`}
                   >
-                    Treatment
+                    {t.notes.composer.category}
                   </Label>
                   <span className="text-xs text-muted-foreground">
-                    Optional context
+                    {locale === "es" ? "Contexto opcional" : "Optional context"}
                   </span>
                 </div>
                 <Select
@@ -333,7 +369,11 @@ export function NoteComposerPanel({
                   }
                   value={values.treatmentId}
                 >
-                  <option value="">No treatment association</option>
+                  <option value="">
+                    {locale === "es"
+                      ? "Sin vinculación a tratamiento"
+                      : "No linked treatment"}
+                  </option>
                   {treatments.map((treatment) => (
                     <option key={treatment.id} value={treatment.id}>
                       {treatment.name}
@@ -349,16 +389,18 @@ export function NoteComposerPanel({
                     className="text-xs font-semibold text-foreground"
                     htmlFor={`${formId}-body`}
                   >
-                    Note
+                    {t.notes.composer.content}
                   </Label>
                   {bodyError ? (
                     <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive animate-in fade-in-0 duration-150">
                       <AlertCircle aria-hidden className="size-3 shrink-0" />
-                      Required
+                      {locale === "es" ? "Obligatorio" : "Required"}
                     </span>
                   ) : (
                     <span className="text-xs text-muted-foreground">
-                      Clinical observation
+                      {locale === "es"
+                        ? "Observación clínica"
+                        : "Clinical observation"}
                     </span>
                   )}
                 </div>
@@ -371,7 +413,7 @@ export function NoteComposerPanel({
                   className="min-h-[9rem] text-sm leading-relaxed"
                   id={`${formId}-body`}
                   onChange={(event) => updateValue("body", event.target.value)}
-                  placeholder="Add a concise coordination detail or treatment observation"
+                  placeholder={t.notes.composer.contentPlaceholder}
                   required
                   value={values.body}
                 />
@@ -400,11 +442,13 @@ export function NoteComposerPanel({
 
             <DialogFooter className="mt-auto border-t border-border/80 bg-secondary/15 px-6 py-4 sm:justify-between">
               <Button onClick={requestClose} type="button" variant="ghost">
-                Close
+                {locale === "es" ? "Cerrar" : "Close"}
               </Button>
               <Button disabled={isPending} type="submit">
                 <FilePenLine aria-hidden className="size-4" />
-                {isPending ? "Saving..." : "Save note"}
+                {isPending
+                  ? t.notes.composer.submitting
+                  : t.notes.composer.submit}
               </Button>
             </DialogFooter>
           </form>
@@ -422,16 +466,22 @@ export function NoteComposerPanel({
                 />
               </div>
               <span className="text-xs font-medium text-muted-foreground">
-                Unsaved Changes
+                {locale === "es" ? "Cambios sin guardar" : "Unsaved changes"}
               </span>
             </div>
-            <AlertDialogTitle>Discard changes?</AlertDialogTitle>
+            <AlertDialogTitle>
+              {locale === "es" ? "¿Descartar cambios?" : "Discard changes?"}
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              Your unsaved note changes will be discarded.
+              {locale === "es"
+                ? "Se perderán las modificaciones no guardadas en la nota."
+                : "Unsaved modifications to this note will be lost."}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel autoFocus>Keep editing</AlertDialogCancel>
+            <AlertDialogCancel autoFocus>
+              {locale === "es" ? "Continuar editando" : "Continue editing"}
+            </AlertDialogCancel>
             <AlertDialogAction
               className="dms-pressable rounded-full border border-destructive/20 bg-destructive px-4 text-xs font-semibold text-destructive-foreground shadow-xs transition-all hover:bg-destructive/90 active:scale-[0.98]"
               onClick={() => {
@@ -440,7 +490,7 @@ export function NoteComposerPanel({
               }}
             >
               <AlertTriangle aria-hidden className="size-3.5" />
-              Discard changes
+              {locale === "es" ? "Descartar cambios" : "Discard changes"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

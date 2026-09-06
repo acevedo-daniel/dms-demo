@@ -1,3 +1,5 @@
+import { getServerLocale } from "@/lib/i18n/server";
+
 function PlaceholderRow({ compact = false }: { compact?: boolean }) {
   return (
     <div className="grid animate-pulse gap-3 py-4 sm:grid-cols-[5.5rem_minmax(0,1fr)_auto] sm:items-center">
@@ -13,11 +15,15 @@ function PlaceholderRow({ compact = false }: { compact?: boolean }) {
   );
 }
 
-export default function DashboardLoading() {
+export default async function DashboardLoading() {
+  const locale = await getServerLocale();
+
   return (
     <main
       aria-busy="true"
-      aria-label="Loading Today"
+      aria-label={
+        locale === "es" ? "Cargando la vista de hoy" : "Loading Today"
+      }
       className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8"
     >
       <div className="animate-pulse border-b border-border/80 pb-8">

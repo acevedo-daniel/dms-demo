@@ -4,6 +4,7 @@ import { FilePenLine } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { NoteComposerPanel } from "@/components/note-composer-panel";
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/lib/i18n";
 import type { NoteComposerPatient, NoteComposerTreatment } from "@/lib/notes";
 
 type PatientNoteActionProps = {
@@ -18,6 +19,7 @@ export function PatientNoteAction({
   treatments,
 }: PatientNoteActionProps) {
   const router = useRouter();
+  const { t } = useI18n();
 
   return (
     <NoteComposerPanel
@@ -28,7 +30,7 @@ export function PatientNoteAction({
       trigger={
         <Button className="h-10 font-semibold shadow-xs" variant="outline">
           <FilePenLine aria-hidden className="size-4" />
-          Add note
+          {t.patients.record.newNoteAction}
         </Button>
       }
     />

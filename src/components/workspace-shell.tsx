@@ -11,7 +11,7 @@ import {
   NotebookPen,
   UsersRound,
 } from "lucide-react";
-import { useState, type ComponentType, type ReactNode } from "react";
+import { useMemo, useState, type ComponentType, type ReactNode } from "react";
 import { DemoUserControls } from "@/components/demo-user-controls";
 import { CommandMenu } from "@/components/command-menu";
 import { DmsLogo } from "@/components/dms-logo";
@@ -20,6 +20,7 @@ import { StudioControls } from "@/components/studio-controls";
 import { Button } from "@/components/ui/button";
 import { WorkspaceFeedback } from "@/components/workspace-feedback";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 
 type WorkspaceShellProps = {
   commandData: {
@@ -41,22 +42,6 @@ type NavigationItem = {
   label: string;
 };
 
-const navigationItems: NavigationItem[] = [
-  { href: "/demo/dashboard", icon: LayoutDashboard, label: "Today" },
-  { href: "/demo/schedule", icon: CalendarDays, label: "Schedule" },
-  { href: "/demo/patients", icon: UsersRound, label: "Patients" },
-  { href: "/demo/treatments", icon: ClipboardList, label: "Treatments" },
-  { href: "/demo/notes", icon: NotebookPen, label: "Notes" },
-];
-
-function workspacePageTitle(pathname: string) {
-  if (pathname.startsWith("/demo/patients/")) {
-    return "Patient record";
-  }
-
-  return navigationItems.find((item) => item.href === pathname)?.label ?? "DMS";
-}
-
 function isNavigationItemActive(item: NavigationItem, pathname: string) {
   return (
     pathname === item.href ||
@@ -65,24 +50,28 @@ function isNavigationItemActive(item: NavigationItem, pathname: string) {
 }
 
 function WorkspaceNavigation({
+  items,
   onNavigate,
   variant,
+  navAriaLabel,
 }: {
+  items: NavigationItem[];
   onNavigate?: () => void;
   variant: "desktop" | "sheet";
+  navAriaLabel: string;
 }) {
   const pathname = usePathname();
 
   return (
     <nav
-      aria-label="Workspace navigation"
+      aria-label={navAriaLabel}
       className={cn(
         variant === "desktop"
           ? "flex h-full items-stretch gap-1"
           : "space-y-1 p-3",
       )}
     >
-      {navigationItems.map((item) => {
+      {items.map((item) => {
         const { href, icon: Icon, label } = item;
         const active = isNavigationItemActive(item, pathname);
         const className = cn(
@@ -120,22 +109,51 @@ export function WorkspaceShell({
   commandData,
   userName,
 }: WorkspaceShellProps) {
+  const { t, locale } = useI18n();
   const [isNavigationOpen, setIsNavigationOpen] = useState(false);
   const pathname = usePathname();
-  const pageTitle = workspacePageTitle(pathname);
+
+  const navigationItems: NavigationItem[] = useMemo(
+    () => [
+      { href: "/demo/dashboard", icon: LayoutDashboard, label: t.nav.today },
+      { href: "/demo/schedule", icon: CalendarDays, label: t.nav.schedule },
+      { href: "/demo/patients", icon: UsersRound, label: t.nav.patients },
+      {
+        href: "/demo/treatments",
+        icon: ClipboardList,
+        label: t.nav.treatments,
+      },
+      { href: "/demo/notes", icon: NotebookPen, label: t.nav.notes },
+    ],
+    [t.nav],
+  );
+
+  const pageTitle = useMemo(() => {
+    if (pathname.startsWith("/demo/patients/")) {
+      return locale === "es" ? "Ficha del paciente" : "Patient record";
+    }
+    return (
+      navigationItems.find((item) => item.href === pathname)?.label ?? "DMS"
+    );
+  }, [pathname, locale, navigationItems]);
+
   const hasCompactCreateAction =
     pathname === "/demo/dashboard" || pathname === "/demo/schedule";
 
   return (
     <div className="min-h-screen bg-background">
       <header
-        aria-label="DMS workspace header"
+        aria-label={
+          locale === "es"
+            ? "Encabezado del espacio DMS"
+            : "DMS workspace header"
+        }
         className="sticky top-0 z-20 border-b border-border bg-surface/90 backdrop-blur-md"
       >
         <div className="mx-auto flex h-[var(--header-height)] w-full max-w-[var(--content-max)] items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex h-full min-w-0 items-center gap-2 lg:gap-7">
             <Button
-              aria-label="Open workspace navigation"
+              aria-label={t.nav.openNav}
               className="lg:hidden"
               onClick={() => setIsNavigationOpen(true)}
               size="icon"
@@ -161,7 +179,11 @@ export function WorkspaceShell({
               {pageTitle}
             </span>
             <div className="hidden h-full lg:block">
-              <WorkspaceNavigation variant="desktop" />
+              <WorkspaceNavigation
+                items={navigationItems}
+                navAriaLabel={t.nav.workspaceNav}
+                variant="desktop"
+              />
             </div>
           </div>
           <div className="flex items-center gap-1 sm:gap-2">
@@ -169,11 +191,11 @@ export function WorkspaceShell({
             {hasCompactCreateAction ? (
               <Button asChild className="px-3 text-xs lg:hidden" size="sm">
                 <Link
-                  aria-label="Create appointment"
+                  aria-label={t.schedule.createAppointment}
                   href="/demo/schedule?create=1"
                 >
                   <CalendarPlus aria-hidden className="size-4" />
-                  Create
+                  {locale === "es" ? "Crear" : "Create"}
                 </Link>
               </Button>
             ) : null}
@@ -190,13 +212,15 @@ export function WorkspaceShell({
       >
         <div className="flex min-h-0 flex-1 flex-col">
           <WorkspaceNavigation
+            items={navigationItems}
+            navAriaLabel={t.nav.workspaceNav}
             onNavigate={() => setIsNavigationOpen(false)}
             variant="sheet"
           />
           <div className="mt-auto space-y-3 border-t border-border pt-4">
             <div className="flex items-center justify-between px-1">
               <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Preferences
+                {locale === "es" ? "Preferencias" : "Preferences"}
               </span>
               <StudioControls />
             </div>

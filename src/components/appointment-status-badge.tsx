@@ -1,43 +1,50 @@
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { useLocale, type Locale } from "@/lib/i18n";
 
 type AppointmentStatus =
   "SCHEDULED" | "CONFIRMED" | "ARRIVED" | "COMPLETED" | "CANCELLED";
 
-const appointmentStatusPresentation: Record<
-  AppointmentStatus,
-  { dotClass: string; label: string }
-> = {
-  SCHEDULED: {
-    dotClass: "bg-muted-foreground/60",
-    label: "Scheduled",
+const statusLabels: Record<Locale, Record<AppointmentStatus, string>> = {
+  es: {
+    SCHEDULED: "Programado",
+    CONFIRMED: "Confirmado",
+    ARRIVED: "En recepción",
+    COMPLETED: "Completado",
+    CANCELLED: "Cancelado",
   },
-  CONFIRMED: {
-    dotClass: "bg-accent",
-    label: "Confirmed",
-  },
-  ARRIVED: {
-    dotClass: "bg-info",
-    label: "Arrived",
-  },
-  COMPLETED: {
-    dotClass: "bg-foreground/70",
-    label: "Completed",
-  },
-  CANCELLED: {
-    dotClass: "bg-destructive/70",
-    label: "Cancelled",
+  en: {
+    SCHEDULED: "Scheduled",
+    CONFIRMED: "Confirmed",
+    ARRIVED: "Arrived",
+    COMPLETED: "Completed",
+    CANCELLED: "Cancelled",
   },
 };
 
-function AppointmentStatusBadge({
+const dotClasses: Record<AppointmentStatus, string> = {
+  SCHEDULED: "bg-muted-foreground/60",
+  CONFIRMED: "bg-accent",
+  ARRIVED: "bg-info",
+  COMPLETED: "bg-foreground/70",
+  CANCELLED: "bg-destructive/70",
+};
+
+export function AppointmentStatusBadge({
   className,
   status,
+  locale: propLocale,
 }: {
   className?: string;
   status: AppointmentStatus;
+  locale?: Locale;
 }) {
-  const { dotClass, label } = appointmentStatusPresentation[status];
+  const contextLocale = useLocale();
+  const activeLocale = propLocale || contextLocale || "es";
+  const label = statusLabels[activeLocale]?.[status] ?? statusLabels.es[status];
+  const dotClass = dotClasses[status];
 
   return (
     <Badge
@@ -55,5 +62,3 @@ function AppointmentStatusBadge({
     </Badge>
   );
 }
-
-export { AppointmentStatusBadge };

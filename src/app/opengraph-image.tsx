@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "DMS practice operations workspace";
+export const alt = "DMS · Gestión operativa odontológica";
 export const contentType = "image/png";
 export const runtime = "nodejs";
 export const size = {
@@ -76,7 +76,7 @@ export default function OpenGraphImage() {
             textTransform: "uppercase",
           }}
         >
-          Practice operations workspace
+          Gestión operativa odontológica
         </div>
         <div
           style={{
@@ -89,7 +89,7 @@ export default function OpenGraphImage() {
             marginTop: "24px",
           }}
         >
-          A quieter way to coordinate the day.
+          Una forma más serena de coordinar el día.
         </div>
       </div>
 
@@ -103,7 +103,7 @@ export default function OpenGraphImage() {
           paddingTop: "28px",
         }}
       >
-        Scheduling · Patient context · Treatments · Notes
+        Agenda · Contexto del paciente · Tratamientos · Notas
       </div>
     </div>,
     size,

@@ -2,6 +2,7 @@
 
 import { CheckCircle2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useI18n } from "@/lib/i18n";
 
 const workspaceFeedbackEvent = "dms:workspace-feedback";
 
@@ -12,6 +13,7 @@ export function announceWorkspaceFeedback(message: string) {
 }
 
 export function WorkspaceFeedback() {
+  const { locale } = useI18n();
   const [message, setMessage] = useState("");
   const timeoutId = useRef<number | undefined>(undefined);
 
@@ -69,7 +71,9 @@ export function WorkspaceFeedback() {
         {message}
       </p>
       <button
-        aria-label="Dismiss notification"
+        aria-label={
+          locale === "es" ? "Cerrar notificación" : "Dismiss notification"
+        }
         className="dms-pressable flex size-7 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground active:scale-95"
         onClick={() => setMessage("")}
         type="button"

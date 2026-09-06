@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { announceWorkspaceFeedback } from "@/components/workspace-feedback";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 
 type ConfirmAppointmentButtonProps = {
   appointmentId: string;
@@ -24,6 +25,7 @@ export function ConfirmAppointmentButton({
   variant = "outline",
 }: ConfirmAppointmentButtonProps) {
   const router = useRouter();
+  const { locale } = useI18n();
   const [error, setError] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
 
@@ -43,17 +45,24 @@ export function ConfirmAppointmentButton({
 
       if (!response.ok) {
         throw new Error(
-          payload.error?.message ?? "Appointment could not be confirmed.",
+          payload.error?.message ??
+            (locale === "es"
+              ? "No se pudo confirmar el turno."
+              : "Could not confirm appointment."),
         );
       }
 
-      announceWorkspaceFeedback("Appointment confirmed.");
+      announceWorkspaceFeedback(
+        locale === "es" ? "Turno confirmado." : "Appointment confirmed.",
+      );
       router.refresh();
     } catch (cause) {
       setError(
         cause instanceof Error
           ? cause.message
-          : "Appointment could not be confirmed.",
+          : locale === "es"
+            ? "No se pudo confirmar el turno."
+            : "Could not confirm appointment.",
       );
     } finally {
       setIsPending(false);
@@ -63,7 +72,11 @@ export function ConfirmAppointmentButton({
   return (
     <div className={cn("inline-flex flex-col items-start gap-1", className)}>
       <Button
-        aria-label={`Confirm appointment for ${patientName}`}
+        aria-label={
+          locale === "es"
+            ? `Confirmar turno de ${patientName}`
+            : `Confirm appointment for ${patientName}`
+        }
         disabled={isPending}
         onClick={confirmAppointment}
         size={size}
@@ -76,7 +89,13 @@ export function ConfirmAppointmentButton({
             variant === "default" ? "text-primary-foreground" : "text-accent",
           )}
         />
-        {isPending ? "Confirming…" : "Confirm"}
+        {isPending
+          ? locale === "es"
+            ? "Confirmando…"
+            : "Confirming…"
+          : locale === "es"
+            ? "Confirmar"
+            : "Confirm"}
       </Button>
       {error ? (
         <p className="max-w-48 text-left text-xs text-destructive" role="alert">

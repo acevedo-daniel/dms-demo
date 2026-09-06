@@ -8,6 +8,7 @@ import {
   Clock as ClockIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 
 // Practice time slots for Atelier Dental (30-minute intervals from 09:00 to 17:30)
 const MORNING_SLOTS = [
@@ -34,23 +35,6 @@ const AFTERNOON_SLOTS = [
   "17:30",
 ];
 
-const MONTH_NAMES = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-
-const WEEKDAY_SHORT = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
-
 export interface StudioDatePickerProps {
   "aria-describedby"?: string;
   "aria-invalid"?: boolean;
@@ -74,8 +58,29 @@ export function StudioDatePicker({
   required,
   value,
 }: StudioDatePickerProps) {
+  const { locale } = useI18n();
   const [isOpen, setIsOpen] = React.useState(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
+  const monthNames = React.useMemo(
+    () =>
+      Array.from({ length: 12 }, (_, month) =>
+        new Intl.DateTimeFormat(locale === "es" ? "es-AR" : "en-GB", {
+          month: "long",
+        }).format(new Date(2026, month, 1)),
+      ),
+    [locale],
+  );
+  const weekdayShort = React.useMemo(
+    () =>
+      Array.from({ length: 7 }, (_, day) =>
+        new Intl.DateTimeFormat(locale === "es" ? "es-AR" : "en-GB", {
+          weekday: "short",
+        })
+          .format(new Date(Date.UTC(2024, 0, 1 + day)))
+          .replace(/\.$/, ""),
+      ),
+    [locale],
+  );
 
   // Parse initial year/month from value (or fallback to May 2026 demo baseline)
   const initialDate = React.useMemo(() => {
@@ -237,11 +242,11 @@ export function StudioDatePicker({
           {/* Calendar Header */}
           <div className="flex items-center justify-between pb-3 border-b border-border/60">
             <span className="text-xs font-semibold text-foreground">
-              {MONTH_NAMES[viewMonth]} {viewYear}
+              {monthNames[viewMonth]} {viewYear}
             </span>
             <div className="flex items-center gap-1">
               <button
-                aria-label="Previous month"
+                aria-label={locale === "es" ? "Mes anterior" : "Previous month"}
                 className="dms-pressable flex size-6 items-center justify-center rounded text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
                 onClick={prevMonth}
                 type="button"
@@ -249,7 +254,7 @@ export function StudioDatePicker({
                 <ChevronLeft className="size-3.5" />
               </button>
               <button
-                aria-label="Next month"
+                aria-label={locale === "es" ? "Mes siguiente" : "Next month"}
                 className="dms-pressable flex size-6 items-center justify-center rounded text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
                 onClick={nextMonth}
                 type="button"
@@ -261,7 +266,7 @@ export function StudioDatePicker({
 
           {/* Weekday Row */}
           <div className="mt-2 grid grid-cols-7 text-center">
-            {WEEKDAY_SHORT.map((day, idx) => (
+            {weekdayShort.map((day, idx) => (
               <span
                 className={cn(
                   "py-1 text-[11px] font-medium",
@@ -288,7 +293,11 @@ export function StudioDatePicker({
                   <div
                     className="flex size-8 items-center justify-center font-mono text-xs text-muted-foreground/30 cursor-not-allowed"
                     key={item.dateString}
-                    title="Practice closed on weekends"
+                    title={
+                      locale === "es"
+                        ? "La clínica permanece cerrada los fines de semana"
+                        : "Practice closed on weekends"
+                    }
                   >
                     {item.dayNumber}
                   </div>
@@ -316,7 +325,7 @@ export function StudioDatePicker({
           {/* Practice Quick Date Shortcuts */}
           <div className="mt-3 flex items-center justify-between border-t border-border/60 pt-2.5">
             <span className="text-xs font-medium text-muted-foreground">
-              Quick pick:
+              {locale === "es" ? "Selección rápida:" : "Quick pick:"}
             </span>
             <div className="flex gap-1">
               <button
@@ -324,21 +333,21 @@ export function StudioDatePicker({
                 onClick={() => selectDate("2026-05-12")}
                 type="button"
               >
-                Today
+                {locale === "es" ? "Hoy" : "Today"}
               </button>
               <button
                 className="rounded-full px-2.5 py-0.5 text-xs font-medium text-foreground bg-secondary/60 hover:bg-secondary transition-colors"
                 onClick={() => selectDate("2026-05-13")}
                 type="button"
               >
-                Tomorrow
+                {locale === "es" ? "Mañana" : "Tomorrow"}
               </button>
               <button
                 className="rounded-full px-2.5 py-0.5 text-xs font-medium text-foreground bg-secondary/60 hover:bg-secondary transition-colors"
                 onClick={() => selectDate("2026-05-18")}
                 type="button"
               >
-                Next Mon
+                {locale === "es" ? "Próximo lun." : "Next Mon"}
               </button>
             </div>
           </div>
@@ -371,6 +380,7 @@ export function StudioTimePicker({
   required,
   value,
 }: StudioTimePickerProps) {
+  const { locale } = useI18n();
   const [isOpen, setIsOpen] = React.useState(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
 
@@ -446,7 +456,9 @@ export function StudioTimePicker({
         >
           <div className="flex items-center justify-between pb-2 border-b border-border/60">
             <span className="text-xs font-semibold text-foreground">
-              Clinical Slots (30 min)
+              {locale === "es"
+                ? "Turnos clínicos (30 min)"
+                : "Clinical slots (30 min)"}
             </span>
             <span className="font-mono text-xs text-muted-foreground">
               09:00 — 17:30
@@ -456,7 +468,7 @@ export function StudioTimePicker({
           {/* Morning Slots */}
           <div className="mt-2.5">
             <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1.5">
-              Morning Shift
+              {locale === "es" ? "Turno mañana" : "Morning shift"}
             </p>
             <div className="grid grid-cols-4 gap-1.5">
               {MORNING_SLOTS.map((slot) => (
@@ -480,7 +492,7 @@ export function StudioTimePicker({
           {/* Afternoon Slots */}
           <div className="mt-3">
             <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1.5">
-              Afternoon Shift
+              {locale === "es" ? "Turno tarde" : "Afternoon shift"}
             </p>
             <div className="grid grid-cols-4 gap-1.5">
               {AFTERNOON_SLOTS.map((slot) => (

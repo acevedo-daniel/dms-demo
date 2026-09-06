@@ -27,19 +27,20 @@ export default async function PatientsPage({
           className="max-w-lg border-y border-border py-10"
         >
           <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            Patient directory
+            Directorio de pacientes
           </p>
           <h1
             className="mt-3 text-3xl font-semibold tracking-[-0.03em]"
             id="patient-directory-error-title"
           >
-            The patient directory could not be loaded.
+            No se pudo cargar el directorio de pacientes.
           </h1>
           <p className="mt-3 leading-7 text-muted-foreground">
-            The sample data is temporarily unavailable. Try again.
+            Los datos del directorio no están disponibles en este momento.
+            Reintentá la carga.
           </p>
           <Button asChild className="mt-6" variant="outline">
-            <Link href="/demo/patients">Try again</Link>
+            <Link href="/demo/patients">Reintentar</Link>
           </Button>
         </section>
       </main>

@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -20,56 +19,99 @@ import { DmsLogo } from "@/components/dms-logo";
 import { StudioControls } from "@/components/studio-controls";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { getServerTranslations } from "@/lib/i18n/server";
+import type { Locale } from "@/lib/i18n/types";
 
-export const metadata: Metadata = {
-  title: "Practice operations workspace",
-  description:
-    "Explore DMS, a focused workspace for scheduling, patient context, treatments, and operational notes.",
-  alternates: { canonical: "/" },
-  openGraph: {
-    description:
-      "Explore DMS, a focused workspace for scheduling, patient context, treatments, and operational notes.",
-    title: "DMS — Practice operations workspace",
-    url: "/",
-  },
-};
+export async function generateMetadata() {
+  const { t } = await getServerTranslations();
 
-const engineeringSignals = [
-  {
-    badge: "Practice Synchronization",
-    description:
-      "A calm five-day clinical rhythm with 30-minute block clarity. Eliminates double bookings and chair desynchronization effortlessly.",
-    icon: CalendarDays,
-    label: "Synchronized schedule",
-    spec: "12 patients · 8 treatments · 5-day cycle",
-  },
-  {
-    badge: "Clinical Record Durability",
-    description:
-      "Instant consistency between reception and treatment operatories. Every appointment, status change, and clinical note is securely preserved.",
-    icon: Database,
-    label: "Relational integrity",
-    spec: "Unified ledger · Immediate record synchronization",
-  },
-  {
-    badge: "High-Contrast Ergonomics",
-    description:
-      "Engineered for high-intensity clinical focus. Natural navigation, high-contrast typography, and zero cognitive friction.",
-    icon: ShieldCheck,
-    label: "Accessible by design",
-    spec: "Clinical readability & tactile keyboard control",
-  },
-  {
-    badge: "Confidential Practice Sandbox",
-    description:
-      "A complete practice operations preview with total patient privacy. Clean, isolated environments with zero exposure of real personal data.",
-    icon: LockKeyhole,
-    label: "Protected workspace",
-    spec: "Fictional Atelier cohort · Zero personal exposure",
-  },
-];
+  return {
+    title: t.landing.metaTitle,
+    description: t.landing.metaDescription,
+    alternates: { canonical: "/" },
+    openGraph: {
+      description: t.landing.metaDescription,
+      title: t.landing.metaTitle,
+      url: "/",
+    },
+  };
+}
 
-export default function Home() {
+const engineeringSignals = (locale: Locale) =>
+  locale === "es"
+    ? [
+        {
+          badge: "Sincronización clínica",
+          description:
+            "Un ritmo clínico semanal ordenado en bloques de 30 minutos. Evita superposiciones y desajustes de sillón con total claridad.",
+          icon: CalendarDays,
+          label: "Agenda sincronizada",
+          spec: "16 pacientes · 8 tratamientos · ciclo de 5 días",
+        },
+        {
+          badge: "Solidez del registro clínico",
+          description:
+            "Consistencia inmediata entre la recepción y los sillones de atención. Cada turno, cambio de estado y nota clínica queda preservado de forma segura.",
+          icon: Database,
+          label: "Integridad relacional",
+          spec: "Registro unificado · Sincronización inmediata",
+        },
+        {
+          badge: "Ergonomía de alto contraste",
+          description:
+            "Diseñado para el ritmo intenso de la práctica clínica. Navegación fluida, tipografía de alto contraste y control completo por teclado.",
+          icon: ShieldCheck,
+          label: "Accesible por diseño",
+          spec: "Legibilidad clínica y control ágil por teclado",
+        },
+        {
+          badge: "Demostración clínica confidencial",
+          description:
+            "Exploración operativa completa con resguardo total de la privacidad. Datos de muestra aislados sin exposición de información real.",
+          icon: LockKeyhole,
+          label: "Espacio protegido",
+          spec: "Cohorte ficticia de Atelier · Sin datos personales reales",
+        },
+      ]
+    : [
+        {
+          badge: "Clinical synchronization",
+          description:
+            "A weekly clinical rhythm arranged in 30-minute blocks. Prevents operatory overlaps and schedule drift with clear visibility.",
+          icon: CalendarDays,
+          label: "Synchronized schedule",
+          spec: "16 patients · 8 treatments · 5-day cycle",
+        },
+        {
+          badge: "Clinical record strength",
+          description:
+            "Immediate consistency between reception and operatories. Every appointment, status change, and clinical note is safely preserved.",
+          icon: Database,
+          label: "Relational integrity",
+          spec: "Unified record · Immediate synchronization",
+        },
+        {
+          badge: "High-contrast ergonomics",
+          description:
+            "Designed for the pace of clinical practice. Fluid navigation, high-contrast typography, and complete keyboard control.",
+          icon: ShieldCheck,
+          label: "Accessible by design",
+          spec: "Clinical legibility · Fast keyboard control",
+        },
+        {
+          badge: "Confidential clinical demo",
+          description:
+            "A complete operational walkthrough with privacy bounded by design. Sample data is isolated and never represents real people.",
+          icon: LockKeyhole,
+          label: "Protected workspace",
+          spec: "Fictional Atelier cohort · No real personal data",
+        },
+      ];
+
+export default async function Home() {
+  const { locale, t } = await getServerTranslations();
+  const landing = t.landing;
+
   return (
     <main className="min-h-screen bg-background">
       {/* Studio Navigation Header */}
@@ -92,26 +134,28 @@ export default function Home() {
             </Link>
 
             <nav
-              aria-label="Page sections"
+              aria-label={
+                locale === "es" ? "Secciones de la página" : "Page sections"
+              }
               className="hidden items-center gap-6 text-xs font-medium text-muted-foreground md:flex"
             >
               <a
                 className="transition-colors hover:text-foreground"
                 href="#workflow-title"
               >
-                Workflow
+                {landing.navWorkflow}
               </a>
               <a
                 className="transition-colors hover:text-foreground"
                 href="#engineering-signals-title"
               >
-                Architecture
+                {landing.navArchitecture}
               </a>
               <a
                 className="transition-colors hover:text-foreground"
                 href="#manifesto"
               >
-                Philosophy
+                {landing.navPhilosophy}
               </a>
             </nav>
           </div>
@@ -121,21 +165,23 @@ export default function Home() {
 
             <span className="hidden items-center gap-2 rounded-full border border-border/80 bg-surface px-3 py-1 font-mono text-[11px] text-muted-foreground shadow-2xs md:inline-flex">
               <span className="font-semibold tracking-tight text-foreground">
-                Clinical Workspace
+                {locale === "es" ? "Espacio clínico" : "Clinical Space"}
               </span>
               <span aria-hidden className="text-border">
                 ·
               </span>
-              <span>Atelier Baseline</span>
+              <span>
+                {locale === "es" ? "Entorno Atelier" : "Atelier Environment"}
+              </span>
             </span>
             <Button asChild size="sm">
-              <Link href="/demo/access">Open demo</Link>
+              <Link href="/demo/access">{landing.enterDemo}</Link>
             </Button>
           </div>
         </div>
       </header>
 
-      {/* Hero Section — The Apple Dynamic Studio Stage */}
+      {/* Hero Section */}
       <section
         aria-labelledby="hero-title"
         className="relative mx-auto max-w-7xl px-4 pt-16 pb-24 sm:px-6 sm:pt-24 sm:pb-32 lg:px-8 lg:pt-28 lg:pb-36"
@@ -159,13 +205,15 @@ export default function Home() {
               /
             </span>
             <span className="text-xs font-medium text-muted-foreground">
-              Practice Operations
+              {locale === "es" ? "Operatoria clínica" : "Clinical operatory"}
             </span>
             <span aria-hidden className="text-border">
               ·
             </span>
             <span className="text-[11px] font-medium text-muted-foreground hidden sm:inline">
-              Week of 11–15 May 2026
+              {locale === "es"
+                ? "Semana del 11 al 15 de mayo de 2026"
+                : "Week of May 11–15, 2026"}
             </span>
           </div>
 
@@ -173,13 +221,11 @@ export default function Home() {
             className="mt-8 text-5xl font-semibold tracking-[-0.055em] text-foreground sm:text-6xl sm:leading-[1.05] lg:text-7xl"
             id="hero-title"
           >
-            A clearer way to run the practice day.
+            {landing.heroTitle}
           </h1>
 
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl sm:leading-8">
-            A unified operations surface built for high-velocity clinical flow.
-            Schedule coordination, live patient records, treatment references,
-            and handover notes brought into one calm, zero-latency workspace.
+            {landing.heroSubtitle}
           </p>
 
           <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-5">
@@ -189,7 +235,7 @@ export default function Home() {
               size="lg"
             >
               <Link href="/demo/access">
-                Open demo workspace
+                {landing.openDemoCta}
                 <ArrowRight aria-hidden className="size-4" />
               </Link>
             </Button>
@@ -199,7 +245,9 @@ export default function Home() {
                 className="size-4 text-accent shrink-0"
               />
               <span className="font-medium">
-                Instant preview · No password required
+                {locale === "es"
+                  ? "Acceso inmediato · Sin contraseñas requeridas"
+                  : "Instant access · No password required"}
               </span>
             </div>
           </div>
@@ -220,14 +268,16 @@ export default function Home() {
                     Atelier Dental
                   </span>
                   <span className="text-xs text-muted-foreground">
-                    · Weekly Agenda
+                    · {locale === "es" ? "Agenda semanal" : "Weekly schedule"}
                   </span>
                 </div>
               </div>
               <div className="flex items-center gap-3 text-xs text-muted-foreground">
                 <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-surface px-2.5 py-0.5 border border-border/70 text-[11px] font-medium">
                   <span className="size-1.5 rounded-full bg-accent" />
-                  Chair Operations · 5-Day View
+                  {locale === "es"
+                    ? "Atención en sillones · Vista de 5 días"
+                    : "Operatory care · 5-day view"}
                 </span>
               </div>
             </div>
@@ -235,7 +285,11 @@ export default function Home() {
             {/* Embedded Live Preview Image */}
             <div className="relative p-2 sm:p-3 bg-secondary/10">
               <Image
-                alt="DMS Schedule showing the fictional Atelier Dental workweek with appointments across five days"
+                alt={
+                  locale === "es"
+                    ? "Agenda de DMS con la semana de trabajo de Atelier Dental y turnos distribuidos en cinco días"
+                    : "DMS schedule showing Atelier Dental appointments across a five-day work week"
+                }
                 className="aspect-[16/10] w-full rounded-[var(--radius-lg)] border border-border/80 object-cover object-left-top shadow-inner"
                 priority
                 sizes="(min-width: 1280px) 1152px, (min-width: 1024px) 90vw, 100vw"
@@ -250,14 +304,22 @@ export default function Home() {
                   aria-hidden
                   className="size-3.5 text-muted-foreground"
                 />
-                <span>Schedule · 11–15 May 2026</span>
+                <span>
+                  {locale === "es"
+                    ? "Agenda · 11 al 15 de mayo de 2026"
+                    : "Schedule · May 11–15, 2026"}
+                </span>
               </div>
               <div className="flex items-center gap-3">
                 <span className="text-xs text-muted-foreground">
-                  Atelier Dental Practice Workspace
+                  {locale === "es"
+                    ? "Espacio de trabajo Atelier Dental"
+                    : "Atelier Dental workspace"}
                 </span>
                 <span className="hidden md:inline-flex rounded-full border border-border/70 bg-secondary/50 px-2.5 py-0.5 text-[10px] font-medium text-foreground/80">
-                  Continuous Practice Flow
+                  {locale === "es"
+                    ? "Continuidad operativa en clínica"
+                    : "Clinical operational continuity"}
                 </span>
               </div>
             </figcaption>
@@ -276,7 +338,9 @@ export default function Home() {
                 <AppointmentStatusBadge status="CONFIRMED" />
               </div>
               <p className="mt-0.5 text-xs text-muted-foreground">
-                Comprehensive Exam · 09:30 · Operatory 1
+                {locale === "es"
+                  ? "Examen integral · 09:30 · Sillón 1"
+                  : "Comprehensive exam · 09:30 · Operatory 1"}
               </p>
             </div>
           </div>
@@ -289,14 +353,18 @@ export default function Home() {
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-xs font-semibold text-foreground">
-                  Clinical Handover Note
+                  {locale === "es"
+                    ? "Nota de pase de guardia"
+                    : "Handover note"}
                 </span>
                 <span className="text-[10px] text-muted-foreground">
-                  Today · 09:45
+                  {locale === "es" ? "Hoy · 09:45" : "Today · 09:45"}
                 </span>
               </div>
               <p className="text-xs text-muted-foreground max-w-xs truncate">
-                Dr. Jane Smith: Routine prophylaxis checkup confirmed
+                {locale === "es"
+                  ? "Dra. Jane Smith: Control de profilaxis de rutina confirmado"
+                  : "Dr. Jane Smith: Routine prophylaxis follow-up confirmed"}
               </p>
             </div>
           </div>
@@ -309,10 +377,14 @@ export default function Home() {
               30m
             </p>
             <p className="mt-1 text-xs font-medium text-foreground">
-              Precision Schedule Blocks
+              {locale === "es"
+                ? "Bloques de agenda precisos"
+                : "Precise schedule blocks"}
             </p>
             <p className="mt-0.5 text-[11px] text-muted-foreground">
-              Aligned with standard clinical pacing
+              {locale === "es"
+                ? "Alineados con el ritmo clínico habitual"
+                : "Aligned with the usual clinical rhythm"}
             </p>
           </div>
           <div className="rounded-[var(--radius-md)] border border-border/60 bg-surface/60 p-4 text-center">
@@ -320,10 +392,14 @@ export default function Home() {
               0
             </p>
             <p className="mt-1 text-xs font-medium text-foreground">
-              Chair Conflicts or Overlaps
+              {locale === "es"
+                ? "Conflictos o solapamientos de sillón"
+                : "Operatory conflicts or overlaps"}
             </p>
             <p className="mt-0.5 text-[11px] text-muted-foreground">
-              Guaranteed double-booking prevention
+              {locale === "es"
+                ? "Prevención garantizada de dobles reservas"
+                : "Double bookings prevented by design"}
             </p>
           </div>
           <div className="rounded-[var(--radius-md)] border border-border/60 bg-surface/60 p-4 text-center">
@@ -331,21 +407,29 @@ export default function Home() {
               100%
             </p>
             <p className="mt-1 text-xs font-medium text-foreground">
-              Preserved Clinical Context
+              {locale === "es"
+                ? "Contexto clínico preservado"
+                : "Clinical context preserved"}
             </p>
             <p className="mt-0.5 text-[11px] text-muted-foreground">
-              All history and alerts bound permanently
+              {locale === "es"
+                ? "Historial y alertas vinculados de forma permanente"
+                : "History and alerts remain linked"}
             </p>
           </div>
           <div className="rounded-[var(--radius-md)] border border-border/60 bg-surface/60 p-4 text-center">
             <p className="font-display text-2xl font-semibold text-foreground">
-              Continuous
+              {locale === "es" ? "Continuo" : "Continuous"}
             </p>
             <p className="mt-1 text-xs font-medium text-foreground">
-              Clinical Practice Flow
+              {locale === "es"
+                ? "Ritmo de trabajo clínico"
+                : "Clinical workflow rhythm"}
             </p>
             <p className="mt-0.5 text-[11px] text-muted-foreground">
-              Zero friction between reception and operatories
+              {locale === "es"
+                ? "Transición fluida entre recepción y gabinetes"
+                : "A smooth handoff between reception and operatories"}
             </p>
           </div>
         </div>
@@ -358,24 +442,22 @@ export default function Home() {
       >
         <div className="mx-auto max-w-3xl text-center">
           <p className="text-xs font-semibold uppercase tracking-wider text-accent">
-            Unified Operations System
+            {landing.previewBadge}
           </p>
           <h2
             className="mt-3.5 text-3xl font-semibold tracking-[-0.04em] text-foreground sm:text-4xl lg:text-5xl"
             id="workflow-title"
           >
-            The practice day, kept connected.
+            {landing.featuresHeading}
           </h2>
           <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
-            Four specialized surfaces acting as one continuous operational
-            thread. No parallel software, no fragmented records between the
-            front desk and the treatment operatories.
+            {landing.featuresSubheading}
           </p>
         </div>
 
-        {/* Expansive Apple Bento Grid */}
+        {/* Expansive Bento Grid */}
         <div className="mt-14 sm:mt-18 grid gap-6 lg:grid-cols-12">
-          {/* Bento Card 1: 5-Day Schedule Matrix (Hero Card, Span 7) */}
+          {/* Bento Card 1: 5-Day Schedule Matrix */}
           <div className="group relative flex flex-col justify-between overflow-hidden rounded-[var(--radius-xl)] border border-border/80 bg-gradient-to-br from-card via-card to-secondary/30 p-7 sm:p-9 shadow-xs transition-all duration-200 hover:border-foreground/20 hover:shadow-sm lg:col-span-7">
             <div>
               <div className="flex items-center justify-between">
@@ -383,16 +465,14 @@ export default function Home() {
                   <CalendarDays aria-hidden className="size-5" />
                 </div>
                 <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  01 · Schedule
+                  01 · {locale === "es" ? "Agenda" : "Schedule"}
                 </span>
               </div>
               <h3 className="mt-5 text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
-                Five-day clinical agenda
+                {landing.features.scheduleTitle}
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground max-w-xl">
-                Plan the week with 30-minute block precision, instant operatory
-                scanning, and direct booking into open chairs without losing
-                your operational place.
+                {landing.features.scheduleDesc}
               </p>
             </div>
 
@@ -402,11 +482,13 @@ export default function Home() {
                 <div className="flex items-center gap-2">
                   <span className="size-1.5 rounded-full bg-accent" />
                   <span className="text-xs font-semibold text-foreground">
-                    Operatory 1 · Morning Session
+                    {locale === "es"
+                      ? "Sillón 1 · Turno mañana"
+                      : "Operatory 1 · Morning"}
                   </span>
                 </div>
                 <span className="text-xs font-medium text-muted-foreground">
-                  Tuesday, 12 May
+                  {locale === "es" ? "Martes, 12 de mayo" : "Tuesday, May 12"}
                 </span>
               </div>
               <div className="mt-4 rounded-[var(--radius-md)] border border-border/80 bg-secondary/30 p-4">
@@ -417,22 +499,32 @@ export default function Home() {
                   <AppointmentStatusBadge status="CONFIRMED" />
                 </div>
                 <p className="mt-2 text-sm font-semibold text-foreground">
-                  Sofia Rossi · Comprehensive Exam
+                  {locale === "es"
+                    ? "Sofia Rossi · Examen integral"
+                    : "Sofia Rossi · Comprehensive exam"}
                 </p>
                 <p className="mt-0.5 text-xs text-muted-foreground">
-                  Operatory 1 · 45 min baseline duration
+                  {locale === "es"
+                    ? "Sillón 1 · 45 min de duración base"
+                    : "Operatory 1 · 45 min baseline duration"}
                 </p>
               </div>
               <div className="mt-4 flex items-center justify-between border-t border-border/60 pt-3 text-[11px] text-muted-foreground">
-                <span>Operatory chair coordination</span>
+                <span>
+                  {locale === "es"
+                    ? "Coordinación de sillones de atención"
+                    : "Operatory coordination"}
+                </span>
                 <span className="font-mono text-foreground font-medium">
-                  30m grid resolution
+                  {locale === "es"
+                    ? "Resolución de grilla en 30 min"
+                    : "30-minute grid resolution"}
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Bento Card 2: Living Patient Context (Span 5) */}
+          {/* Bento Card 2: Living Patient Context */}
           <div className="group relative flex flex-col justify-between overflow-hidden rounded-[var(--radius-xl)] border border-border/80 bg-gradient-to-br from-card via-card to-secondary/30 p-7 sm:p-9 shadow-xs transition-all duration-200 hover:border-foreground/20 hover:shadow-sm lg:col-span-5">
             <div>
               <div className="flex items-center justify-between">
@@ -440,15 +532,14 @@ export default function Home() {
                   <UsersRound aria-hidden className="size-5" />
                 </div>
                 <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  02 · Patients
+                  02 · {locale === "es" ? "Pacientes" : "Patients"}
                 </span>
               </div>
               <h3 className="mt-5 text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
-                Living patient context
+                {landing.features.integrityTitle}
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                Immediate access to visit history, medical alerts, and
-                scheduling preferences surfaced alongside the appointment.
+                {landing.features.integrityDesc}
               </p>
             </div>
 
@@ -466,7 +557,9 @@ export default function Home() {
                     Sofia Rossi
                   </p>
                   <p className="font-mono text-xs text-muted-foreground">
-                    PT-0081 · 3 completed visits
+                    {locale === "es"
+                      ? "PT-0081 · 3 visitas registradas"
+                      : "PT-0081 · 3 recorded visits"}
                   </p>
                 </div>
               </div>
@@ -476,22 +569,32 @@ export default function Home() {
                   variant="outline"
                 >
                   <span className="size-1.5 rounded-full bg-warning" />
-                  Penicillin allergy
+                  {locale === "es"
+                    ? "Alergia a la penicilina"
+                    : "Penicillin allergy"}
                 </Badge>
                 <Badge className="text-xs font-medium" variant="secondary">
-                  Prefers morning visits
+                  {locale === "es"
+                    ? "Prefiere turnos por la mañana"
+                    : "Prefers morning appointments"}
                 </Badge>
               </div>
               <div className="mt-4 flex items-center justify-between border-t border-border/60 pt-3 text-[11px] text-muted-foreground">
-                <span>Direct clinical timeline</span>
+                <span>
+                  {locale === "es"
+                    ? "Línea de tiempo clínica directa"
+                    : "Direct clinical timeline"}
+                </span>
                 <span className="text-foreground/80 font-medium">
-                  History preserved
+                  {locale === "es"
+                    ? "Historial preservado"
+                    : "History preserved"}
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Bento Card 3: Clinical Treatment Catalog (Span 5) */}
+          {/* Bento Card 3: Clinical Treatment Catalog */}
           <div className="group relative flex flex-col justify-between overflow-hidden rounded-[var(--radius-xl)] border border-border/80 bg-gradient-to-br from-card via-card to-secondary/30 p-7 sm:p-9 shadow-xs transition-all duration-200 hover:border-foreground/20 hover:shadow-sm lg:col-span-5">
             <div>
               <div className="flex items-center justify-between">
@@ -499,16 +602,14 @@ export default function Home() {
                   <ClipboardList aria-hidden className="size-5" />
                 </div>
                 <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  03 · Protocols
+                  03 · {locale === "es" ? "Protocolos" : "Protocols"}
                 </span>
               </div>
               <h3 className="mt-5 text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
-                Clinical treatment catalog
+                {landing.features.accessibleTitle}
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                Standardized procedure references with predefined duration
-                baselines. Launch directly into scheduling with pre-filled
-                parameters.
+                {landing.features.accessibleDesc}
               </p>
             </div>
 
@@ -517,10 +618,14 @@ export default function Home() {
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="text-sm font-semibold text-foreground">
-                    Comprehensive Exam & Cleaning
+                    {locale === "es"
+                      ? "Examen integral y limpieza"
+                      : "Comprehensive exam and cleaning"}
                   </p>
                   <p className="mt-0.5 text-xs text-muted-foreground">
-                    Preventive Care · Clinical Protocol
+                    {locale === "es"
+                      ? "Atención preventiva · Protocolo clínico"
+                      : "Preventive care · Clinical protocol"}
                   </p>
                 </div>
                 <Badge
@@ -535,19 +640,27 @@ export default function Home() {
                 </Badge>
               </div>
               <div className="mt-4 pt-3 border-t border-border/60 text-xs font-medium text-muted-foreground flex items-center gap-1">
-                <span>Pre-fills booking duration automatically</span>
+                <span>
+                  {locale === "es"
+                    ? "Precarga la duración del turno automáticamente"
+                    : "Automatically preloads appointment duration"}
+                </span>
                 <ArrowRight aria-hidden className="size-3 text-foreground/60" />
               </div>
               <div className="mt-3 flex items-center justify-between border-t border-border/60 pt-2 text-[11px] text-muted-foreground">
-                <span>Atelier Standard Protocols</span>
+                <span>
+                  {locale === "es"
+                    ? "Protocolos estándar de Atelier"
+                    : "Atelier standard protocols"}
+                </span>
                 <span className="font-mono text-foreground font-medium">
-                  8 catalog items
+                  8 procedimientos catalogados
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Bento Card 4: Shift-Handover Notes (Hero Card, Span 7) */}
+          {/* Bento Card 4: Shift-Handover Notes */}
           <div className="group relative flex flex-col justify-between overflow-hidden rounded-[var(--radius-xl)] border border-border/80 bg-gradient-to-br from-card via-card to-secondary/30 p-7 sm:p-9 shadow-xs transition-all duration-200 hover:border-foreground/20 hover:shadow-sm lg:col-span-7">
             <div>
               <div className="flex items-center justify-between">
@@ -555,16 +668,14 @@ export default function Home() {
                   <NotebookPen aria-hidden className="size-5" />
                 </div>
                 <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  04 · Handover
+                  04 · {locale === "es" ? "Guardia" : "Handover"}
                 </span>
               </div>
               <h3 className="mt-5 text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
-                Shift-handover notes
+                {landing.features.protectedTitle}
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground max-w-xl">
-                Terse, timestamped operational context attached permanently to
-                the patient timeline. Guarantees seamless coordination across
-                practitioner shifts without paper notes.
+                {landing.features.protectedDesc}
               </p>
             </div>
 
@@ -572,22 +683,30 @@ export default function Home() {
             <div className="mt-8 rounded-[var(--radius-lg)] border border-border/70 bg-surface/90 p-5 shadow-xs backdrop-blur-xs">
               <div className="flex items-center justify-between text-xs">
                 <span className="font-semibold text-foreground">
-                  Sofia Rossi · Operatory Handover
+                  {locale === "es"
+                    ? "Sofia Rossi · Pase en sillón"
+                    : "Sofia Rossi · Operatory handover"}
                 </span>
                 <time className="text-xs text-muted-foreground">
-                  Today · 09:45
+                  {locale === "es" ? "Hoy · 09:45" : "Today · 09:45"}
                 </time>
               </div>
               <p className="mt-2.5 text-xs leading-relaxed text-muted-foreground">
-                Patient prefers morning appointments. Scheduled routine 6-month
-                prophylaxis checkup for November. All restorative charting
-                verified.
+                {locale === "es"
+                  ? "La paciente prefiere turnos por la mañana. Se agendó control semestral de profilaxis para noviembre. Se verificó el odontograma de restauraciones."
+                  : "The patient prefers morning appointments. A six-month prophylaxis follow-up was scheduled for November. The restoration chart was verified."}
               </p>
               <div className="mt-4 flex items-center justify-between border-t border-border/60 pt-3 text-xs text-muted-foreground">
-                <span className="text-[11px]">Logged by Dr. Jane Smith</span>
+                <span className="text-[11px]">
+                  {locale === "es"
+                    ? "Registrado por Dra. Jane Smith"
+                    : "Recorded by Dr. Jane Smith"}
+                </span>
                 <span className="text-[11px] font-medium text-foreground/70 flex items-center gap-1.5">
                   <span className="size-1 rounded-full bg-foreground/40" />
-                  Verified session entry
+                  {locale === "es"
+                    ? "Entrada de sesión verificada"
+                    : "Verified session entry"}
                 </span>
               </div>
             </div>
@@ -599,11 +718,15 @@ export default function Home() {
               <div className="flex items-center gap-2">
                 <span className="size-1.5 rounded-full bg-accent" />
                 <h3 className="text-sm font-semibold tracking-tight text-foreground">
-                  Connected Clinical Journey · A Typical Morning at Atelier
+                  {locale === "es"
+                    ? "Recorrido clínico coordinado · Una mañana habitual en Atelier"
+                    : "Coordinated clinical journey · A typical morning at Atelier"}
                 </h3>
               </div>
               <span className="text-xs text-muted-foreground font-medium">
-                4 Operational Touchpoints · Zero Fragmented Records
+                {locale === "es"
+                  ? "4 etapas operativas · Sin registros fragmentados"
+                  : "4 operational steps · No fragmented records"}
               </span>
             </div>
 
@@ -613,11 +736,16 @@ export default function Home() {
                   <span className="flex size-5 items-center justify-center rounded-full border border-border/70 bg-secondary/80 font-mono text-[10px] text-foreground/80">
                     1
                   </span>
-                  <span>Intake & Identification</span>
+                  <span>
+                    {locale === "es"
+                      ? "Recepción e identificación"
+                      : "Reception and identification"}
+                  </span>
                 </div>
                 <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-                  Patient arrives at reception. Identity confirmed, Penicillin
-                  allergy alert surfaced immediately.
+                  {locale === "es"
+                    ? "La paciente llega a recepción. Se confirma su identidad y se visualiza de inmediato la alerta por alergia a la penicilina."
+                    : "The patient arrives at reception. Her identity is confirmed and the penicillin allergy alert is immediately visible."}
                 </p>
               </div>
 
@@ -626,11 +754,16 @@ export default function Home() {
                   <span className="flex size-5 items-center justify-center rounded-full border border-border/70 bg-secondary/80 font-mono text-[10px] text-foreground/80">
                     2
                   </span>
-                  <span>Chair Allocation</span>
+                  <span>
+                    {locale === "es"
+                      ? "Asignación de sillón"
+                      : "Operatory assignment"}
+                  </span>
                 </div>
                 <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-                  Operatory 1 assigned for 09:30. 45-minute block locked on
-                  5-day schedule with zero overlap risk.
+                  {locale === "es"
+                    ? "Se asigna el Sillón 1 a las 09:30. Bloque de 45 minutos reservado en la agenda semanal sin riesgo de superposición."
+                    : "Operatory 1 is assigned at 09:30. A 45-minute block is reserved in the weekly schedule without overlap risk."}
                 </p>
               </div>
 
@@ -639,11 +772,16 @@ export default function Home() {
                   <span className="flex size-5 items-center justify-center rounded-full border border-border/70 bg-secondary/80 font-mono text-[10px] text-foreground/80">
                     3
                   </span>
-                  <span>Protocol Guidance</span>
+                  <span>
+                    {locale === "es"
+                      ? "Guía por protocolo"
+                      : "Protocol guidance"}
+                  </span>
                 </div>
                 <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-                  Comprehensive Exam protocol baseline pre-fills procedure
-                  duration and standard clinical milestones.
+                  {locale === "es"
+                    ? "El protocolo de examen integral precarga los tiempos y parámetros habituales del procedimiento."
+                    : "The comprehensive exam protocol preloads the procedure's usual timing and parameters."}
                 </p>
               </div>
 
@@ -652,11 +790,16 @@ export default function Home() {
                   <span className="flex size-5 items-center justify-center rounded-full border border-border/70 bg-secondary/80 font-mono text-[10px] text-foreground/80">
                     4
                   </span>
-                  <span>Handover & Next Visit</span>
+                  <span>
+                    {locale === "es"
+                      ? "Pase de guardia y próximo turno"
+                      : "Handover and next appointment"}
+                  </span>
                 </div>
                 <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-                  Shift-handover note logged chairside. 6-month recall scheduled
-                  before patient leaves reception.
+                  {locale === "es"
+                    ? "Se asienta la nota clínica al pie del sillón. El turno de control a los 6 meses queda agendado antes de que la paciente deje recepción."
+                    : "The clinical note is recorded at the operatory. The six-month follow-up is scheduled before the patient leaves reception."}
                 </p>
               </div>
             </div>
@@ -675,20 +818,19 @@ export default function Home() {
               className="text-xs font-semibold uppercase tracking-wider text-accent"
               id="engineering-signals-title"
             >
-              Engineering signals
+              {landing.architectureLabel}
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Rigorous systems engineering and architectural guarantees backing
-              every clinical interaction.
+              {landing.architectureDescription}
             </p>
           </div>
           <span className="text-xs font-medium text-muted-foreground">
-            Enterprise Clinical Standards
+            {landing.professionalStandards}
           </span>
         </div>
 
         <ul className="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {engineeringSignals.map(
+          {engineeringSignals(locale).map(
             ({ badge, description, icon: Icon, label, spec }) => (
               <li
                 className="group relative flex flex-col justify-between rounded-[var(--radius-xl)] border border-border/80 bg-surface/70 p-6 sm:p-7 shadow-xs transition-all duration-200 hover:border-foreground/20 hover:bg-surface/90"
@@ -732,7 +874,9 @@ export default function Home() {
                 Next.js 16 App Router
               </p>
               <p className="mt-0.5 text-[11px] text-muted-foreground">
-                Server Components by default
+                {locale === "es"
+                  ? "Server Components por diseño"
+                  : "Server Components by design"}
               </p>
             </div>
             <div>
@@ -740,15 +884,19 @@ export default function Home() {
                 Tailwind CSS v4
               </p>
               <p className="mt-0.5 text-[11px] text-muted-foreground">
-                Inline tokens, zero runtime CSS
+                {locale === "es"
+                  ? "Tokens sin sobrecarga en runtime"
+                  : "Runtime-light design tokens"}
               </p>
             </div>
             <div>
               <p className="text-xs font-semibold text-foreground">
-                TypeScript Strict
+                {locale === "es" ? "TypeScript estricto" : "Strict TypeScript"}
               </p>
               <p className="mt-0.5 text-[11px] text-muted-foreground">
-                End-to-end schema validation
+                {locale === "es"
+                  ? "Validación de esquemas de punta a punta"
+                  : "End-to-end schema validation"}
               </p>
             </div>
             <div>
@@ -756,7 +904,9 @@ export default function Home() {
                 Playwright E2E Suite
               </p>
               <p className="mt-0.5 text-[11px] text-muted-foreground">
-                Multi-viewport responsive verified
+                {locale === "es"
+                  ? "Cobertura responsive multidispositivo"
+                  : "Cross-device responsive coverage"}
               </p>
             </div>
           </div>
@@ -765,45 +915,48 @@ export default function Home() {
 
       {/* 3. Domain Integrity Manifesto */}
       <section
-        aria-label="Domain integrity manifesto"
+        aria-label={`${landing.manifestoLabel} y ${landing.philosophyLabel}`}
         className="mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8 lg:py-36 border-t border-border"
         id="manifesto"
       >
         <div className="mx-auto max-w-3xl text-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-surface px-3.5 py-1 text-xs font-medium text-accent shadow-2xs">
-            <span className="font-semibold">Practice Manifesto</span>
+            <span className="font-semibold">{landing.manifestoLabel}</span>
             <span aria-hidden className="text-border">
               ·
             </span>
-            <span className="text-muted-foreground">Clinical Philosophy</span>
+            <span className="text-muted-foreground">
+              {landing.philosophyLabel}
+            </span>
           </div>
           <h2 className="mt-4 text-3xl font-semibold tracking-[-0.04em] text-foreground sm:text-4xl">
-            Software designed to disappear into patient care.
+            {landing.manifestoTitle}
           </h2>
           <p className="mt-3 text-base text-muted-foreground">
-            A clinical operations platform should demand no more cognitive
-            attention than the instruments on the operatory tray.
+            {landing.manifestoDescription}
           </p>
         </div>
 
         {/* Centerpiece Quote Card */}
         <div className="mx-auto mt-12 max-w-4xl rounded-[var(--radius-xl)] border border-border/80 bg-surface/80 p-8 sm:p-14 shadow-xs">
           <blockquote className="text-xl font-medium tracking-[-0.03em] text-foreground sm:text-2xl sm:leading-relaxed text-center">
-            “In a fast-moving practice, clarity is not an aesthetic
-            preference—it is a patient safety imperative. DMS eliminates visual
-            noise and speculative clutter so the clinical team can dedicate
-            their entire attention to what matters: patient care.”
+            {locale === "es"
+              ? "“En un consultorio de ritmo ágil, la claridad no es un capricho estético: es un principio de seguridad para el paciente. DMS elimina el ruido visual y los elementos superfluos para que el equipo clínico dedique toda su atención a lo verdaderamente importante: las personas.”"
+              : "“In a fast-moving practice, clarity is not an aesthetic luxury: it is a patient-safety principle. DMS removes visual noise and unnecessary elements so the clinical team can focus on what matters: people.”"}
           </blockquote>
           <div className="mt-8 flex flex-col items-center justify-center border-t border-border/70 pt-6 text-center">
             <p className="text-sm font-semibold text-foreground">
-              Dr. Jane Smith
+              {locale === "es" ? "Dra. Jane Smith" : "Dr. Jane Smith"}
             </p>
             <p className="text-xs text-muted-foreground">
-              Clinical Operations Lead · Atelier Dental
+              {locale === "es"
+                ? "Directora de Operaciones Clínicas · Atelier Dental"
+                : "Director of Clinical Operations · Atelier Dental"}
             </p>
             <span className="mt-2 rounded-full bg-secondary/80 px-3 py-1 font-mono text-[10px] text-muted-foreground">
-              Atelier Dental Operations Standard · Purpose-Built Clinical
-              Architecture
+              {locale === "es"
+                ? "Estándar Operativo Atelier Dental · Arquitectura clínica a medida"
+                : "Atelier Dental operating standard · Purpose-built clinical architecture"}
             </span>
           </div>
         </div>
@@ -812,41 +965,48 @@ export default function Home() {
         <div className="mx-auto mt-10 grid max-w-5xl gap-6 sm:grid-cols-3">
           <div className="rounded-[var(--radius-lg)] border border-border/70 bg-surface/60 p-6 text-center sm:text-left">
             <p className="text-xs font-semibold uppercase tracking-wider text-accent">
-              01 · Serene Ergonomics
+              01 · {locale === "es" ? "Ergonomía serena" : "Calm ergonomics"}
             </p>
             <h3 className="mt-2 text-base font-semibold text-foreground">
-              Calm interfaces
+              {locale === "es" ? "Interfaces calmas" : "Calm interfaces"}
             </h3>
             <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-              High-intensity treatment operatories require serenity. Zero pop-up
-              notifications, zero advertising clutter, and zero hidden menus.
+              {locale === "es"
+                ? "Los gabinetes de atención demandan concentración y serenidad. Sin ventanas emergentes, sin elementos publicitarios ni menús innecesarios."
+                : "Operatories demand concentration and calm. No pop-ups, promotional elements, or unnecessary menus."}
             </p>
           </div>
 
           <div className="rounded-[var(--radius-lg)] border border-border/70 bg-surface/60 p-6 text-center sm:text-left">
             <p className="text-xs font-semibold uppercase tracking-wider text-accent">
-              02 · Temporal Rhythm
+              02 · {locale === "es" ? "Ritmo temporal" : "Time rhythm"}
             </p>
             <h3 className="mt-2 text-base font-semibold text-foreground">
-              Structured cadence
+              {locale === "es" ? "Cadencia estructurada" : "Structured cadence"}
             </h3>
             <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-              Designed around realistic 30-minute pacing intervals that respect
-              chair turnover, sterilization routines, and patient consultation.
+              {locale === "es"
+                ? "Diseñado en torno a intervalos realistas de 30 minutos que contemplan tiempos de esterilización, preparación de sillón y consulta con el paciente."
+                : "Built around realistic 30-minute intervals that account for sterilization, operatory setup, and patient consultation."}
             </p>
           </div>
 
           <div className="rounded-[var(--radius-lg)] border border-border/70 bg-surface/60 p-6 text-center sm:text-left">
             <p className="text-xs font-semibold uppercase tracking-wider text-accent">
-              03 · Radical Reliability
+              03 ·{" "}
+              {locale === "es"
+                ? "Confiabilidad rigurosa"
+                : "Rigorous reliability"}
             </p>
             <h3 className="mt-2 text-base font-semibold text-foreground">
-              Relational lockstep
+              {locale === "es"
+                ? "Sincronización transaccional"
+                : "Transactional synchronization"}
             </h3>
             <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-              Instant transactional persistence with relational database
-              guarantees, keeping reception and operatory staff in continuous
-              synchronization.
+              {locale === "es"
+                ? "Persistencia inmediata respaldada por integridad relacional, manteniendo a recepción y a los odontólogos en continua sincronía."
+                : "Immediate persistence backed by relational integrity, keeping reception and clinicians continuously in sync."}
             </p>
           </div>
         </div>
@@ -860,18 +1020,16 @@ export default function Home() {
         <div className="grid gap-12 lg:grid-cols-12 lg:items-center">
           <div className="max-w-xl lg:col-span-6">
             <p className="text-xs font-semibold uppercase tracking-wider text-accent">
-              Evaluate the live workspace
+              {landing.demoLabel}
             </p>
             <h2
               className="mt-3.5 text-3xl font-semibold tracking-[-0.035em] sm:text-4xl"
               id="demo-invitation-title"
             >
-              Explore a complete, bounded practice day.
+              {landing.demoTitle}
             </h2>
             <p className="mt-4 text-base leading-7 text-muted-foreground">
-              A provisioned practitioner session opens instantly with curated
-              fictional data. No account creation, shared passwords, or personal
-              details are required.
+              {landing.demoDescription}
             </p>
 
             {/* Sandbox Features Checklist */}
@@ -882,7 +1040,9 @@ export default function Home() {
                   className="size-4 text-accent shrink-0"
                 />
                 <span>
-                  Five-day multi-operatory schedule with live appointments
+                  {locale === "es"
+                    ? "Agenda de cinco días y múltiples sillones con turnos en vivo"
+                    : "Five-day schedule with multiple operatories and live appointments"}
                 </span>
               </div>
               <div className="flex items-center gap-2">
@@ -891,7 +1051,9 @@ export default function Home() {
                   className="size-4 text-accent shrink-0"
                 />
                 <span>
-                  Twelve patient records with medical alerts and visit histories
+                  {locale === "es"
+                    ? "Dieciséis fichas de pacientes con alertas médicas e historial de visitas"
+                    : "Sixteen patient records with medical alerts and visit history"}
                 </span>
               </div>
               <div className="flex items-center gap-2">
@@ -900,7 +1062,9 @@ export default function Home() {
                   className="size-4 text-accent shrink-0"
                 />
                 <span>
-                  Standardized clinical treatment catalog with duration presets
+                  {locale === "es"
+                    ? "Catálogo clínico de tratamientos con duraciones de referencia"
+                    : "Clinical treatment catalog with reference durations"}
                 </span>
               </div>
               <div className="flex items-center gap-2">
@@ -909,7 +1073,9 @@ export default function Home() {
                   className="size-4 text-accent shrink-0"
                 />
                 <span>
-                  Chronological shift-handover notes with clinician attribution
+                  {locale === "es"
+                    ? "Notas cronológicas de pase de guardia con autoría profesional"
+                    : "Chronological handover notes with professional authorship"}
                 </span>
               </div>
             </div>
@@ -917,7 +1083,7 @@ export default function Home() {
             <div className="mt-8">
               <Button asChild size="lg">
                 <Link href="/demo/access">
-                  Open demo workspace
+                  {landing.openDemoCta}
                   <ArrowRight aria-hidden className="size-4" />
                 </Link>
               </Button>
@@ -928,8 +1094,9 @@ export default function Home() {
                 className="size-3.5 text-accent shrink-0"
               />
               <span>
-                Instant session provision · Privacy-safe sandbox · Resettable
-                baseline
+                {locale === "es"
+                  ? "Sesión instantánea preconfigurada · Entorno seguro de muestra · Datos reajustables"
+                  : "Instant pre-configured session · Safe sample environment · Resettable data"}
               </span>
             </div>
           </div>
@@ -944,7 +1111,9 @@ export default function Home() {
                       ATELIER DENTAL
                     </p>
                     <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-                      Clinical Credential Pass
+                      {locale === "es"
+                        ? "Pase de acreditación clínica"
+                        : "Clinical access pass"}
                     </p>
                   </div>
                 </div>
@@ -954,7 +1123,7 @@ export default function Home() {
                     variant="outline"
                   >
                     <ShieldCheck aria-hidden className="size-3 text-accent" />
-                    Verified Session
+                    {locale === "es" ? "Sesión verificada" : "Verified session"}
                   </Badge>
                   <p className="mt-1 font-mono text-[9px] tracking-widest text-muted-foreground/80">
                     REF · AT-2026-OP
@@ -964,34 +1133,46 @@ export default function Home() {
               <dl className="mt-5 grid grid-cols-2 gap-4 text-xs">
                 <div>
                   <dt className="font-mono text-[10px] uppercase text-muted-foreground">
-                    Practice Role
+                    {locale === "es" ? "Rol en clínica" : "Clinical role"}
                   </dt>
                   <dd className="mt-1 font-medium text-foreground">
-                    Clinical Operations Lead
+                    {locale === "es"
+                      ? "Directora de Operaciones Clínicas"
+                      : "Director of Clinical Operations"}
                   </dd>
                 </div>
                 <div>
                   <dt className="font-mono text-[10px] uppercase text-muted-foreground">
-                    Session Identity
+                    {locale === "es"
+                      ? "Identidad de sesión"
+                      : "Session identity"}
                   </dt>
                   <dd className="mt-1 font-medium text-foreground">
-                    Dr. Jane Smith · Practice Lead
+                    {locale === "es"
+                      ? "Dra. Jane Smith · Directora Médica"
+                      : "Dr. Jane Smith · Medical Director"}
                   </dd>
                 </div>
                 <div>
                   <dt className="font-mono text-[10px] uppercase text-muted-foreground">
-                    Workspace Date
+                    {locale === "es" ? "Fecha del espacio" : "Workspace date"}
                   </dt>
                   <dd className="mt-1 font-mono text-foreground">
-                    Tuesday, 12 May 2026
+                    {locale === "es"
+                      ? "Martes, 12 de mayo de 2026"
+                      : "Tuesday, May 12, 2026"}
                   </dd>
                 </div>
                 <div>
                   <dt className="font-mono text-[10px] uppercase text-muted-foreground">
-                    Privacy Boundary
+                    {locale === "es"
+                      ? "Resguardo de privacidad"
+                      : "Privacy boundary"}
                   </dt>
                   <dd className="mt-1 font-medium text-foreground">
-                    Isolated Practice Baseline
+                    {locale === "es"
+                      ? "Entorno clínico aislado"
+                      : "Isolated clinical environment"}
                   </dd>
                 </div>
               </dl>
@@ -999,12 +1180,14 @@ export default function Home() {
                 <Button asChild className="w-full shadow-2xs" variant="outline">
                   <Link href="/demo/access">
                     <KeyRound aria-hidden className="size-3.5" />
-                    Launch Demo Workspace
+                    {landing.openDemoCta}
                     <ArrowRight aria-hidden className="size-3.5" />
                   </Link>
                 </Button>
                 <p className="mt-2 text-center font-mono text-[10px] text-muted-foreground/80">
-                  Instant zero-credential access · Isolated practice environment
+                  {locale === "es"
+                    ? "Acceso directo sin claves · Entorno de práctica aislado"
+                    : "Direct access without passwords · Isolated practice environment"}
                 </p>
               </div>
             </div>
@@ -1025,17 +1208,20 @@ export default function Home() {
                 </span>
               </Link>
               <p className="mt-3.5 max-w-sm text-xs leading-6 text-muted-foreground">
-                A focused clinical operations workspace purpose-built for
-                five-day practice flow. Daily scheduling, patient records,
-                treatment references, and handover notes unified in one calm
-                surface.
+                {locale === "es"
+                  ? "Un espacio de gestión clínica enfocado, concebido para el ritmo semanal del consultorio. Turnos diarios, fichas de pacientes, catálogo de tratamientos y notas de pase de guardia unificados en un entorno sereno."
+                  : "A focused clinical operations workspace built for the practice's weekly rhythm. Daily appointments, patient records, treatments, and handover notes in one calm environment."}
               </p>
               <div className="mt-4 flex items-center gap-2 font-mono text-[11px] text-muted-foreground">
                 <ShieldCheck
                   aria-hidden
                   className="size-3.5 text-accent shrink-0"
                 />
-                <span>Privacy-safe synthetic clinical environment</span>
+                <span>
+                  {locale === "es"
+                    ? "Entorno clínico sintético con privacidad garantizada"
+                    : "Synthetic clinical environment with privacy by design"}
+                </span>
               </div>
             </div>
 
@@ -1044,7 +1230,7 @@ export default function Home() {
               {/* Column 2: Surfaces */}
               <div>
                 <p className="flex h-8 items-center text-xs font-semibold uppercase tracking-wider text-foreground">
-                  Workspace Surfaces
+                  {locale === "es" ? "Vistas del espacio" : "Workspace views"}
                 </p>
                 <ul className="mt-3.5 space-y-2.5 text-xs text-muted-foreground">
                   <li>
@@ -1052,7 +1238,9 @@ export default function Home() {
                       className="transition-colors hover:text-foreground"
                       href="/demo/schedule"
                     >
-                      Schedule · 5-day agenda
+                      {locale === "es"
+                        ? "Agenda · Vista semanal de 5 días"
+                        : "Schedule · 5-day weekly view"}
                     </Link>
                   </li>
                   <li>
@@ -1060,7 +1248,9 @@ export default function Home() {
                       className="transition-colors hover:text-foreground"
                       href="/demo/dashboard"
                     >
-                      Today · Daily agenda
+                      {locale === "es"
+                        ? "Hoy · Agenda del día"
+                        : "Today · Daily schedule"}
                     </Link>
                   </li>
                   <li>
@@ -1068,7 +1258,9 @@ export default function Home() {
                       className="transition-colors hover:text-foreground"
                       href="/demo/patients"
                     >
-                      Patients · Directory & history
+                      {locale === "es"
+                        ? "Pacientes · Directorio e historial"
+                        : "Patients · Directory and history"}
                     </Link>
                   </li>
                   <li>
@@ -1076,7 +1268,9 @@ export default function Home() {
                       className="transition-colors hover:text-foreground"
                       href="/demo/treatments"
                     >
-                      Treatments · Clinical catalog
+                      {locale === "es"
+                        ? "Tratamientos · Catálogo clínico"
+                        : "Treatments · Clinical catalog"}
                     </Link>
                   </li>
                   <li>
@@ -1084,7 +1278,9 @@ export default function Home() {
                       className="transition-colors hover:text-foreground"
                       href="/demo/notes"
                     >
-                      Notes · Operational handovers
+                      {locale === "es"
+                        ? "Notas · Pases de guardia y evoluciones"
+                        : "Notes · Handover and progress"}
                     </Link>
                   </li>
                 </ul>
@@ -1093,21 +1289,43 @@ export default function Home() {
               {/* Column 3: Systems & Standards */}
               <div>
                 <p className="flex h-8 items-center text-xs font-semibold uppercase tracking-wider text-foreground">
-                  Systems & Standards
+                  {locale === "es"
+                    ? "Sistemas y estándares"
+                    : "Systems and standards"}
                 </p>
                 <ul className="mt-3.5 space-y-2.5 text-xs text-muted-foreground">
-                  <li>Fast, Server-Rendered UI</li>
-                  <li>Conflict-Free Scheduling</li>
-                  <li>Instant Response Times</li>
-                  <li>Isolated Demo Sessions</li>
-                  <li>Full WCAG AA Accessibility</li>
+                  <li>
+                    {locale === "es"
+                      ? "Interfaz ágil renderizada en servidor"
+                      : "Fast server-rendered interface"}
+                  </li>
+                  <li>
+                    {locale === "es"
+                      ? "Agenda sin riesgo de solapamiento"
+                      : "Schedule without overlap risk"}
+                  </li>
+                  <li>
+                    {locale === "es"
+                      ? "Respuesta inmediata en cada acción"
+                      : "Immediate feedback on every action"}
+                  </li>
+                  <li>
+                    {locale === "es"
+                      ? "Sesiones de demostración aisladas"
+                      : "Isolated demo sessions"}
+                  </li>
+                  <li>
+                    {locale === "es"
+                      ? "Accesibilidad completa WCAG AA"
+                      : "Full WCAG AA accessibility"}
+                  </li>
                 </ul>
               </div>
 
               {/* Column 4: Direct Access */}
               <div>
                 <p className="flex h-8 items-center text-xs font-semibold uppercase tracking-wider text-foreground">
-                  Evaluation
+                  {locale === "es" ? "Evaluación" : "Evaluation"}
                 </p>
                 <ul className="mt-3.5 space-y-2.5 text-xs text-muted-foreground">
                   <li>
@@ -1115,13 +1333,25 @@ export default function Home() {
                       className="inline-flex items-center gap-1 font-medium text-foreground transition-colors hover:text-accent"
                       href="/demo/access"
                     >
-                      Open Demo Workspace
+                      {landing.openDemoCta}
                       <ArrowRight aria-hidden className="size-3" />
                     </Link>
                   </li>
-                  <li>No sign-up required</li>
-                  <li>One-click practice reset</li>
-                  <li>Zero real patient data</li>
+                  <li>
+                    {locale === "es"
+                      ? "Sin registro ni formularios"
+                      : "No sign-up or forms"}
+                  </li>
+                  <li>
+                    {locale === "es"
+                      ? "Restablecimiento de datos en un clic"
+                      : "One-click data reset"}
+                  </li>
+                  <li>
+                    {locale === "es"
+                      ? "Sin datos reales de pacientes"
+                      : "No real patient data"}
+                  </li>
                 </ul>
               </div>
             </div>
@@ -1130,15 +1360,24 @@ export default function Home() {
           {/* Bottom copyright bar */}
           <div className="flex flex-col gap-4 border-t border-border pt-8 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
             <p>
-              © 2026 Atelier Dental. Built for high-velocity practice
-              operations.
+              {locale === "es"
+                ? "© 2026 Atelier Dental. Diseñado para la continuidad operativa en la práctica clínica."
+                : "© 2026 Atelier Dental. Designed for continuity in clinical practice."}
             </p>
             <div className="flex items-center gap-4 text-[11px] font-mono sm:gap-6">
-              <span>Bespoke Engineering</span>
+              <span>
+                {locale === "es"
+                  ? "Ingeniería a medida"
+                  : "Purpose-built engineering"}
+              </span>
               <span aria-hidden className="text-border">
                 ·
               </span>
-              <span>Clinical Systems Design</span>
+              <span>
+                {locale === "es"
+                  ? "Diseño de sistemas clínicos"
+                  : "Clinical systems design"}
+              </span>
               <span aria-hidden className="text-border">
                 ·
               </span>

@@ -1,8 +1,16 @@
-export default function PatientsLoading() {
+import { getServerLocale } from "@/lib/i18n/server";
+
+export default async function PatientsLoading() {
+  const locale = await getServerLocale();
+
   return (
     <main
       aria-busy="true"
-      aria-label="Loading patient directory"
+      aria-label={
+        locale === "es"
+          ? "Cargando el directorio de pacientes"
+          : "Loading patient directory"
+      }
       className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8"
     >
       <div className="flex flex-col gap-6 border-b border-border/80 pb-8 sm:flex-row sm:items-end sm:justify-between animate-pulse">

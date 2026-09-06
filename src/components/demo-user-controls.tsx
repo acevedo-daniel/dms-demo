@@ -1,8 +1,8 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { LogOut, MoreHorizontal, RotateCcw } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { announceWorkspaceFeedback } from "@/components/workspace-feedback";
+import { useI18n } from "@/lib/i18n";
 
 type DemoUserControlsProps = {
   onActionComplete?: () => void;
@@ -28,13 +29,14 @@ export function DemoUserControls({
   userName,
   variant = "menu",
 }: DemoUserControlsProps) {
-  const controlsRef = useRef<HTMLDivElement>(null);
-  const router = useRouter();
-  const [error, setError] = useState<string | null>(null);
+  const { t, locale } = useI18n();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isResetOpen, setIsResetOpen] = useState(false);
   const [isResetPending, setIsResetPending] = useState(false);
   const [isSignOutPending, setIsSignOutPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const controlsRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   useEffect(() => {
     if (!isMenuOpen || variant !== "menu") {
@@ -75,11 +77,7 @@ export function DemoUserControls({
     setIsResetPending(true);
 
     try {
-      const response = await fetch("/api/demo/reset", {
-        body: JSON.stringify({}),
-        headers: { "Content-Type": "application/json" },
-        method: "POST",
-      });
+      const response = await fetch("/api/demo/reset", { method: "POST" });
 
       if (!response.ok) {
         throw new Error();
@@ -87,11 +85,11 @@ export function DemoUserControls({
 
       setIsResetOpen(false);
       completeAction();
-      announceWorkspaceFeedback("Sample data reset.");
+      announceWorkspaceFeedback(t.controls.resetSuccess);
       router.push("/demo/dashboard");
       router.refresh();
     } catch {
-      setError("Sample data could not be reset. Try again.");
+      setError(t.controls.resetError);
     } finally {
       setIsResetPending(false);
     }
@@ -112,7 +110,7 @@ export function DemoUserControls({
       router.push("/demo/access");
       router.refresh();
     } catch {
-      setError("The workspace could not be signed out. Try again.");
+      setError(t.controls.signOutError);
     } finally {
       setIsSignOutPending(false);
     }
@@ -139,7 +137,7 @@ export function DemoUserControls({
               {userName}
             </p>
             <p className="text-xs text-muted-foreground">
-              Lead Practitioner · Atelier Dental
+              {t.controls.userRole}
             </p>
           </div>
         </div>
@@ -153,7 +151,7 @@ export function DemoUserControls({
               variant="ghost"
             >
               <RotateCcw aria-hidden className="size-4" />
-              Reset sample data
+              {t.controls.resetButton}
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
@@ -163,23 +161,20 @@ export function DemoUserControls({
                   <RotateCcw aria-hidden className="size-4" />
                 </div>
                 <span className="text-xs font-medium text-muted-foreground">
-                  Practice Reset
+                  {locale === "es" ? "Restablecer clínica" : "Reset practice"}
                 </span>
               </div>
-              <AlertDialogTitle>Reset sample data?</AlertDialogTitle>
+              <AlertDialogTitle>{t.controls.resetTitle}</AlertDialogTitle>
               <AlertDialogDescription>
-                This restores the curated Atelier Dental baseline and removes
-                changes made in this demo session.
+                {t.controls.resetDesc}
               </AlertDialogDescription>
             </AlertDialogHeader>
             <div className="rounded-[var(--radius-lg)] border border-border/70 bg-secondary/40 p-4 text-xs leading-relaxed text-muted-foreground">
               <p>
                 <strong className="font-semibold text-foreground">
-                  Session reset:
+                  {locale === "es" ? "Reinicio de sesión:" : "Session reset:"}
                 </strong>{" "}
-                Any new appointments, patient additions, or clinical notes
-                created during this session will be restored to the clean
-                practice baseline.
+                {t.controls.resetNotice}
               </p>
             </div>
             {error ? (
@@ -189,7 +184,7 @@ export function DemoUserControls({
             ) : null}
             <AlertDialogFooter>
               <AlertDialogCancel disabled={isResetPending}>
-                Keep current data
+                {t.controls.keepData}
               </AlertDialogCancel>
               <AlertDialogAction
                 className="dms-pressable rounded-full border border-destructive/20 bg-destructive px-4 text-xs font-semibold text-destructive-foreground shadow-xs transition-all hover:bg-destructive/90 active:scale-[0.98]"
@@ -200,7 +195,7 @@ export function DemoUserControls({
                 }}
               >
                 <RotateCcw aria-hidden className="size-3.5" />
-                {isResetPending ? "Resetting..." : "Reset sample data"}
+                {isResetPending ? t.controls.resetting : t.controls.resetButton}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -212,7 +207,7 @@ export function DemoUserControls({
           variant="ghost"
         >
           <LogOut aria-hidden className="size-4" />
-          {isSignOutPending ? "Signing out..." : "Sign out"}
+          {isSignOutPending ? t.controls.signingOut : t.controls.signOut}
         </Button>
         {error && !isResetOpen ? (
           <p
@@ -228,7 +223,10 @@ export function DemoUserControls({
 
   if (variant === "sheet") {
     return (
-      <section aria-label="Demo controls" className="border-t border-border">
+      <section
+        aria-label={locale === "es" ? "Controles de la demo" : "Demo controls"}
+        className="border-t border-border"
+      >
         {controls}
       </section>
     );
@@ -239,7 +237,9 @@ export function DemoUserControls({
       <Button
         aria-expanded={isMenuOpen}
         aria-haspopup="dialog"
-        aria-label="Open demo controls"
+        aria-label={
+          locale === "es" ? "Abrir controles de la demo" : "Open demo controls"
+        }
         className="h-9 gap-2 rounded-full border border-border/80 bg-background/50 px-2 sm:px-2.5 transition-colors hover:border-foreground/25 hover:bg-secondary/60"
         onClick={() => setIsMenuOpen((open) => !open)}
         variant="ghost"

@@ -5,9 +5,11 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 
 export function DemoAccessButton() {
   const router = useRouter();
+  const { locale } = useI18n();
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -24,7 +26,9 @@ export function DemoAccessButton() {
       if (!response.ok) {
         throw new Error(
           payload?.error ??
-            "The demo workspace could not be opened. Try again.",
+            (locale === "es"
+              ? "No se pudo abrir el espacio de demostración. Reintentá."
+              : "Could not open demo workspace. Try again."),
         );
       }
 
@@ -34,7 +38,9 @@ export function DemoAccessButton() {
       setError(
         cause instanceof Error
           ? cause.message
-          : "The demo workspace could not be opened. Try again.",
+          : locale === "es"
+            ? "No se pudo abrir el espacio de demostración. Reintentá."
+            : "Could not open demo workspace. Try again.",
       );
     } finally {
       setIsLoading(false);
@@ -50,7 +56,13 @@ export function DemoAccessButton() {
         onClick={openDemoWorkspace}
         size="lg"
       >
-        {isLoading ? "Opening workspace…" : "Open demo workspace"}
+        {isLoading
+          ? locale === "es"
+            ? "Abriendo espacio…"
+            : "Opening workspace…"
+          : locale === "es"
+            ? "Abrir espacio de demostración"
+            : "Open demo workspace"}
         {!isLoading ? <ArrowRight aria-hidden className="size-4" /> : null}
       </Button>
       <p
@@ -62,7 +74,7 @@ export function DemoAccessButton() {
         )}
         id="demo-access-feedback"
       >
-        {isLoading ? "Opening demo workspace." : error}
+        {error}
       </p>
     </div>
   );

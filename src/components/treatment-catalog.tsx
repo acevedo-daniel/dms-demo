@@ -6,6 +6,8 @@ import { useEffect, useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useI18n } from "@/lib/i18n";
+import { getLocalizedTreatment } from "@/lib/i18n/treatment-labels";
 import type { TreatmentCatalogItem } from "@/lib/treatments";
 import { cn } from "@/lib/utils";
 
@@ -23,7 +25,15 @@ export function TreatmentCatalog({
   initialTreatmentId,
   treatments,
 }: TreatmentCatalogProps) {
-  const selectedTreatmentId = treatments.some(
+  const { locale, t } = useI18n();
+
+  const localizedTreatments = useMemo(() => {
+    return treatments.map((treatment) =>
+      getLocalizedTreatment(treatment, locale),
+    );
+  }, [treatments, locale]);
+
+  const selectedTreatmentId = localizedTreatments.some(
     (treatment) => treatment.id === initialTreatmentId,
   )
     ? initialTreatmentId
@@ -38,7 +48,7 @@ export function TreatmentCatalog({
   const groups = useMemo(() => {
     const grouped = new Map<string, TreatmentCatalogItem[]>();
 
-    for (const treatment of treatments) {
+    for (const treatment of localizedTreatments) {
       grouped.set(treatment.category, [
         ...(grouped.get(treatment.category) ?? []),
         treatment,
@@ -51,7 +61,7 @@ export function TreatmentCatalog({
         category,
         treatments: catalogTreatments,
       }));
-  }, [treatments]);
+  }, [localizedTreatments]);
 
   const normalizedSearch = searchQuery.trim().toLowerCase();
 
@@ -69,10 +79,10 @@ export function TreatmentCatalog({
       .map((group) => ({
         category: group.category,
         treatments: group.treatments.filter(
-          (t) =>
-            t.name.toLowerCase().includes(normalizedSearch) ||
-            t.description.toLowerCase().includes(normalizedSearch) ||
-            t.category.toLowerCase().includes(normalizedSearch),
+          (item) =>
+            item.name.toLowerCase().includes(normalizedSearch) ||
+            item.description.toLowerCase().includes(normalizedSearch) ||
+            item.category.toLowerCase().includes(normalizedSearch),
         ),
       }))
       .filter((group) => group.treatments.length > 0);
@@ -108,10 +118,14 @@ export function TreatmentCatalog({
     return (
       <section className="mt-8 rounded-[var(--radius-lg)] border border-border/80 bg-card/40 py-12 text-center shadow-xs">
         <p className="font-semibold text-foreground">
-          No treatment references are available.
+          {locale === "es"
+            ? "No hay referencias de tratamientos disponibles."
+            : "No treatment references available."}
         </p>
         <p className="mt-1 text-sm text-muted-foreground">
-          Treatment catalog data could not be loaded.
+          {locale === "es"
+            ? "No se pudieron cargar los datos del catálogo."
+            : "Could not load catalog data."}
         </p>
       </section>
     );
@@ -127,12 +141,18 @@ export function TreatmentCatalog({
               className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground"
               htmlFor="treatment-catalog-search"
             >
-              Filter catalog
+              {locale === "es" ? "Filtrar catálogo" : "Filter catalog"}
             </label>
             {searchQuery ? (
               <span className="text-xs font-medium text-muted-foreground">
                 {totalFilteredTreatments}{" "}
-                {totalFilteredTreatments === 1 ? "protocol" : "protocols"}
+                {locale === "es"
+                  ? totalFilteredTreatments === 1
+                    ? "protocolo"
+                    : "protocolos"
+                  : totalFilteredTreatments === 1
+                    ? "protocol"
+                    : "protocols"}
               </span>
             ) : null}
           </div>
@@ -145,12 +165,14 @@ export function TreatmentCatalog({
               className="h-10 rounded-[var(--radius-md)] border-border/80 bg-background/60 pl-10 pr-10 text-sm shadow-xs backdrop-blur-xs transition-all focus:border-foreground/30 focus:bg-background"
               id="treatment-catalog-search"
               onChange={(event) => setSearchQuery(event.target.value)}
-              placeholder="Search protocols or keywords"
+              placeholder={t.treatments.searchPlaceholder}
               value={searchQuery}
             />
             {searchQuery ? (
               <Button
-                aria-label="Clear search"
+                aria-label={
+                  locale === "es" ? "Limpiar búsqueda" : "Clear search"
+                }
                 className="absolute top-1/2 right-2 size-7 -translate-y-1/2 rounded-full text-muted-foreground hover:text-foreground"
                 onClick={() => setSearchQuery("")}
                 size="icon"
@@ -163,9 +185,13 @@ export function TreatmentCatalog({
           </div>
         </div>
 
-        {/* Category Pills (Subtle, Sobrio) */}
+        {/* Category Pills */}
         <nav
-          aria-label="Filter treatments by category"
+          aria-label={
+            locale === "es"
+              ? "Filtrar tratamientos por categoría"
+              : "Filter treatments by category"
+          }
           className="inline-flex min-w-0 max-w-full items-center self-start overflow-x-auto rounded-full border border-border/80 bg-surface/80 p-1 shadow-xs backdrop-blur-xs lg:self-end"
         >
           <button
@@ -179,9 +205,9 @@ export function TreatmentCatalog({
             onClick={() => setSelectedCategory("all")}
             type="button"
           >
-            <span>All protocols</span>
+            <span>{t.treatments.allCategories}</span>
             <span className="ml-1 text-muted-foreground">
-              ({treatments.length})
+              ({localizedTreatments.length})
             </span>
           </button>
           {groups.map((group) => (
@@ -213,7 +239,9 @@ export function TreatmentCatalog({
               expandedId={expandedId}
               group={group}
               key={group.category}
+              locale={locale}
               onExpandedChange={setExpandedId}
+              scheduleLabel={t.treatments.scheduleAction}
               selectedTreatmentId={selectedTreatmentId}
             />
           ))}
@@ -227,10 +255,10 @@ export function TreatmentCatalog({
             className="text-base font-semibold text-foreground"
             id="no-treatment-results-title"
           >
-            No treatments match this search.
+            {t.treatments.emptyTitle}
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Try searching by another term or clear the active specialty filter.
+            {t.treatments.emptyDesc}
           </p>
           <Button
             className="mt-4 font-semibold shadow-xs"
@@ -240,7 +268,7 @@ export function TreatmentCatalog({
             }}
             variant="outline"
           >
-            Reset filters
+            {locale === "es" ? "Restablecer filtros" : "Reset filters"}
           </Button>
         </section>
       )}
@@ -251,12 +279,16 @@ export function TreatmentCatalog({
 function TreatmentCatalogGroup({
   expandedId,
   group,
+  locale,
   onExpandedChange,
+  scheduleLabel,
   selectedTreatmentId,
 }: {
   expandedId: string | null;
   group: TreatmentGroup;
+  locale: "es" | "en";
   onExpandedChange: (id: string | null) => void;
+  scheduleLabel: string;
   selectedTreatmentId?: string;
 }) {
   const headingId = `treatment-category-${group.category.toLowerCase().replaceAll(/[^a-z0-9]+/g, "-")}`;
@@ -302,7 +334,9 @@ function TreatmentCatalogGroup({
                     </span>
                     {selected ? (
                       <span className="rounded border border-border bg-foreground text-background px-2 py-0.5 text-[10px] font-medium">
-                        Selected context
+                        {locale === "es"
+                          ? "Contexto seleccionado"
+                          : "Selected context"}
                       </span>
                     ) : null}
                   </div>
@@ -348,11 +382,11 @@ function TreatmentCatalogGroup({
                     size="sm"
                   >
                     <Link
-                      aria-label={`Schedule ${treatment.name}`}
+                      aria-label={`${scheduleLabel} ${treatment.name}`}
                       href={`/demo/schedule?create=1&treatment=${treatment.id}`}
                     >
                       <CalendarPlus aria-hidden className="size-3.5" />
-                      Schedule
+                      {scheduleLabel}
                     </Link>
                   </Button>
                 </div>
@@ -365,17 +399,24 @@ function TreatmentCatalogGroup({
                 >
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <p className="text-muted-foreground">
-                      Baseline practice allocation:{" "}
+                      {locale === "es"
+                        ? "Asignación de referencia en consultorio: "
+                        : "Standard clinical slot: "}
                       <span className="font-mono font-medium text-foreground">
-                        {treatment.defaultDurationMinutes} minutes
+                        {treatment.defaultDurationMinutes}{" "}
+                        {locale === "es" ? "minutos" : "minutes"}
                       </span>{" "}
-                      in Operatory 1 or 2.
+                      {locale === "es"
+                        ? "en Sillón 1 o 2."
+                        : "in Operatory 1 or 2."}
                     </p>
                     <Link
                       className="inline-flex shrink-0 items-center font-medium text-foreground underline-offset-4 hover:underline"
                       href={`/demo/schedule?create=1&treatment=${treatment.id}`}
                     >
-                      Open in Schedule &rarr;
+                      {locale === "es"
+                        ? "Abrir en la agenda →"
+                        : "Open in schedule →"}
                     </Link>
                   </div>
                 </div>

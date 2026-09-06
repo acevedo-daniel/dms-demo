@@ -1,8 +1,16 @@
-export default function PatientLoading() {
+import { getServerLocale } from "@/lib/i18n/server";
+
+export default async function PatientLoading() {
+  const locale = await getServerLocale();
+
   return (
     <main
       aria-busy="true"
-      aria-label="Loading patient record"
+      aria-label={
+        locale === "es"
+          ? "Cargando la ficha del paciente"
+          : "Loading patient record"
+      }
       className="mx-auto w-full max-w-7xl animate-pulse px-4 py-8 sm:px-6 lg:px-8"
     >
       <div className="h-8 w-24 rounded-full bg-secondary/80" />

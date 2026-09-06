@@ -10,7 +10,9 @@ const testPatient = {
 
 async function openDemoWorkspace(page: Page) {
   await page.goto("/demo/access");
-  await page.getByRole("button", { name: "Open demo workspace" }).click();
+  await page
+    .getByRole("button", { name: "Abrir espacio de demostración" })
+    .click();
   await expect(page).toHaveURL(/\/demo\/dashboard$/);
 }
 
@@ -21,7 +23,9 @@ async function resetDemoWorkspace(page: Page) {
 }
 
 async function openDemoControls(page: Page) {
-  await page.getByRole("button", { name: "Open demo controls" }).click();
+  await page
+    .getByRole("button", { name: "Abrir controles de la demo" })
+    .click();
 }
 
 async function openResetDemoWorkspace(page: Page) {
@@ -29,24 +33,24 @@ async function openResetDemoWorkspace(page: Page) {
   await resetDemoWorkspace(page);
   await page.reload();
   await expect(
-    page.getByRole("heading", { level: 1, name: "Today" }),
+    page.getByRole("heading", { level: 1, name: "Hoy" }),
   ).toBeVisible();
 }
 
 async function addPatient(page: Page) {
-  await page.getByRole("button", { name: "Add patient" }).first().click();
+  await page.getByRole("button", { name: "Nuevo paciente" }).first().click();
 
   const dialog = page.getByRole("dialog");
-  await dialog.getByLabel("Identifier").fill(testPatient.identifier);
-  await dialog.getByLabel("First name").fill(testPatient.firstName);
-  await dialog.getByLabel("Last name").fill(testPatient.lastName);
+  await dialog.getByLabel("Identificador").fill(testPatient.identifier);
+  await dialog.getByLabel("Nombre").fill(testPatient.firstName);
+  await dialog.getByLabel("Apellido").fill(testPatient.lastName);
   await dialog
-    .getByRole("button", { name: "Add patient", exact: true })
+    .getByRole("button", { name: "Agregar paciente", exact: true })
     .click();
 
   await expect(dialog).toBeHidden();
   await expect(
-    page.getByRole("link", { name: "Open patient E2E Patient", exact: true }),
+    page.getByRole("link", { name: "Ver ficha de E2E Patient", exact: true }),
   ).toBeVisible();
 }
 
@@ -55,27 +59,27 @@ test("opens a provisioned demo session", async ({ page }) => {
   await openDemoWorkspace(page);
 
   await expect(
-    page.getByRole("heading", { level: 1, name: "Today" }),
+    page.getByRole("heading", { level: 1, name: "Hoy" }),
   ).toBeVisible();
   await expect(
     page
       .getByRole("main")
-      .getByText("Tuesday, 12 May 2026", { exact: true })
+      .getByText("Martes, 12 de mayo de 2026", { exact: true })
       .first(),
   ).toBeVisible();
 
   const navigation = page.getByRole("navigation", {
-    name: "Workspace navigation",
+    name: "Navegación del espacio",
   });
   await expect(navigation).toBeVisible();
   await expect(navigation.getByRole("link")).toHaveText([
-    "Today",
-    "Schedule",
-    "Patients",
-    "Treatments",
-    "Notes",
+    "Hoy",
+    "Agenda",
+    "Pacientes",
+    "Tratamientos",
+    "Notas",
   ]);
-  await expect(navigation.getByRole("link", { name: "Today" })).toHaveAttribute(
+  await expect(navigation.getByRole("link", { name: "Hoy" })).toHaveAttribute(
     "aria-current",
     "page",
   );
@@ -86,34 +90,36 @@ test("opens the selected Today appointment in Schedule", async ({ page }) => {
   await openResetDemoWorkspace(page);
 
   const openInSchedule = page
-    .getByRole("link", { name: "Open in schedule" })
+    .getByRole("link", { name: "Ver en la agenda" })
     .first();
   await expect(openInSchedule).toHaveAttribute("href", /appointment=/);
   await openInSchedule.click();
 
   await expect(
-    page.getByRole("dialog", { name: "Appointment details" }),
+    page.getByRole("dialog", { name: "Detalles del turno" }),
   ).toBeVisible();
 });
 
 test("adds a patient through the directory", async ({ page }) => {
   await openResetDemoWorkspace(page);
-  await page.getByRole("link", { name: "Patients" }).click();
+  await page.getByRole("link", { name: "Pacientes" }).click();
 
   await addPatient(page);
-  await expect(page.getByRole("status")).toContainText("Patient added.");
+  await expect(page.getByRole("status")).toContainText(
+    "Paciente agregado al directorio.",
+  );
 });
 
 test("keeps a failed patient save open and announces its error", async ({
   page,
 }) => {
   await openResetDemoWorkspace(page);
-  await page.getByRole("link", { name: "Patients" }).click();
+  await page.getByRole("link", { name: "Pacientes" }).click();
   await page.route("**/api/demo/patients", async (route) => {
     if (route.request().method() === "POST") {
       await route.fulfill({
         body: JSON.stringify({
-          error: { message: "The patient could not be saved." },
+          error: { message: "No se pudo guardar la ficha del paciente." },
         }),
         contentType: "application/json",
         status: 503,
@@ -124,18 +130,18 @@ test("keeps a failed patient save open and announces its error", async ({
     await route.continue();
   });
 
-  await page.getByRole("button", { name: "Add patient" }).first().click();
-  const dialog = page.getByRole("dialog", { name: "Add patient" });
-  await dialog.getByLabel("Identifier").fill("E2E-ERROR");
-  await dialog.getByLabel("First name").fill("E2E");
-  await dialog.getByLabel("Last name").fill("Error");
+  await page.getByRole("button", { name: "Nuevo paciente" }).first().click();
+  const dialog = page.getByRole("dialog", { name: "Nuevo paciente" });
+  await dialog.getByLabel("Identificador").fill("E2E-ERROR");
+  await dialog.getByLabel("Nombre").fill("E2E");
+  await dialog.getByLabel("Apellido").fill("Error");
   await dialog
-    .getByRole("button", { name: "Add patient", exact: true })
+    .getByRole("button", { name: "Agregar paciente", exact: true })
     .click();
 
   await expect(dialog).toBeVisible();
   await expect(dialog.getByRole("alert")).toHaveText(
-    "The patient could not be saved.",
+    "No se pudo guardar la ficha del paciente.",
   );
 });
 
@@ -143,30 +149,30 @@ test("keeps archive confirmation open when archiving fails", async ({
   page,
 }) => {
   await openResetDemoWorkspace(page);
-  await page.getByRole("link", { name: "Patients" }).click();
+  await page.getByRole("link", { name: "Pacientes" }).click();
   await addPatient(page);
   await page
-    .getByRole("link", { name: "Open patient E2E Patient", exact: true })
+    .getByRole("link", { name: "Ver ficha de E2E Patient", exact: true })
     .click();
   await page.route("**/api/demo/patients/*/archive", async (route) => {
     await route.fulfill({
       body: JSON.stringify({
-        error: { message: "The patient could not be archived." },
+        error: { message: "No se pudo archivar la ficha del paciente." },
       }),
       contentType: "application/json",
       status: 503,
     });
   });
 
-  await page.getByRole("button", { name: "Archive" }).click();
+  await page.getByRole("button", { name: "Archivar" }).click();
   const confirmation = page.getByRole("alertdialog", {
-    name: "Archive E2E Patient?",
+    name: "¿Archivar a E2E Patient?",
   });
-  await confirmation.getByRole("button", { name: "Archive patient" }).click();
+  await confirmation.getByRole("button", { name: "Archivar paciente" }).click();
 
   await expect(confirmation).toBeVisible();
   await expect(confirmation.getByRole("alert")).toHaveText(
-    "The patient could not be archived.",
+    "No se pudo archivar la ficha del paciente.",
   );
 });
 
@@ -174,60 +180,59 @@ test("confirms before discarding an edited appointment and restores focus", asyn
   page,
 }) => {
   await openResetDemoWorkspace(page);
-  await page.getByRole("link", { name: "Schedule", exact: true }).click();
+  await page.getByRole("link", { name: "Agenda", exact: true }).click();
 
   const createAppointment = page
-    .getByRole("button", { name: "Create appointment" })
+    .getByRole("button", { name: "Crear turno" })
     .first();
   await createAppointment.focus();
   await page.keyboard.press("Enter");
 
-  const dialog = page.getByRole("dialog", { name: "Create appointment" });
-  await dialog.getByLabel("Patient").selectOption({ index: 1 });
+  const dialog = page.getByRole("dialog", { name: "Crear turno" });
+  await dialog.getByLabel("Paciente").selectOption({ index: 1 });
   await page.keyboard.press("Escape");
 
   const discardDialog = page.getByRole("alertdialog", {
-    name: "Discard changes?",
+    name: "¿Descartar cambios?",
   });
   await expect(discardDialog).toBeVisible();
   await expect(
-    discardDialog.getByRole("button", { name: "Keep editing" }),
+    discardDialog.getByRole("button", { name: "Continuar editando" }),
   ).toBeFocused();
 
-  await discardDialog.getByRole("button", { name: "Discard changes" }).click();
+  await discardDialog
+    .getByRole("button", { name: "Descartar cambios" })
+    .click();
   await expect(dialog).toBeHidden();
   await expect(createAppointment).toBeFocused();
 });
 
 test("creates an appointment from the weekly schedule", async ({ page }) => {
   await openResetDemoWorkspace(page);
-  await page.getByRole("link", { name: "Schedule", exact: true }).click();
-  await page
-    .getByRole("button", { name: "Create appointment" })
-    .first()
-    .click();
+  await page.getByRole("link", { name: "Agenda", exact: true }).click();
+  await page.getByRole("button", { name: "Crear turno" }).first().click();
 
   const dialog = page.getByRole("dialog");
   await dialog
-    .getByLabel("Patient")
+    .getByLabel("Paciente")
     .selectOption({ label: "Alex Quinn · AT-1001" });
   await dialog
-    .getByLabel("Treatment")
+    .getByLabel("Tratamiento")
     .selectOption({ label: "Consulta de rutina · 30 min" });
-  await dialog.getByLabel("Date").fill("2026-05-11");
-  await dialog.getByLabel("Time").fill("09:00");
+  await dialog.getByLabel("Fecha").fill("2026-05-11");
+  await dialog.getByLabel("Horario").fill("09:00");
   await dialog
-    .getByLabel("Operational note")
+    .getByLabel("Nota de coordinación")
     .fill("Created by end-to-end test.");
   await dialog
-    .getByRole("button", { name: "Create appointment", exact: true })
+    .getByRole("button", { name: "Crear turno", exact: true })
     .click();
 
   await expect(dialog).toBeHidden();
-  await expect(page.getByText("Appointment created.")).toBeAttached();
+  await expect(page.getByText("Turno creado.")).toBeAttached();
   await expect(
     page.getByRole("button", {
-      name: "Open scheduled appointment for Alex Quinn · Consulta de rutina at 09:00",
+      name: "Abrir turno programado para Alex Quinn · Consulta de rutina a las 09:00",
     }),
   ).toBeVisible();
 });
@@ -241,44 +246,44 @@ test("resolves selected appointment deep links and drafts an empty slot", async 
   );
 
   const appointmentContext = page.getByRole("dialog", {
-    name: "Appointment details",
+    name: "Detalles del turno",
   });
   await expect(appointmentContext).toBeVisible();
-  await expect(appointmentContext.getByLabel("Time")).toHaveValue("09:30");
+  await expect(appointmentContext.getByLabel("Horario")).toHaveValue("09:30");
 
   await appointmentContext
-    .getByRole("button", { name: "Close" })
+    .getByRole("button", { name: "Cerrar" })
     .first()
     .click();
   await page
     .getByRole("button", {
-      name: "Create appointment for Tue 12 May at 09:00",
+      name: "Agendar turno para mar 12 may a las 09:00",
     })
     .click();
 
   await expect(
     page
       .locator('[role="status"]')
-      .filter({ hasText: "Draft appointment" })
+      .filter({ hasText: "Turno en borrador" })
       .first(),
   ).toBeVisible();
-  await expect(
-    page.getByRole("dialog", { name: "Create appointment" }),
-  ).toBeVisible();
+  await expect(page.getByRole("dialog", { name: "Crear turno" })).toBeVisible();
 });
 
 test("adds a note from a patient record", async ({ page }) => {
   await openResetDemoWorkspace(page);
   await page.goto(`/demo/patients/${alexQuinnId}`);
-  await page.getByRole("button", { name: "Add note" }).click();
+  await page.getByRole("button", { name: "Nueva nota" }).click();
 
   const dialog = page.getByRole("dialog");
-  await dialog.getByLabel("Note").fill("Created by end-to-end test.");
-  await dialog.getByRole("button", { name: "Save note" }).click();
+  await dialog.getByLabel("Nota clínica").fill("Created by end-to-end test.");
+  await dialog.getByRole("button", { name: "Guardar nota" }).click();
 
   await expect(dialog).toBeHidden();
   await expect(page.getByText("Created by end-to-end test.")).toBeVisible();
-  await expect(page.getByRole("status")).toContainText("Patient note saved.");
+  await expect(page.getByRole("status")).toContainText(
+    "Nota de paciente guardada.",
+  );
 });
 
 test("uses Today as an immediate, connected operating view", async ({
@@ -287,9 +292,9 @@ test("uses Today as an immediate, connected operating view", async ({
   await openResetDemoWorkspace(page);
 
   await expect(page.getByRole("heading", { name: "Alex Quinn" })).toBeVisible();
-  await expect(page.getByText(/Operatory 1.*Assigned/)).toBeVisible();
+  await expect(page.getByText(/Sillón 1.*Asignado/)).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "Today's agenda" }),
+    page.getByRole("heading", { name: "Agenda del día" }),
   ).toBeVisible();
 
   const recentTreatment = page
@@ -299,7 +304,9 @@ test("uses Today as an immediate, connected operating view", async ({
     "href",
     `/demo/treatments?treatment=${hygieneVisitId}`,
   );
-  await expect(page.getByRole("link", { name: "Open notes" })).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Ver libro de notas" }),
+  ).toBeVisible();
 });
 
 test("opens treatment context from Notes and pre-fills Schedule", async ({
@@ -321,20 +328,20 @@ test("opens treatment context from Notes and pre-fills Schedule", async ({
   await expect(selectedTreatment).toBeFocused();
   await expect(selectedTreatment).toContainText("Higiene dental");
   await expect(
-    selectedTreatment.getByRole("link", { name: "Schedule Higiene dental" }),
+    selectedTreatment.getByRole("link", { name: "Agendar Higiene dental" }),
   ).toBeVisible();
 
   await selectedTreatment
-    .getByRole("link", { name: "Schedule Higiene dental" })
+    .getByRole("link", { name: "Agendar Higiene dental" })
     .click();
   const appointmentDialog = page.getByRole("dialog", {
-    name: "Create appointment",
+    name: "Crear turno",
   });
   await expect(appointmentDialog).toBeVisible();
-  await expect(appointmentDialog.getByLabel("Treatment")).toHaveValue(
+  await expect(appointmentDialog.getByLabel("Tratamiento")).toHaveValue(
     hygieneVisitId,
   );
-  await expect(appointmentDialog.getByLabel("Duration (minutes)")).toHaveValue(
+  await expect(appointmentDialog.getByLabel("Duración (minutos)")).toHaveValue(
     "45",
   );
 });
@@ -345,12 +352,14 @@ test("connects patient summary, historical activity, and schedule context", asyn
   await openResetDemoWorkspace(page);
   await page.goto(`/demo/patients/${alexQuinnId}`);
 
-  await expect(page.getByLabel("Patient summary")).toContainText("1 visit");
-  await expect(page.getByLabel("Patient summary")).toContainText(
-    "Prefers morning",
+  await expect(page.getByLabel("Resumen del paciente")).toContainText(
+    "1 consulta",
   );
-  await expect(page.getByLabel("Patient summary")).toContainText(
-    "No clinical alert recorded",
+  await expect(page.getByLabel("Resumen del paciente")).toContainText(
+    "Prefiere turno mañana",
+  );
+  await expect(page.getByLabel("Resumen del paciente")).toContainText(
+    "Sin alerta médica registrada",
   );
   await expect(
     page.getByText(
@@ -358,24 +367,24 @@ test("connects patient summary, historical activity, and schedule context", asyn
     ),
   ).toBeVisible();
 
-  await page.getByRole("button", { name: "Appointments", exact: true }).click();
+  await page.getByRole("button", { name: "Turnos", exact: true }).click();
   await expect(
     page.getByText(
       "Revisión previa a la profilaxis: encías sanas sin signos de sangrado activo. Se confirma indicación de limpieza semestral.",
     ),
   ).toBeHidden();
-  await page.getByRole("button", { name: "Notes", exact: true }).click();
+  await page.getByRole("button", { name: "Notas", exact: true }).click();
   await expect(
     page.getByText(
       "Revisión previa a la profilaxis: encías sanas sin signos de sangrado activo. Se confirma indicación de limpieza semestral.",
     ),
   ).toBeVisible();
 
-  const viewInSchedule = page.getByRole("link", { name: "View in schedule" });
+  const viewInSchedule = page.getByRole("link", { name: "Ver en la agenda" });
   await expect(viewInSchedule).toHaveAttribute("href", /appointment=/);
   await viewInSchedule.click();
   await expect(
-    page.getByRole("dialog", { name: "Appointment details" }),
+    page.getByRole("dialog", { name: "Detalles del turno" }),
   ).toBeVisible();
 });
 
@@ -383,34 +392,32 @@ test("keeps archived patient records read-only while preserving history", async 
   page,
 }) => {
   await openResetDemoWorkspace(page);
-  await page.getByRole("link", { name: "Patients" }).click();
+  await page.getByRole("link", { name: "Pacientes" }).click();
   await addPatient(page);
 
   const patientRecord = page.getByRole("link", {
-    name: "Open patient E2E Patient",
+    name: "Ver ficha de E2E Patient",
     exact: true,
   });
   const patientRecordHref = await patientRecord.getAttribute("href");
   expect(patientRecordHref).toBeTruthy();
   await patientRecord.click();
-  await page.getByRole("button", { name: "Archive" }).click();
+  await page.getByRole("button", { name: "Archivar" }).click();
   await page
-    .getByRole("alertdialog", { name: "Archive E2E Patient?" })
-    .getByRole("button", { name: "Archive patient" })
+    .getByRole("alertdialog", { name: "¿Archivar a E2E Patient?" })
+    .getByRole("button", { name: "Archivar paciente" })
     .click();
 
   await expect(page).toHaveURL(/\/demo\/patients$/);
   await page.goto(patientRecordHref!);
-  await expect(page.getByText("Archived", { exact: true })).toBeVisible();
+  await expect(page.getByText("Archivado", { exact: true })).toBeVisible();
   await expect(
-    page.getByText(/read-only and remains available for reference/),
+    page.getByText(/solo lectura y se conserva como referencia histórica/),
   ).toBeVisible();
-  await expect(
-    page.getByRole("link", { name: "Create appointment" }),
-  ).toHaveCount(0);
-  await expect(page.getByRole("button", { name: "Edit" })).toHaveCount(0);
-  await expect(page.getByRole("button", { name: "Add note" })).toHaveCount(0);
-  await expect(page.getByRole("button", { name: "Archive" })).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "Crear turno" })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Editar" })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Nueva nota" })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Archivar" })).toHaveCount(0);
 });
 
 test("keeps the archive prerequisite explicit for patients with active appointments", async ({
@@ -421,11 +428,11 @@ test("keeps the archive prerequisite explicit for patients with active appointme
 
   await expect(
     page.getByText(
-      "Cancel or complete active appointments before archiving this patient.",
+      "Cancelá o completá los turnos activos antes de archivar este paciente.",
       { exact: true },
     ),
   ).toBeVisible();
-  await expect(page.getByRole("button", { name: "Archive" })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Archivar" })).toHaveCount(0);
 });
 
 test("keeps the workspace available when sign out fails", async ({ page }) => {
@@ -439,40 +446,51 @@ test("keeps the workspace available when sign out fails", async ({ page }) => {
   });
 
   await openDemoControls(page);
-  await page.getByRole("button", { name: "Sign out" }).click();
+  await page.getByRole("button", { name: "Cerrar sesión" }).click();
 
   await expect(page).toHaveURL(/\/demo\/dashboard$/);
   await expect(
-    page.getByText("The workspace could not be signed out. Try again.", {
-      exact: true,
-    }),
+    page.getByText(
+      "No se pudo cerrar la sesión en el espacio de trabajo. Reintentá.",
+      {
+        exact: true,
+      },
+    ),
   ).toBeVisible();
-  await expect(page.getByRole("button", { name: "Sign out" })).toBeEnabled();
+  await expect(
+    page.getByRole("button", { name: "Cerrar sesión" }),
+  ).toBeEnabled();
 });
 
 test("resets sample data from the demo controls", async ({ page }) => {
   await openDemoWorkspace(page);
-  await page.getByRole("link", { name: "Patients" }).click();
+  await page.getByRole("link", { name: "Pacientes" }).click();
   await addPatient(page);
 
   await openDemoControls(page);
-  await page.getByRole("button", { name: "Reset sample data" }).click();
+  await page
+    .getByRole("button", { name: "Restablecer datos de prueba" })
+    .click();
   const confirmation = page.getByRole("alertdialog", {
-    name: "Reset sample data?",
+    name: "¿Restablecer datos de prueba?",
   });
-  await confirmation.getByRole("button", { name: "Reset sample data" }).click();
+  await confirmation
+    .getByRole("button", { name: "Restablecer datos de prueba" })
+    .click();
 
   await expect(page).toHaveURL(/\/demo\/dashboard$/);
-  await expect(page.getByRole("status")).toContainText("Sample data reset.");
-  await page.getByRole("link", { name: "Patients" }).click();
-  await page.getByLabel("Find a patient").fill(testPatient.identifier);
-  await expect(page.getByText(/No patients match/)).toBeVisible();
+  await expect(page.getByRole("status")).toContainText(
+    "Datos de prueba restablecidos.",
+  );
+  await page.getByRole("link", { name: "Pacientes" }).click();
+  await page.getByLabel("Buscar paciente").fill(testPatient.identifier);
+  await expect(page.getByText(/Ningún paciente coincide/)).toBeVisible();
 });
 
 test("signs out and protects the workspace route", async ({ page }) => {
   await openDemoWorkspace(page);
   await openDemoControls(page);
-  await page.getByRole("button", { name: "Sign out" }).click();
+  await page.getByRole("button", { name: "Cerrar sesión" }).click();
 
   await expect(page).toHaveURL(/\/demo\/access$/);
   await page.goto("/demo/dashboard");
@@ -481,14 +499,16 @@ test("signs out and protects the workspace route", async ({ page }) => {
 
 test("resets the demo workspace to its seeded dataset", async ({ page }) => {
   await openResetDemoWorkspace(page);
-  await page.getByRole("link", { name: "Patients" }).click();
+  await page.getByRole("link", { name: "Pacientes" }).click();
   await addPatient(page);
 
   await resetDemoWorkspace(page);
   await page.reload();
-  await page.getByLabel("Find a patient").fill(testPatient.identifier);
+  await page.getByLabel("Buscar paciente").fill(testPatient.identifier);
 
   await expect(
-    page.getByRole("heading", { name: "No patients match this search." }),
+    page.getByRole("heading", {
+      name: "Ningún paciente coincide con esta búsqueda.",
+    }),
   ).toBeVisible();
 });
