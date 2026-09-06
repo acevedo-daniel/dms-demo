@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { announceWorkspaceFeedback } from "@/components/workspace-feedback";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 
 export function ArriveAppointmentButton({
   appointmentId,
@@ -17,6 +18,7 @@ export function ArriveAppointmentButton({
   size?: "sm" | "default";
 }) {
   const router = useRouter();
+  const { locale } = useI18n();
   const [pending, setPending] = useState(false);
 
   async function markArrived() {
@@ -27,11 +29,25 @@ export function ArriveAppointmentButton({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: "ARRIVED" }),
       });
-      if (!response.ok) throw new Error("Unable to update appointment.");
-      announceWorkspaceFeedback(`${patientName} marked as arrived.`);
+      if (!response.ok) {
+        throw new Error(
+          locale === "es"
+            ? "No se pudo actualizar el turno."
+            : "Could not update appointment.",
+        );
+      }
+      announceWorkspaceFeedback(
+        locale === "es"
+          ? `${patientName} registrado en recepción.`
+          : `${patientName} marked arrived in reception.`,
+      );
       router.refresh();
     } catch {
-      announceWorkspaceFeedback("Unable to update the appointment.");
+      announceWorkspaceFeedback(
+        locale === "es"
+          ? "No se pudo actualizar el turno."
+          : "Could not update appointment.",
+      );
     } finally {
       setPending(false);
     }
@@ -39,7 +55,11 @@ export function ArriveAppointmentButton({
 
   return (
     <Button
-      aria-label={`Mark ${patientName} as arrived`}
+      aria-label={
+        locale === "es"
+          ? `Registrar llegada de ${patientName}`
+          : `Mark arrival for ${patientName}`
+      }
       className={cn("gap-1.5 font-semibold", size === "sm" && "text-xs")}
       disabled={pending}
       onClick={markArrived}
@@ -47,7 +67,13 @@ export function ArriveAppointmentButton({
       variant="outline"
     >
       <UserCheck aria-hidden className="size-3.5 text-info" />
-      {pending ? "Updating…" : "Mark arrived"}
+      {pending
+        ? locale === "es"
+          ? "Actualizando…"
+          : "Updating…"
+        : locale === "es"
+          ? "En recepción"
+          : "Arrived"}
     </Button>
   );
 }

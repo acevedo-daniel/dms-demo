@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { formatDemoDate, formatDemoTime } from "@/lib/demo/format";
+import { useI18n, getLocalizedTreatment } from "@/lib/i18n";
 import type { PatientDirectoryItem } from "@/lib/patients";
 import { cn } from "@/lib/utils";
 
@@ -35,23 +36,27 @@ function toDirectoryItem(patient: EditablePatient): PatientDirectoryItem {
   return { ...patient, nextAppointment: null };
 }
 
-function appointmentSummary(patient: PatientDirectoryItem) {
+function appointmentSummary(
+  patient: PatientDirectoryItem,
+  locale: "es" | "en" = "es",
+) {
   if (!patient.nextAppointment) {
-    return "No appointment scheduled";
+    return locale === "es" ? "Sin turnos próximos" : "No upcoming visits";
   }
 
   const startsAt = new Date(patient.nextAppointment.startsAt);
-  return `${formatDemoDate(startsAt).replace(", 2026", "")} · ${formatDemoTime(startsAt)}`;
+  return `${formatDemoDate(startsAt, locale).replace(", 2026", "")} · ${formatDemoTime(startsAt, locale)}`;
 }
 
-function resultLabel(count: number) {
-  return `${count} ${count === 1 ? "patient" : "patients"}`;
+function resultLabel(count: number, locale: "es" | "en" = "es") {
+  return `${count} ${locale === "es" ? (count === 1 ? "paciente" : "pacientes") : count === 1 ? "patient" : "patients"}`;
 }
 
 export function PatientDirectory({
   initialCreate = false,
   initialPatients,
 }: PatientDirectoryProps) {
+  const { locale, t } = useI18n();
   const [patients, setPatients] = useState(initialPatients);
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
@@ -94,12 +99,12 @@ export function PatientDirectory({
     }
 
     const timeout = window.setTimeout(() => {
-      setResultAnnouncement(resultLabel(nextCount));
+      setResultAnnouncement(resultLabel(nextCount, locale));
       previousResultCount.current = nextCount;
     }, 250);
 
     return () => window.clearTimeout(timeout);
-  }, [filteredPatients.length]);
+  }, [filteredPatients.length, locale]);
 
   useEffect(() => {
     const patientId = pendingFocusPatientId.current;
@@ -152,7 +157,9 @@ export function PatientDirectory({
         <div>
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <span className="font-semibold uppercase tracking-wider text-accent">
-              Patient Directory
+              {locale === "es"
+                ? "Directorio de pacientes"
+                : "Patient directory"}
             </span>
             <span className="text-muted-foreground/40">·</span>
             <span>Atelier Dental</span>
@@ -162,11 +169,12 @@ export function PatientDirectory({
             id="patient-directory-title"
             tabIndex={-1}
           >
-            Patients
+            {t.patients.heading}
           </h1>
           <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">
-            Clinical practice records and patient directory. Review upcoming
-            consultations, medical profiles, and treatment histories.
+            {locale === "es"
+              ? "Registros de la práctica clínica y directorio de pacientes. Consultá citas programadas, perfiles de salud e historiales de tratamiento."
+              : "Clinical practice records and patient directory. Review scheduled appointments, health profiles, and treatment histories."}
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -176,27 +184,40 @@ export function PatientDirectory({
             trigger={
               <Button className="h-10 px-4 font-semibold shadow-xs">
                 <UserPlus aria-hidden className="size-4" />
-                Add patient
+                {t.patients.addPatient}
               </Button>
             }
           />
         </div>
       </header>
 
-      {/* Artisanal Clinical Ledger Strip (No generic colored icon squares) */}
+      {/* Artisanal Clinical Ledger Strip */}
       <section
-        aria-label="Patient directory summary"
+        aria-label={
+          locale === "es"
+            ? "Resumen del directorio de pacientes"
+            : "Patient directory summary"
+        }
         className="mt-6 grid grid-cols-1 divide-y divide-border/60 rounded-[var(--radius-lg)] border border-border/80 bg-card/40 shadow-xs sm:grid-cols-3 sm:divide-x sm:divide-y-0"
       >
         <div className="p-4 sm:p-5">
           <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-            Active Roster
+            {locale === "es" ? "Padrón activo" : "Active directory"}
           </p>
           <p className="mt-1 font-display text-xl font-semibold tracking-tight text-foreground">
-            {patients.length} Registered Patients
+            {patients.length}{" "}
+            {locale === "es"
+              ? patients.length === 1
+                ? "paciente registrado"
+                : "pacientes registrados"
+              : patients.length === 1
+                ? "registered patient"
+                : "registered patients"}
           </p>
           <p className="mt-0.5 text-xs text-muted-foreground">
-            Complete clinical practice history
+            {locale === "es"
+              ? "Historial completo de la práctica clínica"
+              : "Complete clinical practice records"}
           </p>
         </div>
 
@@ -204,26 +225,37 @@ export function PatientDirectory({
           <div className="flex items-center gap-1.5">
             <span className="size-1.5 rounded-full bg-accent" />
             <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-              Upcoming Care
+              {locale === "es" ? "Atención programada" : "Scheduled care"}
             </p>
           </div>
           <p className="mt-1 font-display text-xl font-semibold tracking-tight text-foreground">
-            {upcomingCount} Scheduled Visits
+            {upcomingCount}{" "}
+            {locale === "es"
+              ? upcomingCount === 1
+                ? "turno programado"
+                : "turnos programados"
+              : upcomingCount === 1
+                ? "scheduled visit"
+                : "scheduled visits"}
           </p>
           <p className="mt-0.5 text-xs text-muted-foreground">
-            Scheduled across practice chairs
+            {locale === "es"
+              ? "Agendados en los sillones de la clínica"
+              : "Booked across practice operatories"}
           </p>
         </div>
 
         <div className="p-4 sm:p-5">
           <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-            Care Continuity
+            {locale === "es" ? "Continuidad de atención" : "Care continuity"}
           </p>
           <p className="mt-1 font-display text-xl font-semibold tracking-tight text-foreground">
-            Practice Records
+            {locale === "es" ? "Fichas clínicas" : "Clinical charts"}
           </p>
           <p className="mt-0.5 text-xs text-muted-foreground">
-            Historical notes and treatment charts
+            {locale === "es"
+              ? "Evoluciones históricas y protocolos realizados"
+              : "Historical evolutions and completed protocols"}
           </p>
         </div>
       </section>
@@ -236,13 +268,13 @@ export function PatientDirectory({
               className="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
               htmlFor="patient-directory-search"
             >
-              Find a patient
+              {locale === "es" ? "Buscar paciente" : "Search patients"}
             </label>
             <span
               className="text-xs text-muted-foreground"
               id="patient-directory-result-count"
             >
-              {resultLabel(filteredPatients.length)}
+              {resultLabel(filteredPatients.length, locale)}
             </span>
           </div>
           <div className="relative mt-2">
@@ -255,13 +287,15 @@ export function PatientDirectory({
               className="h-10 rounded-[var(--radius-md)] border-border/80 bg-background/60 pl-10 pr-20 text-sm shadow-xs backdrop-blur-xs transition-all focus:border-foreground/30 focus:bg-background"
               id="patient-directory-search"
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search name or identifier"
+              placeholder={t.patients.searchPlaceholder}
               value={query}
             />
             <div className="absolute top-1/2 right-3 flex -translate-y-1/2 items-center gap-1.5">
               {query ? (
                 <Button
-                  aria-label="Clear patient search"
+                  aria-label={
+                    locale === "es" ? "Limpiar búsqueda" : "Clear search"
+                  }
                   className="size-7 rounded-full text-muted-foreground hover:text-foreground"
                   onClick={() => setQuery("")}
                   size="icon"
@@ -282,9 +316,13 @@ export function PatientDirectory({
           </p>
         </div>
 
-        {/* Status Filter Segmented Controls (Subtle, Sobrio) */}
+        {/* Status Filter Segmented Controls */}
         <div
-          aria-label="Filter directory by appointment status"
+          aria-label={
+            locale === "es"
+              ? "Filtrar directorio por estado de turnos"
+              : "Filter directory by appointment status"
+          }
           className="inline-flex items-center rounded-full border border-border/80 bg-surface/80 p-1 shadow-xs backdrop-blur-xs self-start lg:self-end"
           role="group"
         >
@@ -299,7 +337,7 @@ export function PatientDirectory({
             onClick={() => setStatusFilter("all")}
             type="button"
           >
-            <span>All</span>
+            <span>{t.patients.filterAll}</span>
             <span className="ml-1 text-muted-foreground">
               ({patients.length})
             </span>
@@ -315,7 +353,7 @@ export function PatientDirectory({
             onClick={() => setStatusFilter("upcoming")}
             type="button"
           >
-            <span>Upcoming</span>
+            <span>{t.patients.filterScheduled}</span>
             <span className="ml-1 text-muted-foreground">
               ({upcomingCount})
             </span>
@@ -331,7 +369,7 @@ export function PatientDirectory({
             onClick={() => setStatusFilter("unscheduled")}
             type="button"
           >
-            <span>No visit scheduled</span>
+            <span>{t.patients.filterNoUpcoming}</span>
             <span className="ml-1 text-muted-foreground">
               ({unscheduledCount})
             </span>
@@ -342,79 +380,98 @@ export function PatientDirectory({
       {/* Patient Directory List */}
       {filteredPatients.length ? (
         <ol className="mt-8 space-y-2">
-          {filteredPatients.map((patient) => (
-            <li className="group" key={patient.id}>
-              <Link
-                aria-label={`Open patient ${patientName(patient)}`}
-                className="dms-pressable block rounded-[var(--radius-lg)] border border-border/70 bg-card/30 p-4 transition-all duration-150 hover:border-foreground/20 hover:bg-card hover:shadow-xs focus:outline-none focus-visible:ring-2 focus-visible:ring-primary sm:px-6 sm:py-4.5"
-                href={`/demo/patients/${patient.id}`}
-                id={`patient-${patient.id}`}
-              >
-                <div className="flex items-center justify-between gap-4">
-                  <div className="grid flex-1 gap-4 sm:grid-cols-[minmax(14rem,1.3fr)_minmax(12rem,1.1fr)_minmax(10rem,1fr)] sm:items-center sm:gap-6">
-                    {/* Patient identity */}
-                    <div className="flex min-w-0 items-center gap-3.5">
-                      <div
-                        aria-hidden
-                        className="flex size-10 shrink-0 items-center justify-center rounded-full border border-border bg-secondary/60 text-xs font-semibold text-foreground/80"
-                      >
-                        {patientInitials(patient)}
-                      </div>
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-2">
-                          <p className="truncate text-base font-semibold tracking-tight text-foreground transition-colors group-hover:text-primary">
-                            {patientName(patient)}
-                          </p>
-                          <span className="shrink-0 rounded border border-border/70 bg-secondary/50 px-1.5 py-0.5 font-mono text-[10px] font-medium text-muted-foreground">
-                            {patient.identifier}
-                          </span>
-                        </div>
-                        {patient.email || patient.phone ? (
-                          <p className="mt-0.5 truncate text-xs text-muted-foreground">
-                            {patient.email ?? patient.phone}
-                          </p>
-                        ) : null}
-                      </div>
-                    </div>
+          {filteredPatients.map((patient) => {
+            const localizedTreatment = patient.nextAppointment?.treatmentName
+              ? getLocalizedTreatment(
+                  {
+                    name: patient.nextAppointment.treatmentName,
+                  },
+                  locale,
+                )
+              : null;
 
-                    {/* Next scheduled care */}
-                    <div className="text-sm">
-                      <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-                        Next appointment
-                      </p>
-                      {patient.nextAppointment ? (
-                        <div className="mt-0.5 flex items-center gap-1.5">
-                          <span className="size-1.5 shrink-0 rounded-full bg-accent" />
-                          <p className="truncate text-xs font-medium text-foreground sm:text-sm">
-                            {appointmentSummary(patient)}
-                          </p>
+            return (
+              <li className="group" key={patient.id}>
+                <Link
+                  aria-label={
+                    locale === "es"
+                      ? `Ver ficha de ${patientName(patient)}`
+                      : `View record for ${patientName(patient)}`
+                  }
+                  className="dms-pressable block rounded-[var(--radius-lg)] border border-border/70 bg-card/30 p-4 transition-all duration-150 hover:border-foreground/20 hover:bg-card hover:shadow-xs focus:outline-none focus-visible:ring-2 focus-visible:ring-primary sm:px-6 sm:py-4.5"
+                  href={`/demo/patients/${patient.id}`}
+                  id={`patient-${patient.id}`}
+                >
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="grid flex-1 gap-4 sm:grid-cols-[minmax(14rem,1.3fr)_minmax(12rem,1.1fr)_minmax(10rem,1fr)] sm:items-center sm:gap-6">
+                      {/* Patient identity */}
+                      <div className="flex min-w-0 items-center gap-3.5">
+                        <div
+                          aria-hidden
+                          className="flex size-10 shrink-0 items-center justify-center rounded-full border border-border bg-secondary/60 text-xs font-semibold text-foreground/80"
+                        >
+                          {patientInitials(patient)}
                         </div>
-                      ) : (
-                        <p className="mt-0.5 truncate text-xs text-muted-foreground/80 sm:text-sm">
-                          No appointment scheduled
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2">
+                            <p className="truncate text-base font-semibold tracking-tight text-foreground transition-colors group-hover:text-primary">
+                              {patientName(patient)}
+                            </p>
+                            <span className="shrink-0 rounded border border-border/70 bg-secondary/50 px-1.5 py-0.5 font-mono text-[10px] font-medium text-muted-foreground">
+                              {patient.identifier}
+                            </span>
+                          </div>
+                          {patient.email || patient.phone ? (
+                            <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                              {patient.email ?? patient.phone}
+                            </p>
+                          ) : null}
+                        </div>
+                      </div>
+
+                      {/* Next scheduled care */}
+                      <div className="text-sm">
+                        <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                          {locale === "es" ? "Próximo turno" : "Next visit"}
                         </p>
-                      )}
+                        {patient.nextAppointment ? (
+                          <div className="mt-0.5 flex items-center gap-1.5">
+                            <span className="size-1.5 shrink-0 rounded-full bg-accent" />
+                            <p className="truncate text-xs font-medium text-foreground sm:text-sm">
+                              {appointmentSummary(patient, locale)}
+                            </p>
+                          </div>
+                        ) : (
+                          <p className="mt-0.5 truncate text-xs text-muted-foreground/80 sm:text-sm">
+                            {locale === "es"
+                              ? "Sin turnos próximos"
+                              : "No upcoming visits"}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Associated treatment */}
+                      <div className="text-sm">
+                        <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                          {locale === "es" ? "Tratamiento" : "Treatment"}
+                        </p>
+                        <p className="mt-0.5 truncate text-xs text-muted-foreground sm:text-sm">
+                          {localizedTreatment?.name ??
+                            patient.nextAppointment?.treatmentName ??
+                            "—"}
+                        </p>
+                      </div>
                     </div>
 
-                    {/* Associated treatment */}
-                    <div className="text-sm">
-                      <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-                        Treatment
-                      </p>
-                      <p className="mt-0.5 truncate text-xs text-muted-foreground sm:text-sm">
-                        {patient.nextAppointment?.treatmentName ?? "—"}
-                      </p>
-                    </div>
+                    <ChevronRight
+                      aria-hidden
+                      className="size-4 shrink-0 text-muted-foreground/60 transition-all duration-[var(--motion-fast)] group-hover:translate-x-0.5 group-hover:text-foreground group-hover:opacity-100 motion-reduce:transition-none"
+                    />
                   </div>
-
-                  <ChevronRight
-                    aria-hidden
-                    className="size-4 shrink-0 text-muted-foreground/60 transition-all duration-[var(--motion-fast)] group-hover:translate-x-0.5 group-hover:text-foreground group-hover:opacity-100 motion-reduce:transition-none"
-                  />
-                </div>
-              </Link>
-            </li>
-          ))}
+                </Link>
+              </li>
+            );
+          })}
         </ol>
       ) : query ? (
         <section
@@ -425,11 +482,10 @@ export function PatientDirectory({
             className="text-base font-semibold text-foreground"
             id="no-patient-results-title"
           >
-            No patients match this search.
+            {t.patients.emptySearch}
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Try searching by a different name, last name, or clinical
-            identifier.
+            {t.patients.emptyDesc}
           </p>
           <Button
             className="mt-4 font-semibold shadow-xs"
@@ -439,7 +495,7 @@ export function PatientDirectory({
             }}
             variant="outline"
           >
-            Clear search
+            {locale === "es" ? "Restablecer búsqueda" : "Reset search"}
           </Button>
         </section>
       ) : (
@@ -451,10 +507,14 @@ export function PatientDirectory({
             className="text-base font-semibold text-foreground"
             id="no-patients-title"
           >
-            No active patients are available.
+            {locale === "es"
+              ? "No hay pacientes activos en el directorio."
+              : "No active patients in directory."}
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Add a patient to start building the directory.
+            {locale === "es"
+              ? "Agregá un paciente para iniciar el registro clínico."
+              : "Add a patient to start the clinical record."}
           </p>
         </section>
       )}

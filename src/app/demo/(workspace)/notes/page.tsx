@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { NotesIndex } from "@/components/notes-index";
 import { Button } from "@/components/ui/button";
+import { getServerTranslations } from "@/lib/i18n/server";
 import { getNoteComposerOptions, getPatientNotes } from "@/lib/notes";
 
 async function loadNotes() {
@@ -16,8 +17,11 @@ export default async function NotesPage({
 }: {
   searchParams: Promise<{ create?: string }>;
 }) {
-  const parameters = await searchParams;
-  const data = await loadNotes();
+  const [{ locale }, parameters, data] = await Promise.all([
+    getServerTranslations(),
+    searchParams,
+    loadNotes(),
+  ]);
 
   if (!data) {
     return (
@@ -27,7 +31,9 @@ export default async function NotesPage({
           className="max-w-lg rounded-[var(--radius-lg)] border border-border/80 bg-card/40 p-8 shadow-xs"
         >
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span className="font-medium text-foreground">Clinical Notes</span>
+            <span className="font-semibold uppercase tracking-wider text-accent">
+              {locale === "es" ? "Notas clínicas" : "Clinical Notes"}
+            </span>
             <span className="text-muted-foreground/40">·</span>
             <span>Atelier Dental</span>
           </div>
@@ -35,14 +41,19 @@ export default async function NotesPage({
             className="mt-3 text-2xl font-semibold tracking-tight text-foreground"
             id="notes-error-title"
           >
-            Notes could not be loaded.
+            {locale === "es"
+              ? "No se pudieron cargar las notas."
+              : "Could not load clinical notes."}
           </h1>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-            The sample clinical notes data is temporarily unavailable. Please
-            try again.
+            {locale === "es"
+              ? "Los datos de notas clínicas no están disponibles en este momento. Por favor reintentá."
+              : "Clinical note data is currently unavailable. Please retry."}
           </p>
           <Button asChild className="mt-6 font-semibold" variant="outline">
-            <Link href="/demo/notes">Try again</Link>
+            <Link href="/demo/notes">
+              {locale === "es" ? "Reintentar" : "Retry"}
+            </Link>
           </Button>
         </section>
       </main>

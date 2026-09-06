@@ -7,6 +7,7 @@ import {
   getActiveScheduleAppointment,
   getScheduleData,
 } from "@/lib/schedule-data";
+import { getServerTranslations } from "@/lib/i18n/server";
 
 type SchedulePageProps = {
   searchParams: Promise<{
@@ -37,7 +38,10 @@ export default async function SchedulePage({
   const weekStart = selectedAppointment
     ? scheduleWeekStart(new Date(selectedAppointment.startsAt))
     : (parseScheduleWeek(parameters.week) ?? scheduleWeekStart(getDemoClock()));
-  const schedule = await loadSchedule(weekStart);
+  const [{ locale, t }, schedule] = await Promise.all([
+    getServerTranslations(),
+    loadSchedule(weekStart),
+  ]);
 
   if (!schedule) {
     return (
@@ -47,19 +51,25 @@ export default async function SchedulePage({
           className="max-w-lg border-y border-border py-10"
         >
           <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            Schedule
+            {t.schedule.heading}
           </p>
           <h1
             className="mt-3 text-3xl font-semibold tracking-[-0.03em]"
             id="schedule-error-title"
           >
-            The schedule could not be loaded.
+            {locale === "es"
+              ? "No se pudo cargar la agenda."
+              : "Could not load schedule."}
           </h1>
           <p className="mt-3 leading-7 text-muted-foreground">
-            The sample data is temporarily unavailable. Try again.
+            {locale === "es"
+              ? "Los datos de muestra no están disponibles temporalmente. Reintente."
+              : "Sample data is temporarily unavailable. Retry."}
           </p>
           <Button asChild className="mt-6" variant="outline">
-            <Link href="/demo/schedule">Try again</Link>
+            <Link href="/demo/schedule">
+              {locale === "es" ? "Reintentar" : "Retry"}
+            </Link>
           </Button>
         </section>
       </main>

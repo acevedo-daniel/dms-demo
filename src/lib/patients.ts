@@ -219,9 +219,9 @@ export async function getPatientRecord(
   const timingReference = nextAppointment ?? completedAppointment ?? null;
   const schedulingPreference = timingReference
     ? timingReference.startsAt.getUTCHours() < 15
-      ? "Prefers morning"
-      : "Prefers afternoon"
-    : "No timing preference recorded";
+      ? "Prefiere turno mañana"
+      : "Prefiere turno tarde"
+    : "Sin preferencia de horario registrada";
   const historicalTimeline = [
     ...historicalAppointments.map((appointment) => ({
       id: appointment.id,
@@ -248,7 +248,7 @@ export async function getPatientRecord(
 
   return {
     archivedAt: patient.archivedAt?.toISOString() ?? null,
-    clinicalAlert: patient.clinicalAlert ?? "No clinical alert recorded",
+    clinicalAlert: patient.clinicalAlert ?? "Sin alerta médica registrada",
     completedVisitCount,
     email: patient.email,
     firstName: patient.firstName,

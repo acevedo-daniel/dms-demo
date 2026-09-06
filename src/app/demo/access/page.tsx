@@ -15,20 +15,28 @@ import { DemoAccessButton } from "@/components/demo-access-button";
 import { DmsLogo } from "@/components/dms-logo";
 import { StudioControls } from "@/components/studio-controls";
 import { authorizeDemoRequest } from "@/lib/auth/authorization";
+import { getServerTranslations } from "@/lib/i18n/server";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Open demo workspace",
-  description: "Open the resettable DMS sample workspace.",
-  robots: {
-    follow: false,
-    index: false,
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getServerTranslations();
+
+  return {
+    title: t.access.metaTitle,
+    description: t.access.metaDescription,
+    robots: {
+      follow: false,
+      index: false,
+    },
+  };
+}
 
 export default async function DemoAccessPage() {
-  const authorization = await authorizeDemoRequest(await headers());
+  const [authorization, { locale }] = await Promise.all([
+    authorizeDemoRequest(await headers()),
+    getServerTranslations(),
+  ]);
 
   if (authorization.status === "authorized") {
     redirect("/demo/dashboard");
@@ -63,7 +71,7 @@ export default async function DemoAccessPage() {
               href="/"
             >
               <ArrowLeft aria-hidden className="size-3.5" />
-              <span>Back to DMS</span>
+              <span>{locale === "es" ? "Volver a DMS" : "Back to DMS"}</span>
             </Link>
           </div>
         </div>
@@ -94,13 +102,13 @@ export default async function DemoAccessPage() {
                 /
               </span>
               <span className="text-xs text-muted-foreground">
-                Practice Workspace
+                {locale === "es" ? "Espacio de la clínica" : "Clinic Workspace"}
               </span>
               <span aria-hidden className="text-border hidden sm:inline">
                 ·
               </span>
               <span className="text-[11px] font-medium text-muted-foreground hidden sm:inline">
-                Week 20
+                {locale === "es" ? "Semana 20" : "Week 20"}
               </span>
             </div>
 
@@ -109,13 +117,15 @@ export default async function DemoAccessPage() {
               id="demo-access-title"
               tabIndex={-1}
             >
-              Open the DMS demo workspace
+              {locale === "es"
+                ? "Abrir el espacio de demostración de DMS"
+                : "Open DMS Demo Workspace"}
             </h1>
 
             <p className="mt-5 text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
-              No account, password, or personal information is required. Step
-              inside a complete fictional practice day and explore the workspace
-              freely.
+              {locale === "es"
+                ? "No se requiere cuenta, contraseña ni datos personales. Ingresa a una jornada completa de una clínica ficticia y explora el espacio con total libertad."
+                : "No account, password, or personal details required. Step directly into a full day at Atelier Dental with complete freedom to explore."}
             </p>
 
             <div className="mt-8">
@@ -126,7 +136,9 @@ export default async function DemoAccessPage() {
                   className="size-3.5 text-accent shrink-0"
                 />
                 <span className="font-medium">
-                  Instant access · Resettable practice preview · No sign-up
+                  {locale === "es"
+                    ? "Acceso inmediato · Demostración restablecible · Sin registro"
+                    : "Instant access · Fully resettable · Zero sign-up required"}
                 </span>
               </div>
             </div>
@@ -137,7 +149,9 @@ export default async function DemoAccessPage() {
                 <div className="flex items-center gap-2">
                   <KeyRound aria-hidden className="size-4 text-accent" />
                   <p className="text-xs font-semibold uppercase tracking-wider text-foreground">
-                    Practice Session Overview
+                    {locale === "es"
+                      ? "Resumen de la sesión demo"
+                      : "Demo Session Pass"}
                   </p>
                 </div>
                 <span className="rounded border border-border/70 bg-secondary/60 px-2 py-0.5 font-mono text-[10px] font-medium text-muted-foreground">
@@ -148,34 +162,42 @@ export default async function DemoAccessPage() {
               <dl className="mt-4 grid grid-cols-1 gap-3.5 text-xs sm:grid-cols-2">
                 <div className="border-t border-border/60 pt-3">
                   <dt className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                    Practitioner Role
+                    {locale === "es" ? "Rol clínico" : "Clinical Role"}
                   </dt>
                   <dd className="mt-1 font-semibold text-foreground">
-                    Dr. Jane Smith · Lead
+                    {locale === "es"
+                      ? "Dra. Jane Smith · Odontóloga principal"
+                      : "Dr. Jane Smith · Lead Dentist"}
                   </dd>
                 </div>
                 <div className="border-t border-border/60 pt-3">
                   <dt className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                    Practice Date
+                    {locale === "es" ? "Fecha de la clínica" : "Clinic Date"}
                   </dt>
                   <dd className="mt-1 font-mono font-medium text-foreground">
-                    Tuesday, 12 May 2026
+                    {locale === "es"
+                      ? "Martes, 12 de mayo de 2026"
+                      : "Tuesday, May 12, 2026"}
                   </dd>
                 </div>
                 <div className="border-t border-border/60 pt-3">
                   <dt className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                    Workspace Routes
+                    {locale === "es" ? "Vistas del espacio" : "Included Views"}
                   </dt>
                   <dd className="mt-1 text-muted-foreground leading-relaxed">
-                    Today, Schedule, Patients, Treatments, and Notes.
+                    {locale === "es"
+                      ? "Hoy, Agenda, Pacientes, Tratamientos y Notas."
+                      : "Today, Schedule, Patients, Treatments, and Notes."}
                   </dd>
                 </div>
                 <div className="border-t border-border/60 pt-3">
                   <dt className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                    Workspace Reset
+                    {locale === "es" ? "Restablecimiento" : "Reset Safety"}
                   </dt>
                   <dd className="mt-1 text-muted-foreground leading-relaxed">
-                    Sample data can be restored back to baseline with one click.
+                    {locale === "es"
+                      ? "Los datos de muestra pueden volver al estado inicial con un solo clic."
+                      : "Sample data can be restored to its initial state with a single click."}
                   </dd>
                 </div>
               </dl>
@@ -184,15 +206,21 @@ export default async function DemoAccessPage() {
               <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-border/60 pt-4 text-[11px] text-muted-foreground">
                 <span className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-secondary/50 px-2.5 py-0.5 font-medium text-foreground/80">
                   <span className="size-1 rounded-full bg-foreground/50" />
-                  5-Day Schedule Matrix
+                  {locale === "es"
+                    ? "Agenda semanal de 5 días"
+                    : "5-Day Weekly Schedule"}
                 </span>
                 <span className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-secondary/50 px-2.5 py-0.5 font-medium text-foreground/80">
                   <span className="size-1 rounded-full bg-foreground/50" />
-                  12 Patient Histories
+                  {locale === "es"
+                    ? "16 Historias clínicas"
+                    : "16 Patient Records"}
                 </span>
                 <span className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-secondary/50 px-2.5 py-0.5 font-medium text-foreground/80">
-                  <span className="size-1 rounded-full bg-foreground/50" />8
-                  Treatment Protocols
+                  <span className="size-1 rounded-full bg-foreground/50" />
+                  {locale === "es"
+                    ? "8 Protocolos de tratamiento"
+                    : "8 Treatment Protocols"}
                 </span>
               </div>
             </div>
@@ -211,13 +239,15 @@ export default async function DemoAccessPage() {
                     Atelier Dental
                   </span>
                   <span className="text-xs text-muted-foreground">
-                    · Today Agenda
+                    · {locale === "es" ? "Agenda de hoy" : "Today schedule"}
                   </span>
                 </div>
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-surface px-2.5 py-0.5 border border-border/70 text-[11px] font-medium text-foreground">
                     <span className="size-1.5 rounded-full bg-accent" />
-                    Live Clinical Workspace
+                    {locale === "es"
+                      ? "Espacio clínico activo"
+                      : "Live Clinical Space"}
                   </span>
                 </div>
               </div>
@@ -225,7 +255,11 @@ export default async function DemoAccessPage() {
               {/* Embedded Screenshot with soft border */}
               <div className="p-2 sm:p-3 bg-secondary/10">
                 <Image
-                  alt="DMS Today view showing the next appointment, a daily agenda, follow-up work, and recent notes for the fictional practice"
+                  alt={
+                    locale === "es"
+                      ? "DMS Vista de Hoy mostrando el próximo turno, agenda diaria, seguimientos y notas recientes para la clínica ficticia"
+                      : "DMS Today View showing next appointment, daily schedule, follow-ups, and recent notes"
+                  }
                   className="aspect-[4/3] w-full rounded-[var(--radius-lg)] border border-border/80 object-cover object-left-top shadow-xs"
                   priority
                   sizes="(min-width: 1024px) 58vw, 100vw"
@@ -237,14 +271,22 @@ export default async function DemoAccessPage() {
               <figcaption className="flex flex-wrap justify-between items-center gap-x-4 gap-y-1.5 border-t border-border/60 bg-surface/95 px-4 py-3 text-xs text-muted-foreground sm:px-5">
                 <div className="flex items-center gap-2 font-medium text-foreground">
                   <CalendarDays aria-hidden className="size-3.5 text-accent" />
-                  <span>Today · Tuesday, 12 May 2026</span>
+                  <span>
+                    {locale === "es"
+                      ? "Hoy · Martes, 12 de mayo de 2026"
+                      : "Today · Tuesday, May 12, 2026"}
+                  </span>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="text-xs text-muted-foreground">
-                    Atelier Dental Practice Workspace
+                    {locale === "es"
+                      ? "Atelier Dental · Espacio operativo"
+                      : "Atelier Dental · Operating Surface"}
                   </span>
                   <span className="hidden sm:inline-flex rounded-full border border-border/70 bg-secondary/50 px-2 py-0.5 text-[10px] font-medium text-foreground/80">
-                    Standard Practice Baseline
+                    {locale === "es"
+                      ? "Base estándar de la clínica"
+                      : "Clinical Standard"}
                   </span>
                 </div>
               </figcaption>
@@ -258,14 +300,18 @@ export default async function DemoAccessPage() {
               <div>
                 <div className="flex items-center gap-1.5">
                   <span className="text-xs font-semibold text-foreground">
-                    Next: Elena Rostova
+                    {locale === "es"
+                      ? "Próximo: Alex Quinn"
+                      : "Up Next: Alex Quinn"}
                   </span>
                   <span className="text-[10px] text-muted-foreground">
                     · 09:30
                   </span>
                 </div>
                 <p className="text-[11px] text-muted-foreground">
-                  Comprehensive Exam · Operatory 1
+                  {locale === "es"
+                    ? "Higiene dental · Sillón 1"
+                    : "Dental Hygiene · Operatory 1"}
                 </p>
               </div>
             </div>

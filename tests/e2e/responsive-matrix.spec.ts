@@ -19,7 +19,9 @@ test.setTimeout(120_000);
 
 async function openDemoWorkspace(page: Page) {
   await page.goto("/demo/access");
-  await page.getByRole("button", { name: "Open demo workspace" }).click();
+  await page
+    .getByRole("button", { name: "Abrir espacio de demostración" })
+    .click();
   await expect(page).toHaveURL(/\/demo\/dashboard$/);
 }
 
@@ -78,26 +80,26 @@ test("uses the intended navigation, directory, and schedule compositions", async
     await page.goto("/demo/schedule");
 
     await expect(
-      page.getByRole("button", { name: "Open workspace navigation" }),
+      page.getByRole("button", { name: "Abrir navegación del espacio" }),
     ).toBeVisible();
     await expect(
-      page.getByRole("region", { name: "Day agenda" }),
+      page.getByRole("region", { name: "Agenda diaria" }),
     ).toBeVisible();
     await expect(
-      page.getByRole("region", { name: "Scrollable week schedule" }),
+      page.getByRole("region", { name: "Agenda semanal interactiva" }),
     ).toBeHidden();
     await expectViewportFit(page);
 
     await page.goto("/demo/patients");
     await expect(page.getByRole("table")).toHaveCount(0);
     await expect(
-      page.getByRole("link", { name: /Open patient / }).first(),
+      page.getByRole("link", { name: /Ver ficha de / }).first(),
     ).toBeVisible();
     await expectViewportFit(page);
 
     await page.goto(`/demo/patients/${alexQuinnId}`);
     await expect(
-      page.getByRole("link", { name: "Create appointment" }).first(),
+      page.getByRole("link", { name: "Crear turno" }).first(),
     ).toBeVisible();
     await expectViewportFit(page);
   }
@@ -113,9 +115,11 @@ test("uses the intended navigation, directory, and schedule compositions", async
     await page.goto("/demo/schedule");
 
     await expect(
-      page.getByRole("region", { name: "Scrollable week schedule" }),
+      page.getByRole("region", { name: "Agenda semanal interactiva" }),
     ).toBeVisible();
-    await expect(page.getByRole("region", { name: "Day agenda" })).toBeHidden();
+    await expect(
+      page.getByRole("region", { name: "Agenda diaria" }),
+    ).toBeHidden();
     await expectViewportFit(page);
 
     await page.goto("/demo/patients");
@@ -124,7 +128,7 @@ test("uses the intended navigation, directory, and schedule compositions", async
 
     await page.goto(`/demo/patients/${alexQuinnId}`);
     await expect(
-      page.getByText("Related treatment", { exact: true }),
+      page.getByText("Tratamiento vinculado", { exact: true }),
     ).toBeVisible();
     await expectViewportFit(page);
   }
@@ -132,15 +136,15 @@ test("uses the intended navigation, directory, and schedule compositions", async
   await page.setViewportSize(primaryViewports[1]);
   await page.goto("/demo/dashboard");
   await expect(
-    page.getByRole("button", { name: "Open workspace navigation" }),
+    page.getByRole("button", { name: "Abrir navegación del espacio" }),
   ).toBeVisible();
 
   await page.setViewportSize(primaryViewports[2]);
   await expect(
-    page.getByRole("button", { name: "Open workspace navigation" }),
+    page.getByRole("button", { name: "Abrir navegación del espacio" }),
   ).toBeHidden();
   await expect(
-    page.getByRole("navigation", { name: "Workspace navigation" }),
+    page.getByRole("navigation", { name: "Navegación del espacio" }),
   ).toBeVisible();
 });
 
@@ -152,26 +156,26 @@ test("uses the schedule inspector without compressing the week grid", async ({
   await page.setViewportSize({ height: 960, width: 1280 });
   await page.goto("/demo/schedule");
   await page
-    .getByRole("button", { name: /Open scheduled appointment/ })
+    .getByRole("button", { name: /Abrir turno / })
     .first()
     .click();
   await expect(
-    page.getByRole("dialog", { name: "Appointment details" }),
+    page.getByRole("dialog", { name: "Detalles del turno" }),
   ).toBeVisible();
   await expect(
-    page.locator('[aria-label="Scrollable week schedule"]'),
+    page.locator('[aria-label="Agenda semanal interactiva"]'),
   ).toBeVisible();
 
   await page.setViewportSize({ height: 1080, width: 1920 });
   await page.goto("/demo/schedule");
   await page
-    .getByRole("button", { name: /Open scheduled appointment/ })
+    .getByRole("button", { name: /Abrir turno / })
     .first()
     .click();
   await expect(
-    page.getByRole("complementary", { name: "Appointment context" }),
+    page.getByRole("complementary", { name: "Detalles del turno" }),
   ).toBeVisible();
   await expect(
-    page.getByRole("dialog", { name: "Appointment details" }),
+    page.getByRole("dialog", { name: "Detalles del turno" }),
   ).toBeHidden();
 });

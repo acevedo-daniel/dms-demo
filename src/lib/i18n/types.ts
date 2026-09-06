@@ -1,0 +1,437 @@
+export type Locale = "es" | "en";
+export const LOCALE_COOKIE_NAME = "dms-locale";
+
+export interface Dictionary {
+  common: {
+    appName: string;
+    practiceName: string;
+    practiceSpecialty: string;
+    dentistRole: string;
+    dentistName: string;
+    actions: {
+      confirm: string;
+      cancel: string;
+      save: string;
+      saving: string;
+      delete: string;
+      close: string;
+      edit: string;
+      back: string;
+      search: string;
+      clear: string;
+      loading: string;
+      viewAll: string;
+      discard: string;
+      keepEditing: string;
+      continue: string;
+      print: string;
+    };
+    dialogs: {
+      discardTitle: string;
+      discardAppointmentDesc: string;
+      discardPatientDesc: string;
+      discardNoteDesc: string;
+      unsavedChanges: string;
+    };
+    statuses: {
+      scheduled: string;
+      confirmed: string;
+      arrived: string;
+      completed: string;
+      cancelled: string;
+    };
+    operatories: {
+      all: string;
+      operatory1: string;
+      operatory2: string;
+      assigned: string;
+      chair1: string;
+      chair2: string;
+    };
+    badges: {
+      verified: string;
+      readOnly: string;
+      active: string;
+      archived: string;
+    };
+    alerts: {
+      noClinicalAlert: string;
+      noTimingPreference: string;
+      prefersMorning: string;
+      prefersAfternoon: string;
+    };
+  };
+  nav: {
+    today: string;
+    schedule: string;
+    patients: string;
+    treatments: string;
+    notes: string;
+    workspaceNav: string;
+    openNav: string;
+    closeNav: string;
+    patientRecordTitle: (name: string) => string;
+  };
+  commandMenu: {
+    placeholder: string;
+    quickActions: string;
+    scheduleAppointment: string;
+    addPatient: string;
+    newNote: string;
+    navigation: string;
+    patients: string;
+    noResults: string;
+    escHint: string;
+    selectHint: string;
+    navigateHint: string;
+    openHint: string;
+    actionLabels: {
+      today: string;
+      schedule: string;
+      patients: string;
+      treatments: string;
+      notes: string;
+    };
+  };
+  controls: {
+    userRole: string;
+    resetTitle: string;
+    resetDesc: string;
+    resetNotice: string;
+    resetButton: string;
+    resetting: string;
+    keepData: string;
+    resetSuccess: string;
+    resetError: string;
+    signOut: string;
+    signingOut: string;
+    signOutError: string;
+    darkMode: string;
+    lightMode: string;
+    switchDark: string;
+    switchLight: string;
+    toggleLanguage: string;
+  };
+  landing: {
+    metaTitle: string;
+    metaDescription: string;
+    navWorkflow: string;
+    navArchitecture: string;
+    navPhilosophy: string;
+    enterDemo: string;
+    badge: string;
+    heroTitle: string;
+    heroSubtitle: string;
+    openDemoCta: string;
+    reviewArchitectureCta: string;
+    previewBadge: string;
+    previewTitle: string;
+    previewDesc: string;
+    stats: {
+      stat1Label: string;
+      stat1Value: string;
+      stat2Label: string;
+      stat2Value: string;
+      stat3Label: string;
+      stat3Value: string;
+    };
+    featuresHeading: string;
+    featuresSubheading: string;
+    features: {
+      scheduleTitle: string;
+      scheduleDesc: string;
+      integrityTitle: string;
+      integrityDesc: string;
+      accessibleTitle: string;
+      accessibleDesc: string;
+      protectedTitle: string;
+      protectedDesc: string;
+    };
+    architectureLabel: string;
+    architectureDescription: string;
+    professionalStandards: string;
+    manifestoLabel: string;
+    philosophyLabel: string;
+    manifestoTitle: string;
+    manifestoDescription: string;
+    demoLabel: string;
+    demoTitle: string;
+    demoDescription: string;
+    huddleTitle: string;
+    huddleDesc: string;
+    huddlePoints: string[];
+    archHeading: string;
+    archSubheading: string;
+    archStack: {
+      label: string;
+      tech: string;
+      role: string;
+    }[];
+    footerRights: string;
+    footerFictional: string;
+  };
+  access: {
+    metaTitle: string;
+    metaDescription: string;
+    backToHome: string;
+    badge: string;
+    heading: string;
+    subheading: string;
+    cardTitle: string;
+    cardDesc: string;
+    openWorkspace: string;
+    opening: string;
+    features: {
+      schedule: string;
+      patients: string;
+      treatments: string;
+      notes: string;
+    };
+    footerFictional: string;
+  };
+  guide: {
+    badge: string;
+    stepsCount: string;
+    title: string;
+    description: string;
+    dismissAria: string;
+    items: {
+      scheduleTitle: string;
+      scheduleDesc: string;
+      patientTitle: string;
+      patientDesc: string;
+      rescheduleTitle: string;
+      rescheduleDesc: string;
+      noteTitle: string;
+      noteDesc: string;
+    };
+  };
+  dashboard: {
+    metaTitle: string;
+    metaDescription: string;
+    heading: string;
+    huddleAction: string;
+    huddleTitle: string;
+    huddleSub: string;
+    huddleBadge: string;
+    huddlePrint: string;
+    huddleChair1: string;
+    huddleChair2: string;
+    nextAppointment: {
+      badge: string;
+      heading: string;
+      noneTitle: string;
+      noneDesc: string;
+      viewInSchedule: string;
+      confirm: string;
+      confirmed: string;
+      arrive: string;
+      arrived: string;
+    };
+    todayAgenda: {
+      badge: string;
+      heading: string;
+      count: (count: number) => string;
+      emptyTitle: string;
+      emptyAction: string;
+      viewInSchedule: string;
+    };
+    needsAttention: {
+      badge: string;
+      heading: string;
+      description: string;
+      viewInSchedule: string;
+    };
+    recentNotes: {
+      badge: string;
+      sub: string;
+      heading: string;
+      viewLedger: string;
+      emptyTitle: string;
+      emptyDesc: string;
+      emptyAction: string;
+    };
+  };
+  schedule: {
+    metaTitle: string;
+    metaDescription: string;
+    heading: string;
+    weekScheduleAria: string;
+    weekScrollAria: string;
+    dayAgendaAria: string;
+    filterAll: string;
+    filterConfirmed: string;
+    filterScheduled: string;
+    filterArrived: string;
+    filterOperatoryAll: string;
+    filterOperatory1: string;
+    filterOperatory2: string;
+    newAppointment: string;
+    createAppointment: string;
+    clearFilter: string;
+    emptyFiltered: string;
+    prevWeekAria: string;
+    nextWeekAria: string;
+    prevDayAria: string;
+    nextDayAria: string;
+    filterStatusAria: string;
+    filterOperatoryAria: string;
+    bookSlotAria: (day: string, time: string) => string;
+    openAppointmentAria: (
+      status: string,
+      details: string,
+      time: string,
+    ) => string;
+    draftAria: (time: string, minutes: number) => string;
+    draftLabel: string;
+    draftStatus: (minutes: number) => string;
+    nowIndicator: string;
+    todayBadge: string;
+    contextTitleEdit: string;
+    contextTitleCreate: string;
+    contextDescEdit: string;
+    contextDescCreate: string;
+    form: {
+      patient: string;
+      selectPatient: string;
+      treatment: string;
+      selectTreatment: string;
+      date: string;
+      time: string;
+      operatory: string;
+      durationMinutes: string;
+      coordinationNote: string;
+      coordinationNotePlaceholder: string;
+      coordinationNoteHint: string;
+      submitCreate: string;
+      submitEdit: string;
+      creating: string;
+      saving: string;
+      cancelAppointment: string;
+      confirmCancelTitle: string;
+      confirmCancelDesc: string;
+      confirmCancelAction: string;
+      continueEditing: string;
+      cancellationReasonPlaceholder: string;
+    };
+    feedback: {
+      created: string;
+      updated: string;
+      cancelled: string;
+      completed: string;
+      confirmed: string;
+      arrived: string;
+    };
+  };
+  patients: {
+    metaTitle: string;
+    metaDescription: string;
+    heading: string;
+    addPatient: string;
+    searchPlaceholder: string;
+    filterAll: string;
+    filterScheduled: string;
+    filterNoUpcoming: string;
+    filterArchived: string;
+    stats: {
+      total: string;
+      withUpcoming: string;
+      noUpcoming: string;
+      archived: string;
+    };
+    emptySearch: string;
+    emptyFilter: string;
+    emptyDesc: string;
+    record: {
+      backToDirectory: string;
+      vitalsTitle: string;
+      nextAppointmentCard: string;
+      noneUpcoming: string;
+      noneUpcomingDesc: string;
+      scheduleNext: string;
+      openUpcomingInSchedule: string;
+      treatmentContext: string;
+      treatmentCategory: string;
+      treatmentDuration: string;
+      latestNote: string;
+      newNoteAction: string;
+      archivePatient: string;
+      archiveWarningActiveAppts: string;
+      archiveConfirmTitle: string;
+      archiveConfirmDesc: string;
+      archiveConfirmAction: string;
+      archiving: string;
+      patientArchivedStatus: string;
+      activityTitle: string;
+      tabAll: string;
+      tabAppointments: string;
+      tabNotes: string;
+      emptyActivity: string;
+    };
+    form: {
+      titleNew: string;
+      titleEdit: string;
+      descNew: string;
+      descEdit: string;
+      fullName: string;
+      phone: string;
+      email: string;
+      preferredTime: string;
+      morning: string;
+      afternoon: string;
+      noPreference: string;
+      clinicalAlerts: string;
+      clinicalAlertsHint: string;
+      saveNew: string;
+      saveEdit: string;
+      saving: string;
+      feedbackCreated: string;
+      feedbackUpdated: string;
+    };
+  };
+  treatments: {
+    metaTitle: string;
+    metaDescription: string;
+    heading: string;
+    subheading: string;
+    standardsTitle: string;
+    standardsLedger: {
+      specialties: string;
+      protocols: string;
+      standardDuration: string;
+    };
+    allCategories: string;
+    searchPlaceholder: string;
+    scheduleAction: string;
+    emptyTitle: string;
+    emptyDesc: string;
+    minutes: string;
+  };
+  notes: {
+    metaTitle: string;
+    metaDescription: string;
+    heading: string;
+    subheading: string;
+    handoverLedger: string;
+    newNote: string;
+    searchPlaceholder: string;
+    filterAll: string;
+    filterPatient: string;
+    filterShift: string;
+    filterFollowup: string;
+    composer: {
+      title: string;
+      description: string;
+      patient: string;
+      selectPatient: string;
+      category: string;
+      content: string;
+      contentPlaceholder: string;
+      submit: string;
+      submitting: string;
+      feedbackSaved: string;
+    };
+    emptyTitle: string;
+    emptyDesc: string;
+  };
+}

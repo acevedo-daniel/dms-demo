@@ -1,8 +1,12 @@
-export default function ScheduleLoading() {
+import { getServerLocale } from "@/lib/i18n/server";
+
+export default async function ScheduleLoading() {
+  const locale = await getServerLocale();
+
   return (
     <main
       aria-busy="true"
-      aria-label="Loading schedule"
+      aria-label={locale === "es" ? "Cargando la agenda" : "Loading schedule"}
       className="mx-auto w-full max-w-[var(--schedule-workspace-max)] px-4 py-8 sm:px-6 lg:px-8"
     >
       <div className="animate-pulse border-b border-border/80 pb-8">

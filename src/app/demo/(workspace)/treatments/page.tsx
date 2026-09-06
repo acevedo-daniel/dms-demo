@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { TreatmentCatalog } from "@/components/treatment-catalog";
 import { Button } from "@/components/ui/button";
+import { getServerTranslations } from "@/lib/i18n/server";
 import { getTreatmentCatalog } from "@/lib/treatments";
 
 async function loadTreatmentCatalog() {
@@ -18,8 +19,11 @@ type TreatmentsPageProps = {
 export default async function TreatmentsPage({
   searchParams,
 }: TreatmentsPageProps) {
-  const treatments = await loadTreatmentCatalog();
-  const parameters = await searchParams;
+  const [{ locale, t }, treatments, parameters] = await Promise.all([
+    getServerTranslations(),
+    loadTreatmentCatalog(),
+    searchParams,
+  ]);
 
   if (!treatments) {
     return (
@@ -30,7 +34,9 @@ export default async function TreatmentsPage({
         >
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <span className="font-semibold uppercase tracking-wider text-accent">
-              Treatment Catalog
+              {locale === "es"
+                ? "Catálogo de tratamientos"
+                : "Treatment Catalog"}
             </span>
             <span className="text-muted-foreground/40">·</span>
             <span>Atelier Dental</span>
@@ -39,14 +45,19 @@ export default async function TreatmentsPage({
             className="mt-3 text-2xl font-semibold tracking-tight text-foreground"
             id="treatments-error-title"
           >
-            The treatment catalog could not be loaded.
+            {locale === "es"
+              ? "No se pudo cargar el catálogo de tratamientos."
+              : "Could not load treatment catalog."}
           </h1>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-            The sample catalog data is temporarily unavailable. Please try
-            again.
+            {locale === "es"
+              ? "Los datos del catálogo no están disponibles en este momento. Por favor reintentá."
+              : "Catalog data is currently unavailable. Please retry."}
           </p>
           <Button asChild className="mt-6 font-semibold" variant="outline">
-            <Link href="/demo/treatments">Try again</Link>
+            <Link href="/demo/treatments">
+              {locale === "es" ? "Reintentar" : "Retry"}
+            </Link>
           </Button>
         </section>
       </main>
@@ -64,17 +75,18 @@ export default async function TreatmentsPage({
         <div>
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <span className="font-semibold uppercase tracking-wider text-accent">
-              Treatment Catalog
+              {locale === "es"
+                ? "Catálogo de tratamientos"
+                : "Treatment Catalog"}
             </span>
             <span className="text-muted-foreground/40">·</span>
             <span>Atelier Dental</span>
           </div>
           <h1 className="mt-3 text-3xl font-semibold tracking-[-0.035em] text-foreground sm:text-4xl">
-            Treatments
+            {t.treatments.heading}
           </h1>
           <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">
-            Standard clinical protocols, practice specialties, and baseline
-            chair allocations for Atelier Dental.
+            {t.treatments.subheading}
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -82,55 +94,64 @@ export default async function TreatmentsPage({
             <span className="font-semibold text-foreground">
               {treatments.length}
             </span>{" "}
-            protocols
+            {locale === "es" ? "protocolos" : "protocols"}
           </div>
           <div className="rounded-full border border-border/70 bg-secondary/60 px-3 py-1 font-mono text-xs text-muted-foreground">
             <span className="font-semibold text-foreground">
               {uniqueCategories.length}
             </span>{" "}
-            specialties
+            {locale === "es" ? "especialidades" : "specialties"}
           </div>
         </div>
       </header>
 
-      {/* Clinical Standards Ledger (Editorial, No generic SaaS icons) */}
+      {/* Clinical Standards Ledger */}
       <section
-        aria-label="Clinical standards overview"
+        aria-label={t.treatments.standardsTitle}
         className="mt-6 grid grid-cols-1 divide-y divide-border/60 rounded-[var(--radius-lg)] border border-border/80 bg-card/40 shadow-xs sm:grid-cols-3 sm:divide-x sm:divide-y-0"
       >
         <div className="p-4 sm:p-5">
           <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-            Practice Formulary
+            {locale === "es" ? "Vademécum clínico" : "Clinical Formulary"}
           </p>
           <p className="mt-1 font-display text-xl font-semibold tracking-tight text-foreground">
-            {treatments.length} Standard Protocols
+            {treatments.length}{" "}
+            {locale === "es" ? "protocolos estándar" : "standard protocols"}
           </p>
           <p className="mt-0.5 text-xs text-muted-foreground">
-            Across {uniqueCategories.length} practice specialties
+            {locale === "es"
+              ? `En ${uniqueCategories.length} especialidades odontológicas`
+              : `Across ${uniqueCategories.length} dental specialties`}
           </p>
         </div>
 
         <div className="p-4 sm:p-5">
           <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-            Chair Allocations
+            {locale === "es" ? "Tiempos de sillón" : "Chair Time"}
           </p>
           <p className="mt-1 font-display text-xl font-semibold tracking-tight text-foreground">
-            30 – 60 Min Blocks
+            {t.treatments.standardsLedger.standardDuration}
           </p>
           <p className="mt-0.5 text-xs text-muted-foreground">
-            Baseline chair durations preventing overlap
+            {locale === "es"
+              ? "Duraciones de referencia para evitar superposiciones"
+              : "Reference durations to avoid scheduling conflicts"}
           </p>
         </div>
 
         <div className="p-4 sm:p-5">
           <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-            Care Coordination
+            {locale === "es"
+              ? "Coordinación de turnos"
+              : "Scheduling Coordination"}
           </p>
           <p className="mt-1 font-display text-xl font-semibold tracking-tight text-foreground">
-            Direct Scheduling
+            {locale === "es" ? "Agendamiento directo" : "Direct booking"}
           </p>
           <p className="mt-0.5 text-xs text-muted-foreground">
-            Pre-fills protocol duration into weekly schedule
+            {locale === "es"
+              ? "Carga automática de duración en la agenda semanal"
+              : "Automatic duration filling on weekly schedule"}
           </p>
         </div>
       </section>

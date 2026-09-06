@@ -28,6 +28,8 @@ import {
   practiceTimeInputValue,
   toPracticeDateTime,
 } from "@/lib/demo/schedule";
+import { useI18n } from "@/lib/i18n";
+import { getLocalizedAppointmentNote } from "@/lib/i18n/demo-content";
 import type {
   ScheduleAppointment,
   SchedulePatient,
@@ -58,6 +60,7 @@ function initialValues({
   initialPatientId,
   initialStartsAt,
   initialTreatmentId,
+  locale,
   treatments,
 }: Pick<
   ScheduleContextPanelProps,
@@ -66,7 +69,7 @@ function initialValues({
   | "initialStartsAt"
   | "initialTreatmentId"
   | "treatments"
->): AppointmentFormState {
+> & { locale: "es" | "en" }): AppointmentFormState {
   const startsAt = new Date(
     initialStartsAt ?? appointment?.startsAt ?? "2026-05-12T12:00:00.000Z",
   );
@@ -79,7 +82,9 @@ function initialValues({
     durationMinutes: String(
       appointment?.durationMinutes ?? treatment?.defaultDurationMinutes ?? 30,
     ),
-    note: appointment?.note ?? "",
+    note: appointment?.note
+      ? getLocalizedAppointmentNote(appointment.id, appointment.note, locale)
+      : "",
     patientId: appointment?.patientId ?? initialPatientId ?? "",
     operatory: String(appointment?.operatory ?? 1),
     time: practiceTimeInputValue(startsAt),
@@ -116,10 +121,14 @@ export function ScheduleContextFrame({
   open: boolean;
   presentation: ScheduleContextPanelProps["presentation"];
 }) {
+  const { locale } = useI18n();
+
   if (presentation === "integrated") {
     return (
       <aside
-        aria-label="Appointment context"
+        aria-label={
+          locale === "es" ? "Detalles del turno" : "Appointment details"
+        }
         className="sticky top-[calc(var(--header-height)+1rem)] flex max-h-[calc(100vh-var(--header-height)-2rem)] min-h-0 flex-col overflow-hidden rounded-[var(--radius-lg)] border border-border/80 bg-card shadow-raised"
         onKeyDownCapture={(event) => {
           if (event.key === "Escape" && isDirty) {
@@ -177,6 +186,7 @@ export function ScheduleContextPanel({
   presentation,
   treatments,
 }: ScheduleContextPanelProps) {
+  const { locale, t } = useI18n();
   const formId = useId();
   const isEditing = Boolean(appointment);
   const [values, setValues] = useState(() =>
@@ -185,6 +195,7 @@ export function ScheduleContextPanel({
       initialPatientId,
       initialStartsAt,
       initialTreatmentId,
+      locale,
       treatments,
     }),
   );
@@ -229,36 +240,58 @@ export function ScheduleContextPanel({
     event.preventDefault();
 
     if (!values.patientId) {
-      setError("Please select a patient from the directory.");
+      setError(
+        locale === "es"
+          ? "Seleccione un paciente del directorio."
+          : "Select a patient from the directory.",
+      );
       return;
     }
 
     if (!values.treatmentId) {
-      setError("Please select a clinical treatment protocol.");
+      setError(
+        locale === "es"
+          ? "Seleccione un tratamiento clínico."
+          : "Select a clinical treatment.",
+      );
       return;
     }
 
     if (!values.date) {
-      setError("Please choose an appointment date.");
+      setError(
+        locale === "es"
+          ? "Seleccione una fecha para el turno."
+          : "Select a date for the appointment.",
+      );
       return;
     }
 
     if (!values.time) {
-      setError("Please choose an appointment time.");
+      setError(
+        locale === "es"
+          ? "Seleccione un horario para el turno."
+          : "Select a time for the appointment.",
+      );
       return;
     }
 
     const startsAt = toPracticeDateTime(values.date, values.time);
 
     if (!startsAt) {
-      setError("Enter a valid appointment date and time.");
+      setError(
+        locale === "es"
+          ? "Ingrese una fecha y horario válidos para el turno."
+          : "Enter a valid appointment date and time.",
+      );
       return;
     }
 
     const duration = Number(values.durationMinutes);
     if (!duration || duration < 15 || duration > 180 || duration % 15 !== 0) {
       setError(
-        "Duration must be between 15 and 180 minutes in 15-minute intervals.",
+        locale === "es"
+          ? "La duración debe ser entre 15 y 180 minutos en intervalos de 15 minutos."
+          : "Duration must be between 15 and 180 minutes in 15-minute intervals.",
       );
       return;
     }
@@ -290,21 +323,30 @@ export function ScheduleContextPanel({
 
       if (!response.ok) {
         throw new Error(
-          getServerError(payload, "The appointment could not be saved."),
+          getServerError(
+            payload,
+            locale === "es"
+              ? "No se pudo guardar el turno."
+              : "Could not save appointment.",
+          ),
         );
       }
 
       setInitialFormValues(values);
       onOpenChange(false);
       onSaved({
-        message: isEditing ? "Appointment updated." : "Appointment created.",
+        message: isEditing
+          ? t.schedule.feedback.updated
+          : t.schedule.feedback.created,
         startsAt: payload.appointment?.startsAt ?? startsAt.toISOString(),
       });
     } catch (cause) {
       setError(
         cause instanceof Error
           ? cause.message
-          : "The appointment could not be saved.",
+          : locale === "es"
+            ? "No se pudo guardar el turno."
+            : "Could not save appointment.",
       );
     } finally {
       setIsPending(false);
@@ -333,7 +375,12 @@ export function ScheduleContextPanel({
 
       if (!response.ok) {
         throw new Error(
-          getServerError(payload, "The appointment could not be updated."),
+          getServerError(
+            payload,
+            locale === "es"
+              ? "No se pudo actualizar el turno."
+              : "Could not update appointment.",
+          ),
         );
       }
 
@@ -341,19 +388,21 @@ export function ScheduleContextPanel({
       onSaved({
         message:
           status === "CANCELLED"
-            ? "Appointment cancelled."
+            ? t.schedule.feedback.cancelled
             : status === "COMPLETED"
-              ? "Appointment completed."
+              ? t.schedule.feedback.completed
               : status === "ARRIVED"
-                ? "Patient marked as arrived."
-                : "Appointment confirmed.",
+                ? t.schedule.feedback.arrived
+                : t.schedule.feedback.confirmed,
         startsAt: payload.appointment?.startsAt ?? appointment.startsAt,
       });
     } catch (cause) {
       setError(
         cause instanceof Error
           ? cause.message
-          : "The appointment could not be updated.",
+          : locale === "es"
+            ? "No se pudo actualizar el turno."
+            : "Could not update appointment.",
       );
     } finally {
       setIsStatusPending(false);
@@ -376,16 +425,20 @@ export function ScheduleContextPanel({
                   <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                     {isEditing && appointment
                       ? `${practiceTimeInputValue(new Date(appointment.startsAt))} · ${appointment.patientName}`
-                      : "New appointment"}
+                      : locale === "es"
+                        ? "Nuevo turno"
+                        : "New appointment"}
                   </span>
                 </div>
                 <DialogTitle className="mt-1 text-xl font-semibold tracking-tight text-foreground">
-                  {isEditing ? "Appointment details" : "Create appointment"}
+                  {isEditing
+                    ? t.schedule.contextTitleEdit
+                    : t.schedule.contextTitleCreate}
                 </DialogTitle>
                 <DialogDescription className="mt-1 text-sm text-muted-foreground">
                   {isEditing
-                    ? "Update appointment details or take the next status action."
-                    : "Appointments are created as Scheduled."}
+                    ? t.schedule.contextDescEdit
+                    : t.schedule.contextDescCreate}
                 </DialogDescription>
               </DialogHeader>
             ) : (
@@ -393,19 +446,23 @@ export function ScheduleContextPanel({
                 <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                   {isEditing && appointment
                     ? `${practiceTimeInputValue(new Date(appointment.startsAt))} · ${appointment.patientName}`
-                    : "Draft appointment"}
+                    : locale === "es"
+                      ? "Turno en borrador"
+                      : "Draft appointment"}
                 </p>
                 <h2
                   className="mt-1 text-xl font-semibold tracking-tight text-foreground"
                   id="schedule-context-title"
                   tabIndex={-1}
                 >
-                  {isEditing ? "Appointment details" : "Create appointment"}
+                  {isEditing
+                    ? t.schedule.contextTitleEdit
+                    : t.schedule.contextTitleCreate}
                 </h2>
                 <p className="mt-1.5 text-sm text-muted-foreground">
                   {isEditing
-                    ? "Update appointment details or take the next status action."
-                    : "Appointments are created as Scheduled."}
+                    ? t.schedule.contextDescEdit
+                    : t.schedule.contextDescCreate}
                 </p>
               </header>
             )}
@@ -442,16 +499,22 @@ export function ScheduleContextPanel({
                 />
               </div>
               <span className="text-xs font-medium text-muted-foreground">
-                Unsaved Changes
+                {locale === "es" ? "Cambios sin guardar" : "Unsaved changes"}
               </span>
             </div>
-            <AlertDialogTitle>Discard changes?</AlertDialogTitle>
+            <AlertDialogTitle>
+              {locale === "es" ? "¿Descartar cambios?" : "Discard changes?"}
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              Your unsaved appointment changes will be discarded.
+              {locale === "es"
+                ? "Se perderán las modificaciones no guardadas del turno."
+                : "Unsaved modifications to this appointment will be lost."}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel autoFocus>Keep editing</AlertDialogCancel>
+            <AlertDialogCancel autoFocus>
+              {t.schedule.form.continueEditing}
+            </AlertDialogCancel>
             <AlertDialogAction
               className="dms-pressable rounded-full border border-destructive/20 bg-destructive px-4 text-xs font-semibold text-destructive-foreground shadow-xs transition-all hover:bg-destructive/90 active:scale-[0.98]"
               onClick={() => {
@@ -460,7 +523,7 @@ export function ScheduleContextPanel({
               }}
             >
               <AlertTriangle aria-hidden className="size-3.5" />
-              Discard changes
+              {locale === "es" ? "Descartar cambios" : "Discard changes"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

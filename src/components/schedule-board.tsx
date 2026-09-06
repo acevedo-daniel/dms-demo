@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { announceWorkspaceFeedback } from "@/components/workspace-feedback";
 import { cn } from "@/lib/utils";
 import { formatDemoDate, formatDemoTime } from "@/lib/demo/format";
+import { useI18n, getLocalizedTreatment } from "@/lib/i18n";
 import {
   addPracticeDays,
   practiceDateInputValue,
@@ -57,24 +58,33 @@ type ContextState =
 type StatusFilter = "ALL" | "CONFIRMED" | "SCHEDULED" | "ARRIVED";
 type OperatoryFilter = "ALL" | "1" | "2";
 
-function dayLabel(date: Date) {
-  return new Intl.DateTimeFormat("en-GB", {
+function dayLabel(date: Date, locale: "es" | "en" = "es") {
+  return new Intl.DateTimeFormat(locale === "es" ? "es-AR" : "en-US", {
     day: "numeric",
     month: "short",
     timeZone: "America/Argentina/Buenos_Aires",
     weekday: "short",
-  }).format(date);
+  })
+    .format(date)
+    .replace(/,/g, "")
+    .replace(/\./g, "")
+    .toLowerCase();
 }
 
-function weekRange(days: Date[]) {
-  const formatter = new Intl.DateTimeFormat("en-GB", {
-    day: "numeric",
-    month: "short",
-    timeZone: "America/Argentina/Buenos_Aires",
-    year: "numeric",
-  });
+function weekRange(days: Date[], locale: "es" | "en" = "es") {
+  const formatter = new Intl.DateTimeFormat(
+    locale === "es" ? "es-AR" : "en-US",
+    {
+      day: "numeric",
+      month: "short",
+      timeZone: "America/Argentina/Buenos_Aires",
+      year: "numeric",
+    },
+  );
 
-  return `${formatter.format(days[0])}–${formatter.format(days[4])}`;
+  return locale === "es"
+    ? `${formatter.format(days[0])} al ${formatter.format(days[4])}`
+    : `${formatter.format(days[0])} to ${formatter.format(days[4])}`;
 }
 
 function appointmentEnd(appointment: ScheduleAppointment) {
@@ -91,13 +101,31 @@ function slotIndex(startsAt: string) {
   return (hours - scheduleStartHour) * 2 + minutes / 30;
 }
 
-function appointmentName(appointment: ScheduleAppointment) {
-  return `${appointment.patientName} · ${appointment.treatmentName}`;
+function appointmentName(
+  appointment: ScheduleAppointment,
+  locale: "es" | "en" = "es",
+) {
+  const treatment = getLocalizedTreatment(
+    { id: appointment.treatmentId, name: appointment.treatmentName },
+    locale,
+  );
+  return `${appointment.patientName} · ${treatment.name}`;
 }
 
-function appointmentStatusLabel(appointment: ScheduleAppointment) {
-  if (appointment.status === "ARRIVED") return "Arrived";
-  return appointment.status === "CONFIRMED" ? "Confirmed" : "Scheduled";
+function appointmentStatusLabel(
+  appointment: ScheduleAppointment,
+  locale: "es" | "en" = "es",
+) {
+  if (appointment.status === "ARRIVED") {
+    return locale === "es" ? "En recepción" : "Arrived";
+  }
+  return appointment.status === "CONFIRMED"
+    ? locale === "es"
+      ? "Confirmado"
+      : "Confirmed"
+    : locale === "es"
+      ? "Programado"
+      : "Scheduled";
 }
 
 function initialContext({
@@ -175,6 +203,7 @@ export function ScheduleBoard({
   weekStart,
 }: ScheduleBoardProps) {
   const router = useRouter();
+  const { locale, t } = useI18n();
   const days = useMemo(
     () => scheduleWeekDays(new Date(weekStart)),
     [weekStart],
@@ -441,7 +470,9 @@ export function ScheduleBoard({
           <div>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <span className="font-semibold uppercase tracking-wider text-accent">
-                Appointment Coordination
+                {locale === "es"
+                  ? "Coordinación de turnos"
+                  : "Appointment coordination"}
               </span>
               <span className="text-muted-foreground/40">·</span>
               <span>Atelier Dental</span>
@@ -451,16 +482,20 @@ export function ScheduleBoard({
               id="schedule-title"
               tabIndex={-1}
             >
-              Schedule
+              {t.schedule.heading}
             </h1>
             <p className="mt-2 text-sm text-muted-foreground flex flex-wrap items-center gap-x-2.5 gap-y-1">
               <span className="font-medium text-foreground">
-                {weekRange(days)}
+                {weekRange(days, locale)}
               </span>
               <span aria-hidden className="text-muted-foreground/40">
                 ·
               </span>
-              <span>Monday–Friday clinical hours</span>
+              <span>
+                {locale === "es"
+                  ? "Lunes a viernes · Horario de atención clínica"
+                  : "Monday to Friday · Practice operating hours"}
+              </span>
             </p>
           </div>
           <Button
@@ -468,17 +503,19 @@ export function ScheduleBoard({
             onClick={(event) => openCreate(undefined, event.currentTarget)}
           >
             <CalendarPlus aria-hidden className="size-4" />
-            Create appointment
+            {t.schedule.createAppointment}
           </Button>
         </div>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <nav
-            aria-label="Schedule week"
+            aria-label={
+              locale === "es" ? "Semana de la agenda" : "Schedule week"
+            }
             className="inline-flex items-center rounded-full border border-border/80 bg-surface p-1 shadow-xs backdrop-blur-xs"
           >
             <Button
               asChild
-              aria-label="Previous week"
+              aria-label={t.schedule.prevWeekAria}
               className="size-8 rounded-full hover:bg-secondary"
               size="icon"
               variant="ghost"
@@ -498,12 +535,12 @@ export function ScheduleBoard({
               <Link
                 href={`/demo/schedule${operatoryFilter === "ALL" ? "" : `?operatory=${operatoryFilter}`}`}
               >
-                Today
+                {locale === "es" ? "Hoy" : "Today"}
               </Link>
             </Button>
             <Button
               asChild
-              aria-label="Next week"
+              aria-label={t.schedule.nextWeekAria}
               className="size-8 rounded-full hover:bg-secondary"
               size="icon"
               variant="ghost"
@@ -515,19 +552,19 @@ export function ScheduleBoard({
           </nav>
           <div className="flex max-w-full flex-wrap items-center gap-2">
             <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Filter
+              {locale === "es" ? "Filtrar" : "Filter"}
             </span>
             <div
-              aria-label="Filter by appointment status"
+              aria-label={t.schedule.filterStatusAria}
               className="inline-flex items-center rounded-full border border-border/80 bg-surface p-1 shadow-xs backdrop-blur-xs"
               role="radiogroup"
             >
               {(
                 [
-                  { label: "All active", value: "ALL" },
-                  { label: "Confirmed", value: "CONFIRMED" },
-                  { label: "Arrived", value: "ARRIVED" },
-                  { label: "Scheduled", value: "SCHEDULED" },
+                  { label: t.schedule.filterAll, value: "ALL" },
+                  { label: t.schedule.filterConfirmed, value: "CONFIRMED" },
+                  { label: t.schedule.filterArrived, value: "ARRIVED" },
+                  { label: t.schedule.filterScheduled, value: "SCHEDULED" },
                 ] as const
               ).map((tab) => (
                 <button
@@ -548,7 +585,7 @@ export function ScheduleBoard({
               ))}
             </div>
             <div
-              aria-label="Filter by operatory"
+              aria-label={t.schedule.filterOperatoryAria}
               className="inline-flex items-center rounded-full border border-border/80 bg-surface p-1 shadow-xs"
               role="radiogroup"
             >
@@ -566,7 +603,11 @@ export function ScheduleBoard({
                   role="radio"
                   type="button"
                 >
-                  {value === "ALL" ? "All chairs" : `Operatory ${value}`}
+                  {value === "ALL"
+                    ? t.schedule.filterOperatoryAll
+                    : value === "1"
+                      ? t.schedule.filterOperatory1
+                      : t.schedule.filterOperatory2}
                 </button>
               ))}
             </div>
@@ -582,9 +623,12 @@ export function ScheduleBoard({
             "grid grid-cols-[minmax(0,1fr)_22rem] gap-5",
         )}
       >
-        <section aria-label="Week schedule" className="hidden md:block">
+        <section
+          aria-label={t.schedule.weekScheduleAria}
+          className="hidden md:block"
+        >
           <div
-            aria-label="Scrollable week schedule"
+            aria-label={t.schedule.weekScrollAria}
             className="overflow-x-auto rounded-[var(--radius-lg)] border border-border/80 bg-surface pb-2 shadow-xs focus-visible:outline-none"
             role="region"
             tabIndex={0}
@@ -592,7 +636,7 @@ export function ScheduleBoard({
             <div className="min-w-[62rem]">
               <div className="sticky top-0 z-20 grid grid-cols-[4.5rem_repeat(5,minmax(10.5rem,1fr))] border-b border-border/80 bg-surface/95 backdrop-blur-sm">
                 <div className="sticky left-0 z-30 border-r border-border/80 bg-surface/95 px-3 py-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  Time
+                  {locale === "es" ? "Horario" : "Time"}
                 </div>
                 {days.map((day) => {
                   const dayKey = practiceDateInputValue(day);
@@ -611,22 +655,28 @@ export function ScheduleBoard({
                       <div className="flex items-center justify-between gap-2">
                         <span
                           className={cn(
-                            "font-semibold tracking-tight",
+                            "font-semibold tracking-tight capitalize",
                             isDemoDay ? "text-primary" : "text-foreground",
                           )}
                         >
-                          {dayLabel(day)}
+                          {dayLabel(day, locale)}
                         </span>
                         <div className="flex items-center gap-1.5">
                           {dayApptCount > 0 ? (
                             <span className="rounded-full bg-secondary/80 px-2 py-0.5 font-mono text-[10px] font-medium text-muted-foreground">
                               {dayApptCount}{" "}
-                              {dayApptCount === 1 ? "slot" : "slots"}
+                              {dayApptCount === 1
+                                ? locale === "es"
+                                  ? "turno"
+                                  : "visit"
+                                : locale === "es"
+                                  ? "turnos"
+                                  : "visits"}
                             </span>
                           ) : null}
                           {isDemoDay ? (
                             <span className="rounded-full border border-border/80 bg-foreground/5 px-2 py-0.5 font-mono text-[10px] font-medium tracking-wide text-foreground/80">
-                              Today
+                              {t.schedule.todayBadge}
                             </span>
                           ) : null}
                         </div>
@@ -676,7 +726,10 @@ export function ScheduleBoard({
                           ).toISOString();
                           return (
                             <button
-                              aria-label={`Create appointment for ${dayLabel(day)} at ${formatDemoTime(new Date(startsAt))}`}
+                              aria-label={t.schedule.bookSlotAria(
+                                dayLabel(day, locale),
+                                formatDemoTime(new Date(startsAt), locale),
+                              )}
                               className={cn(
                                 "group/slot dms-pressable relative block h-12 w-full text-left transition-colors hover:bg-primary/[0.04] focus-visible:relative focus-visible:z-20 focus-visible:outline-none",
                                 index % 2 === 0
@@ -691,7 +744,7 @@ export function ScheduleBoard({
                             >
                               <span className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-150 group-hover/slot:opacity-100">
                                 <span className="rounded-full border border-border/80 bg-surface px-2 py-0.5 font-mono text-[10px] font-medium text-foreground/80 shadow-2xs">
-                                  + Book
+                                  {locale === "es" ? "+ Agendar" : "+ Book"}
                                 </span>
                               </span>
                             </button>
@@ -704,7 +757,7 @@ export function ScheduleBoard({
                           style={{ top: `${demoMarkerSlot * 3}rem` }}
                         >
                           <span className="absolute -top-2.5 left-1.5 rounded-full border border-border bg-foreground px-2 py-0.5 text-[10px] font-medium tracking-wide text-background shadow-xs">
-                            Now 08:30
+                            {t.schedule.nowIndicator}
                           </span>
                         </div>
                       ) : null}
@@ -713,7 +766,10 @@ export function ScheduleBoard({
                       practiceDateInputValue(new Date(draft.startsAt)) ===
                         dayKey ? (
                         <div
-                          aria-label={`Draft appointment at ${formatDemoTime(new Date(draft.startsAt))} for ${draft.durationMinutes} minutes`}
+                          aria-label={t.schedule.draftAria(
+                            formatDemoTime(new Date(draft.startsAt), locale),
+                            draft.durationMinutes,
+                          )}
                           className="pointer-events-none absolute right-1.5 left-1.5 z-10 overflow-hidden rounded-[var(--radius-md)] border-2 border-dashed border-accent/60 bg-accent-soft/40 px-2.5 py-2 text-left shadow-xs transition-[height] duration-[var(--motion-base)] ease-[var(--ease-emphasized)] backdrop-blur-xs"
                           role="status"
                           style={{
@@ -723,7 +779,7 @@ export function ScheduleBoard({
                         >
                           <div className="flex items-center justify-between gap-1">
                             <span className="block truncate text-xs font-semibold text-foreground/90">
-                              Draft appointment
+                              {t.schedule.draftLabel}
                             </span>
                             <span className="rounded border border-border/70 bg-secondary/80 px-1.5 py-0.5 font-mono text-[10px] font-medium text-muted-foreground shrink-0">
                               {draft.durationMinutes} min
@@ -737,10 +793,27 @@ export function ScheduleBoard({
                           appointment.id === selectedAppointmentId;
                         const isConfirmed = appointment.status === "CONFIRMED";
                         const isArrived = appointment.status === "ARRIVED";
+                        const treatment = getLocalizedTreatment(
+                          {
+                            id: appointment.treatmentId,
+                            name: appointment.treatmentName,
+                          },
+                          locale,
+                        );
 
                         return (
                           <button
-                            aria-label={`Open ${appointment.status.toLowerCase()} appointment for ${appointmentName(appointment)} at ${formatDemoTime(new Date(appointment.startsAt))}`}
+                            aria-label={t.schedule.openAppointmentAria(
+                              appointmentStatusLabel(
+                                appointment,
+                                locale,
+                              ).toLowerCase(),
+                              appointmentName(appointment, locale),
+                              formatDemoTime(
+                                new Date(appointment.startsAt),
+                                locale,
+                              ),
+                            )}
                             aria-pressed={isSelected}
                             className={cn(
                               "dms-pressable dms-raised-action group absolute right-1.5 left-1.5 z-10 overflow-hidden rounded-[var(--radius-md)] border text-left transition-all duration-150 focus-visible:outline-none shadow-xs hover:shadow-sm",
@@ -765,7 +838,10 @@ export function ScheduleBoard({
                           >
                             <div className="flex items-center justify-between gap-1">
                               <span className="text-xs font-semibold tabular-nums tracking-tight">
-                                {formatDemoTime(new Date(appointment.startsAt))}
+                                {formatDemoTime(
+                                  new Date(appointment.startsAt),
+                                  locale,
+                                )}
                               </span>
                               <span className="rounded border border-border/60 bg-secondary/60 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground tabular-nums">
                                 {appointment.durationMinutes}m
@@ -777,7 +853,7 @@ export function ScheduleBoard({
                             <div className="mt-0.5 flex items-center justify-between gap-1">
                               {!isCompact ? (
                                 <span className="block truncate text-[11px] text-muted-foreground leading-tight">
-                                  {appointment.treatmentName}
+                                  {treatment.name}
                                 </span>
                               ) : (
                                 <span />
@@ -804,7 +880,7 @@ export function ScheduleBoard({
                                   )}
                                 />
                                 <span>
-                                  {appointmentStatusLabel(appointment)}
+                                  {appointmentStatusLabel(appointment, locale)}
                                 </span>
                               </span>
                             </div>
@@ -821,11 +897,11 @@ export function ScheduleBoard({
         {context && isIntegrated ? renderContext("integrated") : null}
       </div>
 
-      <section aria-label="Day agenda" className="mt-8 md:hidden">
+      <section aria-label={t.schedule.dayAgendaAria} className="mt-8 md:hidden">
         <div className="rounded-[var(--radius-lg)] border border-border/80 bg-card p-3 shadow-xs">
           <div className="flex items-center justify-between gap-2 border-b border-border/60 pb-3">
             <Button
-              aria-label="Previous day"
+              aria-label={t.schedule.prevDayAria}
               className="size-8 rounded-full"
               disabled={mobileDayIndex === 0}
               onClick={() => setMobileDayIndex((index) => index - 1)}
@@ -838,10 +914,10 @@ export function ScheduleBoard({
               aria-live="polite"
               className="text-sm font-semibold text-foreground"
             >
-              {formatDemoDate(selectedMobileDay)}
+              {formatDemoDate(selectedMobileDay, locale)}
             </p>
             <Button
-              aria-label="Next day"
+              aria-label={t.schedule.nextDayAria}
               className="size-8 rounded-full"
               disabled={mobileDayIndex === days.length - 1}
               onClick={() => setMobileDayIndex((index) => index + 1)}
@@ -856,7 +932,11 @@ export function ScheduleBoard({
             {days.map((day, idx) => {
               const isSelected = idx === mobileDayIndex;
               const isDemoDay = practiceDateInputValue(day) === demoDayKey;
-              const shortName = ["Mon", "Tue", "Wed", "Thu", "Fri"][idx];
+              const shortNames =
+                locale === "es"
+                  ? ["Lun", "Mar", "Mié", "Jue", "Vie"]
+                  : ["Mon", "Tue", "Wed", "Thu", "Fri"];
+              const shortName = shortNames[idx];
               const dateNum = day.getDate();
               return (
                 <button
@@ -898,7 +978,7 @@ export function ScheduleBoard({
                 key={startsAt.toISOString()}
               >
                 <time className="w-12 shrink-0 font-mono text-xs font-medium text-muted-foreground">
-                  {formatDemoTime(startsAt)}
+                  {formatDemoTime(startsAt, locale)}
                 </time>
                 {isDraft ? (
                   <div
@@ -906,41 +986,63 @@ export function ScheduleBoard({
                     className="flex-1 rounded-[var(--radius-md)] border-2 border-dashed border-accent/60 bg-accent-soft/40 px-3 py-2 text-sm text-foreground/90"
                     role="status"
                   >
-                    Draft appointment · {draft.durationMinutes} min
+                    {t.schedule.draftStatus(draft.durationMinutes)}
                   </div>
                 ) : slotAppointments.length ? (
-                  slotAppointments.map((appointment) => (
-                    <button
-                      aria-label={`Open ${appointment.status.toLowerCase()} appointment for ${appointmentName(appointment)} at ${formatDemoTime(new Date(appointment.startsAt))}`}
-                      aria-pressed={appointment.id === selectedAppointmentId}
-                      className={cn(
-                        "dms-pressable dms-raised-action min-w-0 flex-1 rounded-[var(--radius-md)] border px-3 py-2 text-left focus-visible:outline-none shadow-xs",
-                        appointment.status === "ARRIVED"
-                          ? "border-border/90 border-l-4 border-l-info bg-card dark:bg-surface-raised/70"
-                          : appointment.status === "CONFIRMED"
-                            ? "border-border/90 border-l-4 border-l-accent bg-card dark:bg-surface-raised/70"
-                            : "border-border/90 border-l-4 border-l-foreground/30 bg-card dark:bg-surface-raised/70",
-                        appointment.id === selectedAppointmentId &&
-                          "ring-2 ring-primary ring-offset-1",
-                      )}
-                      key={appointment.id}
-                      onClick={(event) =>
-                        openAppointment(appointment, event.currentTarget)
-                      }
-                      type="button"
-                    >
-                      <p className="truncate text-sm font-semibold text-foreground">
-                        {appointment.patientName}
-                      </p>
-                      <p className="mt-0.5 truncate text-xs text-muted-foreground">
-                        {appointment.treatmentName} ·{" "}
-                        {formatDemoTime(appointmentEnd(appointment))}
-                      </p>
-                      <div className="mt-2">
-                        <AppointmentStatusBadge status={appointment.status} />
-                      </div>
-                    </button>
-                  ))
+                  slotAppointments.map((appointment) => {
+                    const treatment = getLocalizedTreatment(
+                      {
+                        id: appointment.treatmentId,
+                        name: appointment.treatmentName,
+                      },
+                      locale,
+                    );
+                    return (
+                      <button
+                        aria-label={t.schedule.openAppointmentAria(
+                          appointmentStatusLabel(
+                            appointment,
+                            locale,
+                          ).toLowerCase(),
+                          appointmentName(appointment, locale),
+                          formatDemoTime(
+                            new Date(appointment.startsAt),
+                            locale,
+                          ),
+                        )}
+                        aria-pressed={appointment.id === selectedAppointmentId}
+                        className={cn(
+                          "dms-pressable dms-raised-action min-w-0 flex-1 rounded-[var(--radius-md)] border px-3 py-2 text-left focus-visible:outline-none shadow-xs",
+                          appointment.status === "ARRIVED"
+                            ? "border-border/90 border-l-4 border-l-info bg-card dark:bg-surface-raised/70"
+                            : appointment.status === "CONFIRMED"
+                              ? "border-border/90 border-l-4 border-l-accent bg-card dark:bg-surface-raised/70"
+                              : "border-border/90 border-l-4 border-l-foreground/30 bg-card dark:bg-surface-raised/70",
+                          appointment.id === selectedAppointmentId &&
+                            "ring-2 ring-primary ring-offset-1",
+                        )}
+                        key={appointment.id}
+                        onClick={(event) =>
+                          openAppointment(appointment, event.currentTarget)
+                        }
+                        type="button"
+                      >
+                        <p className="truncate text-sm font-semibold text-foreground">
+                          {appointment.patientName}
+                        </p>
+                        <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                          {treatment.name} ·{" "}
+                          {formatDemoTime(appointmentEnd(appointment), locale)}
+                        </p>
+                        <div className="mt-2">
+                          <AppointmentStatusBadge
+                            locale={locale}
+                            status={appointment.status}
+                          />
+                        </div>
+                      </button>
+                    );
+                  })
                 ) : (
                   <Button
                     className="justify-start text-muted-foreground text-xs hover:text-foreground"
@@ -951,7 +1053,7 @@ export function ScheduleBoard({
                     variant="ghost"
                   >
                     <CalendarPlus aria-hidden className="size-3.5" />
-                    Create appointment
+                    {t.schedule.createAppointment}
                   </Button>
                 )}
               </li>
@@ -966,16 +1068,14 @@ export function ScheduleBoard({
             aria-hidden
             className="mx-auto size-5 text-muted-foreground"
           />
-          <p className="mt-3 font-medium">
-            No appointments match this week and filter.
-          </p>
+          <p className="mt-3 font-medium">{t.schedule.emptyFiltered}</p>
           {filter !== "ALL" ? (
             <Button
               className="mt-4"
               onClick={() => setFilter("ALL")}
               variant="outline"
             >
-              Clear filter
+              {t.schedule.clearFilter}
             </Button>
           ) : (
             <Button
@@ -983,7 +1083,7 @@ export function ScheduleBoard({
               onClick={(event) => openCreate(undefined, event.currentTarget)}
             >
               <CalendarPlus aria-hidden className="size-4" />
-              Create appointment
+              {t.schedule.createAppointment}
             </Button>
           )}
         </section>

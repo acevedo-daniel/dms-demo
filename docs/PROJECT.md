@@ -1,10 +1,10 @@
 # DMS — Project
 
-> Product scope, domain rules, and business constraints for the DMS public portfolio demo.
+> Product scope, domain rules, and business constraints for the DMS public showcase demo.
 
 ## Product
 
-DMS is a dental practice operations workspace designed around the day-to-day coordination of a single practice. The public portfolio demo uses a fictional sample practice (Atelier Dental) and brings appointments, patient records, a treatment catalog, and operational notes together.
+DMS is a dental practice operations workspace designed around the day-to-day coordination of a single practice. The public showcase demo uses a fictional sample practice (Atelier Dental) and brings appointments, patient records, a treatment catalog, and operational notes together.
 
 ## Problem
 
@@ -60,7 +60,7 @@ Find patient → review record, next appointment, and activity history
 
 ## Provenance
 
-Independent public portfolio demo informed by operational systems delivered with a small team for a dental practice client. Every practice, patient, and record is fictional.
+Independent public showcase demo informed by operational systems delivered with a small team for a dental practice client. Every practice, patient, and record is fictional.
 
 ## Related documentation
 

@@ -36,7 +36,7 @@ This policy covers the source code and configuration in this repository. Third-p
 
 ## Demo data
 
-This repository is a public portfolio demonstration and contains only fictional data. Do not submit real patient, client, clinical, authentication, or other sensitive information as part of a security report.
+This repository is a public demonstration and contains only fictional data. Do not submit real patient, client, clinical, authentication, or other sensitive information as part of a security report.
 
 ## Recognition
 

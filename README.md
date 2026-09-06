@@ -2,9 +2,9 @@
 
 [![CI](https://github.com/acevedo-daniel/dms-demo/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/acevedo-daniel/dms-demo/actions/workflows/ci.yml)
 
-> A public portfolio demo of a dental practice operations workspace.
+> A public showcase demo of a dental practice operations workspace.
 
-DMS brings appointments, patient records, a treatment catalog, and operational notes into one workspace for a single dental practice. This independent public portfolio demo is informed by a system delivered with a small team for a dental client. Every practice, person, and record here is fictional.
+DMS brings appointments, patient records, a treatment catalog, and operational notes into one workspace for a single dental practice. This independent public showcase demo is informed by a system delivered with a small team for a dental client. Every practice, person, and record here is fictional.
 
 **[Explore the live demo](https://dms-showcase.vercel.app)**
 
@@ -42,7 +42,7 @@ DMS brings appointments, patient records, a treatment catalog, and operational n
 - **The public demo is intentionally bounded.** A deterministic clock and resettable seed keep every walkthrough, screenshot, and test run consistent.
 - **Authentication is purpose-built for exploration.** Better Auth provisions a server-side demo identity and protects workspace routes without exposing credentials in the interface.
 - **Quality checks cover the important boundaries.** Vitest verifies rules and PostgreSQL integration; Playwright covers the main workflow and automated WCAG checks; GitHub Actions runs CI quality checks.
-- **The demo closes the loop.** A deterministic clinical huddle, operatory-aware schedule, and arrival lifecycle make the portfolio walkthrough operationally complete.
+- **The demo closes the loop.** A deterministic clinical huddle, operatory-aware schedule, and arrival lifecycle make the product walkthrough operationally complete.
 
 ## Architecture
 

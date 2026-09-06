@@ -10,6 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useI18n } from "@/lib/i18n";
 
 type NavigationSheetProps = {
   children: ReactNode;
@@ -22,6 +23,8 @@ export function NavigationSheet({
   onOpenChange,
   open,
 }: NavigationSheetProps) {
+  const { t } = useI18n();
+
   return (
     <Dialog onOpenChange={onOpenChange} open={open}>
       <DialogContent
@@ -41,7 +44,7 @@ export function NavigationSheet({
             </span>
           </DialogTitle>
           <Button
-            aria-label="Close workspace navigation"
+            aria-label={t.nav.closeNav}
             onClick={() => onOpenChange(false)}
             size="icon"
             variant="ghost"

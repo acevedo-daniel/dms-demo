@@ -2,36 +2,41 @@
 
 import Link from "next/link";
 import { ArrowUpRight, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/lib/i18n";
 
 const alexQuinnId = "30000000-0000-4000-8000-000000000001";
 
-const guideItems = [
-  {
-    description: "See the demo day in chronological order.",
-    href: "/demo/schedule",
-    label: "Review today's agenda",
-  },
-  {
-    description: "Follow an appointment into its patient context.",
-    href: `/demo/patients/${alexQuinnId}`,
-    label: "Open a patient record",
-  },
-  {
-    description: "Open an active appointment to change its time.",
-    href: "/demo/schedule",
-    label: "Reschedule an appointment",
-  },
-  {
-    description: "Record a concise operational detail.",
-    href: "/demo/notes",
-    label: "Add a note",
-  },
-];
-
 export function ExploreDmsGuide() {
+  const { t } = useI18n();
   const [isVisible, setIsVisible] = useState(true);
+
+  const guideItems = useMemo(
+    () => [
+      {
+        description: t.guide.items.scheduleDesc,
+        href: "/demo/schedule",
+        label: t.guide.items.scheduleTitle,
+      },
+      {
+        description: t.guide.items.patientDesc,
+        href: `/demo/patients/${alexQuinnId}`,
+        label: t.guide.items.patientTitle,
+      },
+      {
+        description: t.guide.items.rescheduleDesc,
+        href: "/demo/schedule",
+        label: t.guide.items.rescheduleTitle,
+      },
+      {
+        description: t.guide.items.noteDesc,
+        href: "/demo/notes",
+        label: t.guide.items.noteTitle,
+      },
+    ],
+    [t.guide.items],
+  );
 
   function dismissGuide() {
     setIsVisible(false);
@@ -53,24 +58,24 @@ export function ExploreDmsGuide() {
         <div>
           <div className="inline-flex items-center gap-2">
             <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Practice walkthrough
+              {t.guide.badge}
             </span>
             <span className="rounded-full border border-border/70 bg-secondary/60 px-2.5 py-0.5 font-mono text-[10px] font-medium text-muted-foreground">
-              4 steps
+              {t.guide.stepsCount}
             </span>
           </div>
           <h2
             className="mt-2 text-lg font-semibold tracking-tight sm:text-xl text-foreground"
             id="explore-title"
           >
-            Explore DMS
+            {t.guide.title}
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            A short, curated path through daily practice operations.
+            {t.guide.description}
           </p>
         </div>
         <Button
-          aria-label="Dismiss Explore DMS guide"
+          aria-label={t.guide.dismissAria}
           className="size-8 rounded-full border border-border/70 hover:bg-secondary/70 hover:text-foreground"
           onClick={dismissGuide}
           size="icon"

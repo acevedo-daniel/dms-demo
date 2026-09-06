@@ -2,9 +2,10 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "DMS — Practice operations workspace",
+    name: "DMS — Gestión operativa odontológica",
     short_name: "DMS",
-    description: "A focused workspace for dental practice operations.",
+    description:
+      "Un espacio de trabajo enfocado para la operación odontológica.",
     start_url: "/",
     display: "browser",
     background_color: "#f8f8f6",

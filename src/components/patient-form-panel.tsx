@@ -26,6 +26,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { announceWorkspaceFeedback } from "@/components/workspace-feedback";
+import { useI18n } from "@/lib/i18n";
 
 export type EditablePatient = {
   email: string | null;
@@ -84,6 +85,7 @@ export function PatientFormPanel({
   trigger,
 }: PatientFormPanelProps) {
   const router = useRouter();
+  const { locale, t } = useI18n();
   const formId = useId();
   const [isDiscardOpen, setIsDiscardOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(defaultOpen);
@@ -103,13 +105,22 @@ export function PatientFormPanel({
   const isDirty = JSON.stringify(values) !== JSON.stringify(initialValues);
   const identifierError =
     fieldErrors.identifier ||
-    (error?.toLowerCase().includes("identifier") ? error : null);
+    (error?.toLowerCase().includes("identifier") ||
+    error?.toLowerCase().includes("identificador")
+      ? error
+      : null);
   const firstNameError =
     fieldErrors.firstName ||
-    (error?.toLowerCase().includes("first name") ? error : null);
+    (error?.toLowerCase().includes("first name") ||
+    error?.toLowerCase().includes("nombre")
+      ? error
+      : null);
   const lastNameError =
     fieldErrors.lastName ||
-    (error?.toLowerCase().includes("last name") ? error : null);
+    (error?.toLowerCase().includes("last name") ||
+    error?.toLowerCase().includes("apellido")
+      ? error
+      : null);
   const emailError = fieldErrors.email || null;
 
   function requestClose() {
@@ -143,15 +154,24 @@ export function PatientFormPanel({
     } = {};
 
     if (!values.identifier.trim()) {
-      nextFieldErrors.identifier = "Identifier is required (e.g. PAT-010).";
+      nextFieldErrors.identifier =
+        locale === "es"
+          ? "El identificador es obligatorio (ej. PAT-010)."
+          : "Identifier is required (e.g. PAT-010).";
     }
 
     if (!values.firstName.trim()) {
-      nextFieldErrors.firstName = "First name is required.";
+      nextFieldErrors.firstName =
+        locale === "es"
+          ? "El nombre es obligatorio."
+          : "First name is required.";
     }
 
     if (!values.lastName.trim()) {
-      nextFieldErrors.lastName = "Last name is required.";
+      nextFieldErrors.lastName =
+        locale === "es"
+          ? "El apellido es obligatorio."
+          : "Last name is required.";
     }
 
     if (
@@ -159,7 +179,9 @@ export function PatientFormPanel({
       !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email.trim())
     ) {
       nextFieldErrors.email =
-        "Enter a valid email address (e.g. name@domain.com).";
+        locale === "es"
+          ? "Ingresá un correo electrónico válido (ej. nombre@dominio.com)."
+          : "Enter a valid email address (e.g. name@domain.com).";
     }
 
     if (Object.values(nextFieldErrors).some(Boolean)) {
@@ -169,7 +191,9 @@ export function PatientFormPanel({
           nextFieldErrors.firstName ||
           nextFieldErrors.lastName ||
           nextFieldErrors.email ||
-          "Please fill in all required fields.",
+          (locale === "es"
+            ? "Por favor completá todos los campos obligatorios."
+            : "Please fill out all required fields."),
       );
       return;
     }
@@ -191,7 +215,12 @@ export function PatientFormPanel({
 
       if (!response.ok) {
         throw new Error(
-          getServerMessage(payload, "The patient could not be saved."),
+          getServerMessage(
+            payload,
+            locale === "es"
+              ? "No se pudo guardar la ficha del paciente."
+              : "Could not save patient record.",
+          ),
         );
       }
 
@@ -201,14 +230,18 @@ export function PatientFormPanel({
       setIsOpen(false);
       onSaved?.(payload);
       announceWorkspaceFeedback(
-        isEditing ? "Patient updated." : "Patient added.",
+        isEditing
+          ? t.patients.form.feedbackUpdated
+          : t.patients.form.feedbackCreated,
       );
       router.refresh();
     } catch (cause) {
       setError(
         cause instanceof Error
           ? cause.message
-          : "The patient could not be saved.",
+          : locale === "es"
+            ? "No se pudo guardar la ficha del paciente."
+            : "Could not save patient record.",
       );
     } finally {
       setIsPending(false);
@@ -250,18 +283,16 @@ export function PatientFormPanel({
           <DialogHeader className="border-b border-border/80 bg-secondary/15 px-6 py-5 text-left">
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <span className="font-medium text-foreground">
-                Patient Intake
+                {locale === "es" ? "Ficha de paciente" : "Patient file"}
               </span>
               <span className="text-muted-foreground/40">·</span>
               <span>Atelier Dental</span>
             </div>
             <DialogTitle className="mt-1.5 text-xl font-semibold tracking-tight text-foreground">
-              {isEditing ? "Edit patient" : "Add patient"}
+              {isEditing ? t.patients.form.titleEdit : t.patients.form.titleNew}
             </DialogTitle>
             <DialogDescription className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
-              {isEditing
-                ? "Update the patient’s operational contact record."
-                : "Create a patient record for the Atelier Dental workspace."}
+              {isEditing ? t.patients.form.descEdit : t.patients.form.descNew}
             </DialogDescription>
           </DialogHeader>
 
@@ -275,7 +306,7 @@ export function PatientFormPanel({
               {/* Clinical Identity Section */}
               <div className="space-y-4">
                 <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  Clinical identity
+                  {locale === "es" ? "Identidad clínica" : "Clinical identity"}
                 </p>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
@@ -283,16 +314,18 @@ export function PatientFormPanel({
                       className="text-xs font-semibold text-foreground"
                       htmlFor={`${formId}-identifier`}
                     >
-                      Identifier
+                      {locale === "es" ? "Identificador" : "Identifier"}
                     </Label>
                     {identifierError ? (
                       <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive animate-in fade-in-0 duration-150">
                         <AlertCircle aria-hidden className="size-3 shrink-0" />
-                        Required
+                        {locale === "es" ? "Obligatorio" : "Required"}
                       </span>
                     ) : (
                       <span className="text-xs text-muted-foreground">
-                        Unique chart ID
+                        {locale === "es"
+                          ? "N° de ficha único"
+                          : "Unique record ID"}
                       </span>
                     )}
                   </div>
@@ -308,7 +341,9 @@ export function PatientFormPanel({
                     onChange={(event) =>
                       updateValue("identifier", event.target.value)
                     }
-                    placeholder="e.g. PAT-010"
+                    placeholder={
+                      locale === "es" ? "ej. PAT-010" : "e.g. PAT-010"
+                    }
                     required
                     value={values.identifier}
                   />
@@ -331,7 +366,7 @@ export function PatientFormPanel({
                         className="text-xs font-semibold text-foreground"
                         htmlFor={`${formId}-first-name`}
                       >
-                        First name
+                        {locale === "es" ? "Nombre" : "First name"}
                       </Label>
                       {firstNameError ? (
                         <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive animate-in fade-in-0 duration-150">
@@ -339,7 +374,7 @@ export function PatientFormPanel({
                             aria-hidden
                             className="size-3 shrink-0"
                           />
-                          Required
+                          {locale === "es" ? "Obligatorio" : "Required"}
                         </span>
                       ) : null}
                     </div>
@@ -354,7 +389,7 @@ export function PatientFormPanel({
                       onChange={(event) =>
                         updateValue("firstName", event.target.value)
                       }
-                      placeholder="e.g. Elena"
+                      placeholder={locale === "es" ? "ej. Elena" : "e.g. Elena"}
                       required
                       value={values.firstName}
                     />
@@ -378,7 +413,7 @@ export function PatientFormPanel({
                         className="text-xs font-semibold text-foreground"
                         htmlFor={`${formId}-last-name`}
                       >
-                        Last name
+                        {locale === "es" ? "Apellido" : "Last name"}
                       </Label>
                       {lastNameError ? (
                         <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive animate-in fade-in-0 duration-150">
@@ -386,7 +421,7 @@ export function PatientFormPanel({
                             aria-hidden
                             className="size-3 shrink-0"
                           />
-                          Required
+                          {locale === "es" ? "Obligatorio" : "Required"}
                         </span>
                       ) : null}
                     </div>
@@ -399,7 +434,9 @@ export function PatientFormPanel({
                       onChange={(event) =>
                         updateValue("lastName", event.target.value)
                       }
-                      placeholder="e.g. Rostova"
+                      placeholder={
+                        locale === "es" ? "ej. Rostova" : "e.g. Rostova"
+                      }
                       required
                       value={values.lastName}
                     />
@@ -423,7 +460,7 @@ export function PatientFormPanel({
               {/* Contact Information Section */}
               <div className="space-y-4 border-t border-border/80 pt-6">
                 <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  Contact details
+                  {locale === "es" ? "Datos de contacto" : "Contact details"}
                 </p>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
@@ -431,16 +468,18 @@ export function PatientFormPanel({
                       className="text-xs font-semibold text-foreground"
                       htmlFor={`${formId}-email`}
                     >
-                      Email
+                      {t.patients.form.email}
                     </Label>
                     {emailError ? (
                       <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2 py-0.5 text-xs font-medium text-destructive animate-in fade-in-0 duration-150">
                         <AlertCircle aria-hidden className="size-3 shrink-0" />
-                        Invalid format
+                        {locale === "es"
+                          ? "Formato inválido"
+                          : "Invalid format"}
                       </span>
                     ) : (
                       <span className="text-xs text-muted-foreground">
-                        Optional
+                        {locale === "es" ? "Opcional" : "Optional"}
                       </span>
                     )}
                   </div>
@@ -453,7 +492,11 @@ export function PatientFormPanel({
                     onChange={(event) =>
                       updateValue("email", event.target.value)
                     }
-                    placeholder="patient@example.com"
+                    placeholder={
+                      locale === "es"
+                        ? "paciente@ejemplo.com"
+                        : "patient@example.com"
+                    }
                     type="email"
                     value={values.email}
                   />
@@ -473,14 +516,14 @@ export function PatientFormPanel({
                     className="text-xs font-semibold text-foreground"
                     htmlFor={`${formId}-phone`}
                   >
-                    Phone
+                    {t.patients.form.phone}
                   </Label>
                   <Input
                     id={`${formId}-phone`}
                     onChange={(event) =>
                       updateValue("phone", event.target.value)
                     }
-                    placeholder="(555) 012-3456"
+                    placeholder="(11) 4123-4567"
                     type="tel"
                     value={values.phone}
                   />
@@ -504,7 +547,7 @@ export function PatientFormPanel({
 
             <DialogFooter className="mt-auto border-t border-border/80 bg-secondary/15 px-6 py-4 sm:justify-between">
               <Button onClick={requestClose} type="button" variant="ghost">
-                Close
+                {locale === "es" ? "Cerrar" : "Close"}
               </Button>
               <Button disabled={isPending} type="submit">
                 {isEditing ? (
@@ -514,11 +557,13 @@ export function PatientFormPanel({
                 )}
                 {isPending
                   ? isEditing
-                    ? "Saving…"
-                    : "Adding…"
+                    ? t.patients.form.saving
+                    : locale === "es"
+                      ? "Agregando…"
+                      : "Adding…"
                   : isEditing
-                    ? "Save changes"
-                    : "Add patient"}
+                    ? t.patients.form.saveEdit
+                    : t.patients.form.saveNew}
               </Button>
             </DialogFooter>
           </form>
@@ -536,16 +581,22 @@ export function PatientFormPanel({
                 />
               </div>
               <span className="text-xs font-medium text-muted-foreground">
-                Unsaved Changes
+                {locale === "es" ? "Cambios sin guardar" : "Unsaved changes"}
               </span>
             </div>
-            <AlertDialogTitle>Discard changes?</AlertDialogTitle>
+            <AlertDialogTitle>
+              {locale === "es" ? "¿Descartar cambios?" : "Discard changes?"}
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              Any changes made to this patient record will be discarded.
+              {locale === "es"
+                ? "Se perderán las modificaciones no guardadas en esta ficha."
+                : "Unsaved modifications to this record will be lost."}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel autoFocus>Keep editing</AlertDialogCancel>
+            <AlertDialogCancel autoFocus>
+              {locale === "es" ? "Continuar editando" : "Continue editing"}
+            </AlertDialogCancel>
             <AlertDialogAction
               className="dms-pressable rounded-full border border-destructive/20 bg-destructive px-4 text-xs font-semibold text-destructive-foreground shadow-xs transition-all hover:bg-destructive/90 active:scale-[0.98]"
               onClick={() => {
@@ -554,7 +605,7 @@ export function PatientFormPanel({
               }}
             >
               <AlertTriangle aria-hidden className="size-3.5" />
-              Discard changes
+              {locale === "es" ? "Descartar cambios" : "Discard changes"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
