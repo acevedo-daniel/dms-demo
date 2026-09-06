@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { Metadata } from "next";
 import {
   ArrowRight,
   CalendarDays,
@@ -22,16 +23,19 @@ import { Button } from "@/components/ui/button";
 import { getServerTranslations } from "@/lib/i18n/server";
 import type { Locale } from "@/lib/i18n/types";
 
-export async function generateMetadata() {
-  const { t } = await getServerTranslations();
+export async function generateMetadata(): Promise<Metadata> {
+  const { locale, t } = await getServerTranslations();
 
   return {
-    title: t.landing.metaTitle,
+    title: { absolute: t.landing.metaTitle },
     description: t.landing.metaDescription,
     alternates: { canonical: "/" },
     openGraph: {
       description: t.landing.metaDescription,
+      locale: locale === "es" ? "es_AR" : "en_US",
+      siteName: "DMS",
       title: t.landing.metaTitle,
+      type: "website",
       url: "/",
     },
   };

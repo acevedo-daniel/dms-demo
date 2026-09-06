@@ -6,6 +6,22 @@ test("localizes the public landing page and metadata", async ({ page }) => {
 
   await expect(page.locator("html")).toHaveAttribute("lang", "es");
   await expect(page).toHaveTitle(/Gestión operativa odontológica/);
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    "href",
+    "http://localhost:3100",
+  );
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+    "content",
+    /Espacio de trabajo unificado/,
+  );
+  await expect(page.locator('meta[property="og:locale"]')).toHaveAttribute(
+    "content",
+    "es_AR",
+  );
+  await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute(
+    "content",
+    "summary_large_image",
+  );
   await expect(
     page.getByRole("heading", { level: 1, name: /Una forma más clara/ }),
   ).toBeVisible();

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { ScheduleBoard } from "@/components/schedule-board";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -19,6 +20,15 @@ type SchedulePageProps = {
     week?: string;
   }>;
 };
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getServerTranslations();
+
+  return {
+    title: t.schedule.metaTitle,
+    description: t.schedule.metaDescription,
+  };
+}
 
 async function loadSchedule(week: Date) {
   try {

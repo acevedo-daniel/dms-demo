@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { CalendarPlus, Clock, Clock3, FileText, MapPin } from "lucide-react";
 import Link from "next/link";
 import { AppointmentStatusBadge } from "@/components/appointment-status-badge";
@@ -54,6 +55,15 @@ function getPatientInitials(name: string) {
       .join("")
       .toUpperCase() || "PT"
   );
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getServerTranslations();
+
+  return {
+    title: t.dashboard.metaTitle,
+    description: t.dashboard.metaDescription,
+  };
 }
 
 export default async function DashboardPage() {

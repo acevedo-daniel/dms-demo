@@ -210,7 +210,7 @@ export const enDictionary: Dictionary = {
       "Demonstration workspace with strictly fictional clinic data.",
   },
   access: {
-    metaTitle: "Demo Access · DMS",
+    metaTitle: "Demo access",
     metaDescription:
       "Immediate access to the DMS demonstration workspace for Atelier Dental.",
     backToHome: "Back to overview",

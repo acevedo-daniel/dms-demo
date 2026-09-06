@@ -1,7 +1,18 @@
+import type { Metadata } from "next";
 import { PatientDirectory } from "@/components/patient-directory";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { getServerTranslations } from "@/lib/i18n/server";
 import { getPatientDirectory } from "@/lib/patients";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getServerTranslations();
+
+  return {
+    title: t.patients.metaTitle,
+    description: t.patients.metaDescription,
+  };
+}
 
 async function loadPatientDirectory() {
   try {

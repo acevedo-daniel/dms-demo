@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist_Mono, Inter, Plus_Jakarta_Sans } from "next/font/google";
-import { getSiteUrl, siteName } from "@/lib/site";
+import { getSiteUrl, isSearchIndexableDeployment, siteName } from "@/lib/site";
 import { getServerLocale, getServerTranslations } from "@/lib/i18n/server";
 import { I18nProvider } from "@/lib/i18n";
 import "./globals.css";
@@ -23,8 +23,17 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
+export const viewport: Viewport = {
+  colorScheme: "light dark",
+  themeColor: [
+    { color: "#f8f8f6", media: "(prefers-color-scheme: light)" },
+    { color: "#171715", media: "(prefers-color-scheme: dark)" },
+  ],
+};
+
 export async function generateMetadata(): Promise<Metadata> {
   const { locale, t } = await getServerTranslations();
+  const indexable = isSearchIndexableDeployment();
 
   return {
     metadataBase: getSiteUrl(),
@@ -34,7 +43,24 @@ export async function generateMetadata(): Promise<Metadata> {
       template: "%s | DMS",
     },
     description: t.landing.metaDescription,
-    category: "business",
+    category: "software de gestión odontológica",
+    keywords: [
+      "gestión odontológica",
+      "software dental",
+      "agenda clínica",
+      "turnos odontología",
+      "historias clínicas",
+      "Atelier Dental",
+    ],
+    icons: {
+      icon: "/icon",
+      apple: "/icon",
+    },
+    appleWebApp: {
+      capable: true,
+      statusBarStyle: "default",
+      title: siteName,
+    },
     formatDetection: {
       address: false,
       email: false,
@@ -48,12 +74,15 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
     },
     robots: {
-      follow: true,
-      index: true,
+      follow: indexable,
+      index: indexable,
     },
     twitter: {
       card: "summary_large_image",
+      description: t.landing.metaDescription,
+      title: t.landing.metaTitle,
     },
+    referrer: "strict-origin-when-cross-origin",
   };
 }
 
