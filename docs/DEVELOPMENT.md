@@ -1,86 +1,88 @@
 # DMS — Development
 
-> Developer environment setup, database commands, and workflow guide for DMS.
+> Developer setup, database commands, and the day-to-day workflow for DMS.
 
 ## Requirements
 
-| Tool    | Version   | Source                                         |
-| ------- | --------- | ---------------------------------------------- |
-| Node.js | >= 24.0.0 | `.nvmrc`                                       |
-| pnpm    | >= 10.0.0 | `package.json` (`packageManager`)              |
-| Docker  | Latest    | Docker Desktop / OrbStack for local PostgreSQL |
+| Tool    | Version                | Source                                         |
+| ------- | ---------------------- | ---------------------------------------------- |
+| Node.js | 24.x                   | .nvmrc and package.json engines                |
+| pnpm    | 12.3.4                 | package.json packageManager                    |
+| Docker  | Current stable release | Docker Desktop or an equivalent Docker runtime |
 
 ## Setup
 
-```bash
-# Clone the repository
-git clone https://github.com/acevedo-daniel/dms-demo.git
-cd dms-demo
+    # Clone the repository
+    git clone https://github.com/acevedo-daniel/dms-demo.git
+    cd dms-demo
 
-# Copy environment variables
-cp .env.example .env
+    # Create the local environment file
+    cp .env.example .env
 
-# Install dependencies
-pnpm install
+    # Install dependencies
+    pnpm install
 
-# Start local PostgreSQL container
-docker compose up -d
+    # Start the local PostgreSQL container
+    docker compose up -d
 
-# Initialize migrations and seed deterministic sample data
-pnpm db:reset
-```
+    # Apply migrations and load the deterministic sample data
+    pnpm db:reset
 
 ## Local environment
 
-| Variable             | Required | Purpose                                                                                      |
-| -------------------- | :------: | -------------------------------------------------------------------------------------------- |
-| `DATABASE_URL`       |   Yes    | PostgreSQL connection string (`postgresql://postgres:postgres@localhost:5432/dms`)           |
-| `TEST_DATABASE_URL`  |   Yes    | Test PostgreSQL connection string (`postgresql://postgres:postgres@localhost:5433/dms_test`) |
-| `BETTER_AUTH_SECRET` |   Yes    | Cryptographic secret for signing session tokens in local development                         |
-| `BETTER_AUTH_URL`    |   Yes    | Local application URL (`http://localhost:3000`)                                              |
+| Variable            | Required | Purpose                                               |
+| ------------------- | :------: | ----------------------------------------------------- |
+| DATABASE_URL        |   Yes    | Local PostgreSQL connection string.                   |
+| TEST_DATABASE_URL   |   Yes    | Isolated integration-test database connection string. |
+| BETTER_AUTH_SECRET  |   Yes    | Secret used to sign local session tokens.             |
+| BETTER_AUTH_URL     |   Yes    | Base URL used by Better Auth in local development.    |
+| DEMO_AUTH_EMAIL     |   Yes    | Server-side email for the fictional demo identity.    |
+| DEMO_AUTH_PASSWORD  |   Yes    | Server-side password for the fictional demo identity. |
+| NEXT_PUBLIC_APP_URL |   Yes    | Public application URL used by metadata and links.    |
+| PLAYWRIGHT_BASE_URL | E2E only | Base URL used by Playwright.                          |
 
-Never commit real secrets. The repository is strictly a fictional demonstration.
+The .env.example file contains safe local defaults. Never commit real secrets or real patient information; the repository is a fictional demonstration.
 
 ## Run locally
 
-```bash
-# Start development server with Turbopack
-pnpm dev
-```
+    # Start the development server
+    pnpm dev
 
-Open [http://localhost:3000](http://localhost:3000) to view the public home, or [http://localhost:3000/demo/access](http://localhost:3000/demo/access) to access the workspace.
+Open [http://localhost:3000](http://localhost:3000) for the public entry point, or [http://localhost:3000/demo/access](http://localhost:3000/demo/access) to enter the workspace.
 
 ## Commands
 
-| Task              | Command                 | Purpose                                                 |
-| ----------------- | ----------------------- | ------------------------------------------------------- |
-| Dev server        | `pnpm dev`              | Start Next.js App Router local dev server               |
-| Lint              | `pnpm lint`             | Run ESLint across code and components                   |
-| Format            | `pnpm format`           | Reformat code using Prettier rules                      |
-| Format check      | `pnpm format:check`     | Verify formatting without modifying files               |
-| Type check        | `pnpm typecheck`        | Run TypeScript compiler in `--noEmit` mode              |
-| Unit tests        | `pnpm test`             | Run Vitest unit tests                                   |
-| Test DB Up        | `pnpm db:test:up`       | Start isolated test PostgreSQL Docker container         |
-| Integration tests | `pnpm test:integration` | Run PostgreSQL integration tests                        |
-| E2E tests         | `pnpm test:e2e`         | Run Playwright end-to-end and WCAG accessibility suites |
-| Build             | `pnpm build`            | Compile production Next.js bundle                       |
+| Task               | Command               | Purpose                                            |
+| ------------------ | --------------------- | -------------------------------------------------- |
+| Development server | pnpm dev              | Start the Next.js development server.              |
+| Production build   | pnpm build            | Create the production bundle.                      |
+| Production server  | pnpm start            | Serve the built application.                       |
+| Formatting         | pnpm format           | Format the repository with Prettier.               |
+| Format check       | pnpm format:check     | Verify formatting without changing files.          |
+| Lint               | pnpm lint             | Run ESLint across the repository.                  |
+| Type check         | pnpm typecheck        | Run TypeScript without emitting files.             |
+| Unit tests         | pnpm test             | Run the Vitest unit suite.                         |
+| Test database up   | pnpm db:test:up       | Start the isolated PostgreSQL test container.      |
+| Test database down | pnpm db:test:down     | Stop the isolated PostgreSQL test container.       |
+| Integration tests  | pnpm test:integration | Run PostgreSQL-backed integration tests.           |
+| E2E tests          | pnpm test:e2e         | Run Playwright workflows and accessibility checks. |
 
 ## Database workflow
 
-```bash
-# Run migrations using Drizzle Kit
-pnpm db:migrate
+    # Apply pending migrations
+    pnpm db:migrate
 
-# Seed deterministic sample dataset for Atelier Dental
-pnpm db:seed
+    # Load the deterministic sample data
+    pnpm db:seed
 
-# Complete reset (migrate + seed)
-pnpm db:reset
-```
+    # Apply migrations and reload the sample data
+    pnpm db:reset
+
+The demo seed is fictional and deterministic. Reset it after exploratory changes when you need to return to the baseline used by tests and screenshots.
 
 ## Related documentation
 
-- [README.md](../README.md) — project overview, screenshots, and live demo link.
-- [ARCHITECTURE.md](ARCHITECTURE.md) — architecture, component boundaries, and invariants.
+- [README.md](../README.md) — project overview, capabilities, and quick start.
+- [ARCHITECTURE.md](ARCHITECTURE.md) — architecture, boundaries, and invariants.
 - [TESTING.md](TESTING.md) — test layers and CI verification.
-- [PROJECT.md](PROJECT.md) — product scope and clinical business rules.
+- [PROJECT.md](PROJECT.md) — product scope and domain rules.

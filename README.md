@@ -2,9 +2,9 @@
 
 [![CI](https://github.com/acevedo-daniel/dms-demo/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/acevedo-daniel/dms-demo/actions/workflows/ci.yml)
 
-> A public showcase demo of a dental practice operations workspace.
+> A focused workspace for coordinating the daily operation of a dental practice.
 
-DMS brings appointments, patient records, a treatment catalog, and operational notes into one workspace for a single dental practice. This independent public showcase demo is informed by a system delivered with a small team for a dental client. Every practice, person, and record here is fictional.
+DMS brings appointments, patient records, treatment context, and operational notes into one calm, connected workspace. The public experience uses Atelier Dental, a fictional practice created to show how the main workflows fit together. Every practice, person, and record in this repository is fictional.
 
 **[Explore the live demo](https://dms-showcase.vercel.app)**
 
@@ -12,15 +12,15 @@ DMS brings appointments, patient records, a treatment catalog, and operational n
 
 ### Public entry
 
-| Case study                                                                                                | Demo access                                                                                             |
-| --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| ![DMS public case study introducing the practice operations workspace](docs/screenshots/public-home.webp) | ![DMS demo access screen for the fictional Atelier Dental workspace](docs/screenshots/demo-access.webp) |
+| Public introduction                                                                            | Demo access                                                                                             |
+| ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| ![DMS public introduction to the dental practice workspace](docs/screenshots/public-home.webp) | ![DMS demo access screen for the fictional Atelier Dental workspace](docs/screenshots/demo-access.webp) |
 
 ### Daily operations
 
-![DMS Today view showing the demo day's appointments, follow-up work, and recent notes](docs/screenshots/today.webp)
+![DMS Today view showing appointments, follow-up work, and recent notes](docs/screenshots/today.webp)
 
-![DMS printable daily huddle briefing showing appointments, operatories, statuses, and a fictional clinical alert](docs/screenshots/daily-huddle.webp)
+![DMS Daily Huddle brief showing appointments, operatories, statuses, and a fictional clinical alert](docs/screenshots/daily-huddle.webp)
 
 ### Core workflows
 
@@ -28,90 +28,89 @@ DMS brings appointments, patient records, a treatment catalog, and operational n
 | --------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
 | ![DMS weekly schedule for the fictional practice](docs/screenshots/schedule.webp) | ![DMS patient record with appointment activity and treatment context](docs/screenshots/patient-record.webp) |
 
-## Key capabilities
+## What the workspace covers
 
 - **Appointment coordination:** Create, reschedule, confirm, complete, or cancel appointments while preventing conflicting active slots.
-- **Clinical flow controls:** Mark patients as arrived, filter the schedule by operatory, open the global `⌘K` command menu, and print a daily huddle brief.
+- **Clinical flow controls:** Mark patients as arrived, filter the schedule by operatory, open the command menu with Command-K or Control-K, and print a Daily Huddle brief.
 - **Patient directory:** Find, add, edit, archive, and review patients within the sample practice.
 - **Connected records:** Keep appointment activity, treatment context, and concise operational notes together on each patient record.
-- **Guided public access:** Open a server-provisioned demo session without a public sign-up flow. The resettable fictional dataset can be restored to its curated baseline when needed.
+- **Guided public access:** Open a server-provisioned demo session without public registration. The fictional dataset can be reset to its curated baseline whenever needed.
 
-## Engineering highlights
+## Technical highlights
 
-- **Domain rules remain close to persistence.** Focused services enforce practice ownership, appointment overlap checks, and archive constraints through PostgreSQL-backed queries.
-- **The public demo is intentionally bounded.** A deterministic clock and resettable seed keep every walkthrough, screenshot, and test run consistent.
-- **Authentication is purpose-built for exploration.** Better Auth provisions a server-side demo identity and protects workspace routes without exposing credentials in the interface.
-- **Quality checks cover the important boundaries.** Vitest verifies rules and PostgreSQL integration; Playwright covers the main workflow and automated WCAG checks; GitHub Actions runs CI quality checks.
-- **The demo closes the loop.** A deterministic clinical huddle, operatory-aware schedule, and arrival lifecycle make the product walkthrough operationally complete.
+- **Domain rules stay close to persistence.** Focused services enforce practice ownership, appointment overlap checks, and archive constraints through PostgreSQL-backed queries.
+- **The public experience is intentionally bounded.** A deterministic clock and resettable seed keep walkthroughs, screenshots, and tests consistent.
+- **Authentication is designed for exploration.** Better Auth provisions a server-side demo identity and protects workspace routes without exposing credentials in the interface.
+- **Quality checks cover the important boundaries.** Vitest covers domain rules and PostgreSQL integration; Playwright covers the main workflows and accessibility checks; GitHub Actions runs the full CI pipeline.
+- **The workflow is connected end to end.** A Daily Huddle brief, operatory-aware schedule, and arrival lifecycle make the operational story easy to follow.
 
 ## Architecture
 
-```text
-Browser -> Next.js App Router -> Better Auth + Zod service layer -> Drizzle ORM -> PostgreSQL
-```
+    Browser -> Next.js App Router -> Better Auth + Zod boundary -> Domain services -> Drizzle ORM -> PostgreSQL
 
-The application is a modular monolith: server-rendered routes and route handlers compose focused domain services, while Drizzle owns PostgreSQL access and SQL migrations.
+DMS is a modular monolith: server-rendered routes and route handlers compose focused domain services, while Drizzle owns PostgreSQL access and SQL migrations.
 
 ## Technology stack
 
-- **Application:** Next.js 16 (App Router), React 19, TypeScript, and Tailwind CSS v4.
-- **UI & Primitives:** Radix UI primitives and Lucide React.
-- **Data & Identity:** PostgreSQL, Drizzle ORM, Drizzle Kit, Better Auth, and Zod.
-- **Testing & Quality:** Vitest, Playwright, `@axe-core/playwright`, Prettier, and ESLint.
-- **Tooling & Runtime:** Node.js 24, pnpm 10, Docker Compose, and GitHub Actions.
+- **Application:** Next.js 16, React 19, TypeScript, and Tailwind CSS v4.
+- **UI:** Radix UI primitives and Lucide React.
+- **Data and identity:** PostgreSQL, Drizzle ORM, Drizzle Kit, Better Auth, and Zod.
+- **Testing and quality:** Vitest, Playwright, @axe-core/playwright, Prettier, and ESLint.
+- **Tooling and runtime:** Node.js 24, pnpm 12.3.4, Docker Compose, and GitHub Actions.
 
 ## Repository structure
 
-| Path                   | Responsibility                                                         |
-| ---------------------- | ---------------------------------------------------------------------- |
-| `src/app`              | App Router pages, route handlers, metadata, and workspace routes.      |
-| `src/components`       | Product UI components, accessible primitives, and client interactions. |
-| `src/lib`              | Domain services, validation schemas, auth config, and demo helpers.    |
-| `src/db` and `drizzle` | Drizzle schema, deterministic seed data, and versioned SQL migrations. |
-| `tests`                | Unit, PostgreSQL integration, end-to-end, and accessibility suites.    |
-| `docs`                 | Architectural, developmental, testing, and product documentation.      |
+| Path               | Responsibility                                                                 |
+| ------------------ | ------------------------------------------------------------------------------ |
+| src/app            | App Router pages, route handlers, metadata, and workspace routes.              |
+| src/components     | Product UI, accessible primitives, and client interactions.                    |
+| src/lib            | Domain services, validation contracts, authentication, and demo helpers.       |
+| src/db and drizzle | Database schema, deterministic seed data, and versioned SQL migrations.        |
+| tests              | Unit, PostgreSQL integration, end-to-end, responsive, and accessibility tests. |
+| docs               | Product, architecture, development, and testing documentation.                 |
 
 ## Local development
 
-Prerequisites: Node.js 24, pnpm 10, and Docker Desktop.
+Requirements: Node.js 24, pnpm 12.3.4, and Docker Desktop.
 
-```bash
-# Clone and setup environment
-cp .env.example .env
-pnpm install
+    # Clone and configure the project
+    git clone https://github.com/acevedo-daniel/dms-demo.git
+    cd dms-demo
+    cp .env.example .env
 
-# Start local PostgreSQL database
-docker compose up -d
+    # Install dependencies
+    pnpm install
 
-# Initialize migrations and deterministic sample data
-pnpm db:reset
+    # Start local PostgreSQL
+    docker compose up -d
 
-# Start development server
-pnpm dev
-```
+    # Apply migrations and load the deterministic sample data
+    pnpm db:reset
 
-Open [http://localhost:3000](http://localhost:3000), then select **Explore demo**. The sample environment is intentionally fictional and resettable.
+    # Start the development server
+    pnpm dev
 
-## Quality
+Open [http://localhost:3000](http://localhost:3000) and choose **Explore demo**. The sample environment is fictional and resettable.
 
-```bash
-pnpm format:check
-pnpm lint
-pnpm typecheck
-pnpm test
-pnpm db:test:up
-pnpm test:integration
-pnpm test:e2e
-pnpm db:test:down
-pnpm build
-```
+## Quality checks
 
-Automated CI runs formatting, linting, type checking, unit tests, PostgreSQL integration tests against an isolated container, Playwright end-to-end workflows, automated WCAG accessibility audits, and the production build.
+    pnpm format:check
+    pnpm lint
+    pnpm typecheck
+    pnpm test
+    pnpm db:test:up
+    pnpm test:integration
+    pnpm exec playwright install --with-deps chromium
+    pnpm test:e2e
+    pnpm db:test:down
+    pnpm build
+
+The CI workflow runs these checks with Node.js 24, pnpm 12.3.4, and an isolated PostgreSQL service.
 
 ## Documentation
 
-- [Project scope](docs/PROJECT.md) — product scope, clinical domain rules, and business constraints.
-- [Architecture](docs/ARCHITECTURE.md) — modular monolith topology, component boundaries, and invariants.
-- [Development](docs/DEVELOPMENT.md) — local requirements, environment configuration, and database workflow.
-- [Testing](docs/TESTING.md) — verification strategy, test suites, and quality release gates.
-- [Security policy](.github/SECURITY.md) — responsible disclosure guidance and demo data privacy.
+- [Project scope](docs/PROJECT.md) — product scope, domain rules, and constraints.
+- [Architecture](docs/ARCHITECTURE.md) — system topology, boundaries, and invariants.
+- [Development](docs/DEVELOPMENT.md) — local requirements, environment setup, and database workflow.
+- [Testing](docs/TESTING.md) — test layers, commands, and release gates.
+- [Security policy](.github/SECURITY.md) — private vulnerability reporting and demo-data guidance.
