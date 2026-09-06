@@ -17,9 +17,6 @@
     "node": ">=24 <25",
     "pnpm": ">=12 <13"
   },
-  "overrides": {
-    "@esbuild-kit/core-utils>esbuild": "0.25.12"
-  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",

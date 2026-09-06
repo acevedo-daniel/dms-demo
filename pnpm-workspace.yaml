@@ -1,0 +1,6 @@
+overrides:
+  '@esbuild-kit/core-utils>esbuild': 0.25.12
+
+allowBuilds:
+  esbuild: true
+  unrs-resolver: true
