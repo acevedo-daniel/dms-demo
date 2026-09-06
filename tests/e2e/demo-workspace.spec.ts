@@ -213,7 +213,7 @@ test("creates an appointment from the weekly schedule", async ({ page }) => {
     .selectOption({ label: "Alex Quinn · AT-1001" });
   await dialog
     .getByLabel("Treatment")
-    .selectOption({ label: "Routine consultation · 30 min" });
+    .selectOption({ label: "Consulta de rutina · 30 min" });
   await dialog.getByLabel("Date").fill("2026-05-11");
   await dialog.getByLabel("Time").fill("09:00");
   await dialog
@@ -227,7 +227,7 @@ test("creates an appointment from the weekly schedule", async ({ page }) => {
   await expect(page.getByText("Appointment created.")).toBeAttached();
   await expect(
     page.getByRole("button", {
-      name: "Open scheduled appointment for Alex Quinn · Routine consultation at 09:00",
+      name: "Open scheduled appointment for Alex Quinn · Consulta de rutina at 09:00",
     }),
   ).toBeVisible();
 });
@@ -293,7 +293,7 @@ test("uses Today as an immediate, connected operating view", async ({
   ).toBeVisible();
 
   const recentTreatment = page
-    .getByRole("link", { name: /Hygiene visit/ })
+    .getByRole("link", { name: /Higiene dental/ })
     .last();
   await expect(recentTreatment).toHaveAttribute(
     "href",
@@ -309,7 +309,7 @@ test("opens treatment context from Notes and pre-fills Schedule", async ({
   await page.goto("/demo/notes");
 
   const treatmentLink = page
-    .getByRole("link", { name: /Hygiene visit/ })
+    .getByRole("link", { name: /Higiene dental/ })
     .first();
   await expect(treatmentLink).toHaveAttribute(
     "href",
@@ -319,13 +319,13 @@ test("opens treatment context from Notes and pre-fills Schedule", async ({
   await page.goto(`/demo/treatments?treatment=${hygieneVisitId}`);
   const selectedTreatment = page.locator(`#treatment-${hygieneVisitId}`);
   await expect(selectedTreatment).toBeFocused();
-  await expect(selectedTreatment).toContainText("Hygiene visit");
+  await expect(selectedTreatment).toContainText("Higiene dental");
   await expect(
-    selectedTreatment.getByRole("link", { name: "Schedule Hygiene visit" }),
+    selectedTreatment.getByRole("link", { name: "Schedule Higiene dental" }),
   ).toBeVisible();
 
   await selectedTreatment
-    .getByRole("link", { name: "Schedule Hygiene visit" })
+    .getByRole("link", { name: "Schedule Higiene dental" })
     .click();
   const appointmentDialog = page.getByRole("dialog", {
     name: "Create appointment",
@@ -353,16 +353,22 @@ test("connects patient summary, historical activity, and schedule context", asyn
     "No clinical alert recorded",
   );
   await expect(
-    page.getByText("Appointment preparation details reviewed."),
+    page.getByText(
+      "Revisión previa a la profilaxis: encías sanas sin signos de sangrado activo. Se confirma indicación de limpieza semestral.",
+    ),
   ).toBeVisible();
 
   await page.getByRole("button", { name: "Appointments", exact: true }).click();
   await expect(
-    page.getByText("Appointment preparation details reviewed."),
+    page.getByText(
+      "Revisión previa a la profilaxis: encías sanas sin signos de sangrado activo. Se confirma indicación de limpieza semestral.",
+    ),
   ).toBeHidden();
   await page.getByRole("button", { name: "Notes", exact: true }).click();
   await expect(
-    page.getByText("Appointment preparation details reviewed."),
+    page.getByText(
+      "Revisión previa a la profilaxis: encías sanas sin signos de sangrado activo. Se confirma indicación de limpieza semestral.",
+    ),
   ).toBeVisible();
 
   const viewInSchedule = page.getByRole("link", { name: "View in schedule" });
