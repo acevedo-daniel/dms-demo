@@ -3,8 +3,8 @@ import { ImageResponse } from "next/og";
 export const contentType = "image/png";
 export const runtime = "nodejs";
 export const size = {
-  width: 64,
-  height: 64,
+  width: 512,
+  height: 512,
 };
 
 export default function Icon() {
@@ -13,7 +13,7 @@ export default function Icon() {
       style={{
         alignItems: "center",
         background: "#171715",
-        borderRadius: "14px",
+        borderRadius: "112px",
         display: "flex",
         height: "100%",
         justifyContent: "center",
@@ -26,10 +26,10 @@ export default function Icon() {
           color: "#ffffff",
           display: "flex",
           fontFamily: "sans-serif",
-          fontSize: "36px",
+          fontSize: "288px",
           fontWeight: 700,
-          letterSpacing: "-4px",
-          marginLeft: "-3px",
+          letterSpacing: "-32px",
+          marginLeft: "-24px",
         }}
       >
         D

@@ -117,7 +117,7 @@ export const enDictionary: Dictionary = {
     toggleLanguage: "Switch language (ES/EN)",
   },
   landing: {
-    metaTitle: "DMS — Dental practice operations workspace",
+    metaTitle: "DMS: Dental practice operations workspace",
     metaDescription:
       "A focused workspace for dental practice operations: scheduling, patient context, treatments, and operational notes.",
     navWorkflow: "Workflow",
@@ -210,7 +210,7 @@ export const enDictionary: Dictionary = {
       "Demonstration workspace with strictly fictional clinic data.",
   },
   access: {
-    metaTitle: "Demo Access · DMS",
+    metaTitle: "Demo access",
     metaDescription:
       "Immediate access to the DMS demonstration workspace for Atelier Dental.",
     backToHome: "Back to overview",

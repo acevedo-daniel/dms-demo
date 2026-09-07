@@ -1,8 +1,18 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { TreatmentCatalog } from "@/components/treatment-catalog";
 import { Button } from "@/components/ui/button";
 import { getServerTranslations } from "@/lib/i18n/server";
 import { getTreatmentCatalog } from "@/lib/treatments";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getServerTranslations();
+
+  return {
+    title: t.treatments.metaTitle,
+    description: t.treatments.metaDescription,
+  };
+}
 
 async function loadTreatmentCatalog() {
   try {

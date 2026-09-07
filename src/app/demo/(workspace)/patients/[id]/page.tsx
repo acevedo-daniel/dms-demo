@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { ArrowLeft, CalendarPlus, ClipboardList, Pencil } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -23,6 +24,29 @@ import { getNoteComposerOptions } from "@/lib/notes";
 import { getPatientRecord } from "@/lib/patients";
 
 type PatientPageProps = { params: Promise<{ id: string }> };
+
+export async function generateMetadata({
+  params,
+}: PatientPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const [{ locale, t }, patient] = await Promise.all([
+    getServerTranslations(),
+    loadPatientRecord(id),
+  ]);
+
+  if (!patient || patient === "not-found") {
+    return {
+      title: locale === "es" ? "Paciente no encontrado" : "Patient not found",
+    };
+  }
+
+  const name = patientName(patient);
+
+  return {
+    title: t.nav.patientRecordTitle(name),
+    description: `${patient.identifier} · ${name}`,
+  };
+}
 
 function patientName(patient: { firstName: string; lastName: string }) {
   return `${patient.firstName} ${patient.lastName}`;

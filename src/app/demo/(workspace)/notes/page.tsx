@@ -1,8 +1,18 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { NotesIndex } from "@/components/notes-index";
 import { Button } from "@/components/ui/button";
 import { getServerTranslations } from "@/lib/i18n/server";
 import { getNoteComposerOptions, getPatientNotes } from "@/lib/notes";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getServerTranslations();
+
+  return {
+    title: t.notes.metaTitle,
+    description: t.notes.metaDescription,
+  };
+}
 
 async function loadNotes() {
   try {

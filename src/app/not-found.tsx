@@ -1,7 +1,24 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, SearchX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getServerTranslations } from "@/lib/i18n/server";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { locale } = await getServerTranslations();
+
+  return {
+    title: locale === "es" ? "Página no encontrada" : "Page Not Found",
+    description:
+      locale === "es"
+        ? "La ruta solicitada no está disponible en el espacio de trabajo de DMS."
+        : "The requested route was not found in the DMS workspace.",
+    robots: {
+      follow: false,
+      index: false,
+    },
+  };
+}
 
 export default async function NotFound() {
   const { locale } = await getServerTranslations();

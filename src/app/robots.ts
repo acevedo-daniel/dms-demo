@@ -1,15 +1,33 @@
 import type { MetadataRoute } from "next";
-import { getSiteUrl } from "@/lib/site";
+import { getSiteUrl, isSearchIndexableDeployment } from "@/lib/site";
 
 export default function robots(): MetadataRoute.Robots {
   const siteUrl = getSiteUrl();
+  const indexable = isSearchIndexableDeployment();
 
   return {
     rules: {
       userAgent: "*",
-      allow: "/",
-      disallow: ["/admin/", "/api/", "/demo/", "/login"],
+      ...(indexable
+        ? {
+            allow: "/",
+            disallow: [
+              "/admin",
+              "/admin/",
+              "/api",
+              "/api/",
+              "/demo",
+              "/demo/",
+              "/login",
+            ],
+          }
+        : { disallow: "/" }),
     },
-    sitemap: new URL("/sitemap.xml", siteUrl).toString(),
+    ...(indexable
+      ? {
+          host: siteUrl.origin,
+          sitemap: new URL("/sitemap.xml", siteUrl).toString(),
+        }
+      : {}),
   };
 }

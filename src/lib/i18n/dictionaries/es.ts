@@ -119,7 +119,7 @@ export const esDictionary: Dictionary = {
     toggleLanguage: "Cambiar idioma (ES/EN)",
   },
   landing: {
-    metaTitle: "DMS — Gestión operativa odontológica",
+    metaTitle: "DMS: Gestión operativa odontológica",
     metaDescription:
       "Espacio de trabajo unificado para clínicas odontológicas: turnos, fichas de pacientes, catálogo de tratamientos y notas clínicas.",
     navWorkflow: "Flujo de trabajo",
@@ -171,10 +171,10 @@ export const esDictionary: Dictionary = {
       "Software diseñado para pasar a segundo plano frente al cuidado del paciente.",
     manifestoDescription:
       "Una plataforma de gestión clínica no debería demandar mayor carga mental que el instrumental sobre la bandeja operatoria.",
-    demoLabel: "Conozca el espacio de trabajo en vivo",
-    demoTitle: "Explore una jornada clínica completa y ordenada.",
+    demoLabel: "Espacio de trabajo en vivo",
+    demoTitle: "Explora una jornada clínica completa y ordenada.",
     demoDescription:
-      "Inicie una sesión profesional de muestra al instante con datos ficticios cuidadosamente organizados. Sin creación de cuentas, claves compartidas ni solicitud de información personal.",
+      "Inicia una sesión de muestra al instante con datos ficticios cuidadosamente organizados. Sin creación de cuentas, contraseñas ni solicitud de información personal.",
     huddleTitle: "Reunión clínica diaria en un solo vistazo",
     huddleDesc:
       "Informe imprimible para la puesta en común del equipo al inicio de cada jornada: pacientes del día, sillón asignado y alertas médicas críticas.",
@@ -213,7 +213,7 @@ export const esDictionary: Dictionary = {
       "Espacio de demostración con datos y pacientes estrictamente ficticios.",
   },
   access: {
-    metaTitle: "Acceso a la Demostración · DMS",
+    metaTitle: "Acceso a la demostración",
     metaDescription:
       "Acceso inmediato al espacio de demostración de DMS para la clínica Atelier Dental.",
     backToHome: "Volver al inicio",
@@ -341,7 +341,7 @@ export const esDictionary: Dictionary = {
     contextTitleEdit: "Detalles del turno",
     contextTitleCreate: "Crear turno",
     contextDescEdit:
-      "Actualice los datos del turno o avance al siguiente estado.",
+      "Actualiza los datos del turno o avanza al siguiente estado.",
     contextDescCreate: "Los nuevos turnos se crean con estado Programado.",
     form: {
       patient: "Paciente",
@@ -397,8 +397,7 @@ export const esDictionary: Dictionary = {
     },
     emptySearch: "Ningún paciente coincide con esta búsqueda.",
     emptyFilter: "No hay pacientes en esta categoría.",
-    emptyDesc:
-      "Modifique los filtros o agregue un nuevo paciente al directorio.",
+    emptyDesc: "Modifica los filtros o añade un nuevo paciente al directorio.",
     record: {
       backToDirectory: "Volver al directorio",
       vitalsTitle: "Antecedentes y preferencias",
@@ -415,7 +414,7 @@ export const esDictionary: Dictionary = {
       newNoteAction: "Nueva nota",
       archivePatient: "Archivar",
       archiveWarningActiveAppts:
-        "Cancelá o completá los turnos activos antes de archivar este paciente.",
+        "Cancela o completa los turnos activos antes de archivar a este paciente.",
       archiveConfirmTitle: "¿Archivar esta ficha de paciente?",
       archiveConfirmDesc:
         "La ficha pasará a modo solo lectura y se ocultará de los filtros activos del directorio.",
@@ -432,8 +431,9 @@ export const esDictionary: Dictionary = {
     form: {
       titleNew: "Nuevo paciente",
       titleEdit: "Editar paciente",
-      descNew: "Complete los datos filiatorios y clínicos para abrir la ficha.",
-      descEdit: "Actualice la información de contacto o antecedentes médicos.",
+      descNew:
+        "Completa los datos de contacto y antecedentes para abrir la ficha.",
+      descEdit: "Actualiza la información de contacto o antecedentes médicos.",
       fullName: "Nombre completo",
       phone: "Teléfono de contacto",
       email: "Correo electrónico",
@@ -462,14 +462,14 @@ export const esDictionary: Dictionary = {
     standardsLedger: {
       specialties: "Especialidades activas",
       protocols: "Protocolos validados",
-      standardDuration: "Bloques clínicos calibrados",
+      standardDuration: "Tiempos estimados por tratamiento",
     },
     allCategories: "Todas las especialidades",
     searchPlaceholder: "Buscar tratamiento o protocolo...",
     scheduleAction: "Agendar",
     emptyTitle: "No se encontraron tratamientos.",
     emptyDesc:
-      "Intente con otro término de búsqueda o seleccione otra especialidad.",
+      "Intenta con otro término de búsqueda o selecciona otra especialidad.",
     minutes: "min",
   },
   notes: {
@@ -490,13 +490,13 @@ export const esDictionary: Dictionary = {
     composer: {
       title: "Nueva nota clínica",
       description:
-        "Registre una evolución o comentario operativo relevante para la atención del paciente.",
+        "Registra una evolución u observación relevante para la atención del paciente.",
       patient: "Paciente asociado",
       selectPatient: "Seleccionar paciente...",
       category: "Tipo de nota",
       content: "Nota clínica",
       contentPlaceholder:
-        "Describa la evolución clínica, indicaciones o acuerdos del pase de guardia...",
+        "Describe la evolución clínica, indicaciones o acuerdos del pase de guardia...",
       submit: "Guardar nota",
       submitting: "Guardando nota...",
       feedbackSaved: "Nota de paciente guardada.",

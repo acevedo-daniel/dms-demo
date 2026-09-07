@@ -309,6 +309,88 @@ test("uses Today as an immediate, connected operating view", async ({
   ).toBeVisible();
 });
 
+test("prints the daily huddle in an isolated, unclipped document", async ({
+  page,
+}) => {
+  await openResetDemoWorkspace(page);
+  await page.getByRole("button", { name: "Informe diario" }).click();
+
+  const dialog = page.getByRole("dialog", {
+    name: "Reunión clínica diaria",
+  });
+  const printButton = dialog.getByRole("button", { name: "Imprimir" });
+
+  await page.evaluate(() => {
+    window.open = () =>
+      ({
+        close: () => {
+          document.documentElement.dataset.printWindowClosed = "true";
+        },
+        document: {
+          close: () => {},
+          open: () => {},
+          write: (markup: string) => {
+            document.documentElement.dataset.printDocument = markup;
+          },
+        },
+        focus: () => {},
+        opener: window,
+        print: () => {
+          document.documentElement.dataset.printRequested = "true";
+        },
+      }) as unknown as Window;
+  });
+  await printButton.click();
+  await expect(page.locator("html")).toHaveAttribute(
+    "data-print-requested",
+    "true",
+  );
+  await expect(page.locator("html")).toHaveAttribute(
+    "data-print-window-closed",
+    "true",
+  );
+
+  const printDocument = await page
+    .locator("html")
+    .getAttribute("data-print-document");
+
+  expect(printDocument).toContain('<html lang="es">');
+  expect(printDocument).toContain("@page { margin: 14mm; }");
+  expect(printDocument).toContain("overflow: visible;");
+  expect(printDocument).toContain("Reunión clínica diaria");
+  expect(printDocument).toContain("Atelier Dental · informe operativo del día");
+  expect(printDocument).toContain("page-break-inside: avoid;");
+
+  if (!printDocument) {
+    throw new Error("The daily huddle print document was not generated.");
+  }
+
+  const printPreview = await page.context().newPage();
+  await printPreview.setContent(printDocument);
+  await printPreview.emulateMedia({ media: "print" });
+
+  const layout = await printPreview.locator("main").evaluate((element) => ({
+    height: element.getBoundingClientRect().height,
+    overflow: getComputedStyle(element).overflow,
+    rowCount: element.querySelectorAll("tbody tr").length,
+    rowsWithLayout: Array.from(element.querySelectorAll("tbody tr")).filter(
+      (row) => row.getBoundingClientRect().height > 0,
+    ).length,
+  }));
+
+  expect(layout).toEqual({
+    height: expect.any(Number),
+    overflow: "visible",
+    rowCount: expect.any(Number),
+    rowsWithLayout: expect.any(Number),
+  });
+  expect(layout.height).toBeGreaterThan(0);
+  expect(layout.rowCount).toBeGreaterThan(0);
+  expect(layout.rowsWithLayout).toBe(layout.rowCount);
+
+  await printPreview.close();
+});
+
 test("opens treatment context from Notes and pre-fills Schedule", async ({
   page,
 }) => {
@@ -428,7 +510,7 @@ test("keeps the archive prerequisite explicit for patients with active appointme
 
   await expect(
     page.getByText(
-      "Cancelá o completá los turnos activos antes de archivar este paciente.",
+      "Cancela o completa los turnos activos antes de archivar a este paciente.",
       { exact: true },
     ),
   ).toBeVisible();

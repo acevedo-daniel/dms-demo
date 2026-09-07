@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "DMS · Gestión operativa odontológica";
+export const alt =
+  "DMS, un espacio de trabajo para la gestión operativa odontológica.";
 export const contentType = "image/png";
 export const runtime = "nodejs";
 export const size = {
@@ -89,7 +90,7 @@ export default function OpenGraphImage() {
             marginTop: "24px",
           }}
         >
-          Una forma más serena de coordinar el día.
+          Una forma más clara de llevar el día en la clínica.
         </div>
       </div>
 
@@ -103,7 +104,7 @@ export default function OpenGraphImage() {
           paddingTop: "28px",
         }}
       >
-        Agenda · Contexto del paciente · Tratamientos · Notas
+        Agenda · Fichas de pacientes · Tratamientos · Notas
       </div>
     </div>,
     size,

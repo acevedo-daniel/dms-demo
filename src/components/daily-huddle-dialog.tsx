@@ -39,7 +39,24 @@ export function DailyHuddleDialog({
   );
   const afternoon = appointments.filter((item) => !morning.includes(item));
   const alertCount = appointments.filter((item) => item.clinicalAlert).length;
-  const print = () => window.print();
+  const print = () => {
+    const printWindow = window.open("", "daily-huddle-print");
+
+    if (!printWindow) return;
+
+    printWindow.opener = null;
+    printWindow.document.open();
+    printWindow.document.write(
+      getDailyHuddlePrintDocument({ appointments, locale }),
+    );
+    printWindow.document.close();
+
+    window.setTimeout(() => {
+      printWindow.focus();
+      printWindow.print();
+      printWindow.close();
+    }, 0);
+  };
 
   return (
     <>
@@ -52,8 +69,8 @@ export function DailyHuddleDialog({
         {locale === "es" ? "Informe diario" : "Daily huddle"}
       </Button>
       <Dialog onOpenChange={setOpen} open={open}>
-        <DialogContent className="daily-huddle-dialog max-h-[min(90vh,48rem)] max-w-3xl overflow-y-auto p-0">
-          <div data-daily-huddle-print className="space-y-6 p-6 sm:p-8">
+        <DialogContent className="max-h-[min(90vh,48rem)] max-w-3xl overflow-y-auto p-0">
+          <div className="space-y-6 p-6 sm:p-8">
             <DialogHeader>
               <DialogTitle className="text-2xl">
                 {locale === "es"
@@ -141,6 +158,196 @@ export function DailyHuddleDialog({
       </Dialog>
     </>
   );
+}
+
+function getDailyHuddlePrintDocument({
+  appointments,
+  locale,
+}: {
+  appointments: HuddleAppointment[];
+  locale: "es" | "en";
+}) {
+  const morning = appointments.filter(
+    (item) => new Date(item.startsAt).getUTCHours() < 15,
+  );
+  const afternoon = appointments.filter((item) => !morning.includes(item));
+  const alertAppointments = appointments.filter((item) => item.clinicalAlert);
+  const copy =
+    locale === "es"
+      ? {
+          alerts: "Alertas",
+          appointments: "Turnos",
+          arrived: "En recepción",
+          clinicalAlerts: "Alertas clínicas",
+          footer:
+            "Dos sillones operativos · Coordinar transición entre gabinetes.",
+          morning: "Mañana",
+          operatory: "Sillón",
+          patient: "Paciente",
+          subtitle: "Atelier Dental · informe operativo del día",
+          time: "Horario",
+          title: "Reunión clínica diaria",
+          treatment: "Tratamiento",
+          status: "Estado",
+          noAppointments: "Sin turnos programados.",
+        }
+      : {
+          alerts: "Alerts",
+          appointments: "Appointments",
+          arrived: "Arrived",
+          clinicalAlerts: "Clinical alerts",
+          footer: "Two active operatories · Coordinate chair handover.",
+          morning: "Morning",
+          operatory: "Operatory",
+          patient: "Patient",
+          subtitle: "Atelier Dental · daily operational brief",
+          time: "Time",
+          title: "Clinical daily huddle",
+          treatment: "Treatment",
+          status: "Status",
+          noAppointments: "No appointments scheduled.",
+        };
+
+  const table = (items: HuddleAppointment[], label: string) => `
+    <section>
+      <h2>${escapeHtml(label)}</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>${escapeHtml(copy.time)}</th>
+            <th>${escapeHtml(copy.patient)}</th>
+            <th>${escapeHtml(copy.treatment)}</th>
+            <th>${escapeHtml(copy.operatory)}</th>
+            <th>${escapeHtml(copy.status)}</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${
+            items.length
+              ? items
+                  .map(
+                    (item) => `
+                      <tr>
+                        <td>${escapeHtml(formatDemoTime(new Date(item.startsAt), locale))}</td>
+                        <td><strong>${escapeHtml(item.patientName)}</strong></td>
+                        <td>${escapeHtml(getLocalizedTreatment({ name: item.treatmentName }, locale).name)}</td>
+                        <td>${escapeHtml(`${copy.operatory} ${item.operatory}`)}</td>
+                        <td>${escapeHtml(getLocalizedStatus(item.status, locale))}</td>
+                      </tr>
+                    `,
+                  )
+                  .join("")
+              : `<tr><td class="empty" colspan="5">${escapeHtml(copy.noAppointments)}</td></tr>`
+          }
+        </tbody>
+      </table>
+    </section>
+  `;
+
+  return `<!doctype html>
+    <html lang="${locale}">
+      <head>
+        <meta charset="utf-8" />
+        <title>${escapeHtml(copy.title)}</title>
+        <style>
+          @page { margin: 14mm; }
+          * { box-sizing: border-box; }
+          html, body { margin: 0; padding: 0; background: #fff; color: #171717; }
+          body { font-family: Arial, Helvetica, sans-serif; font-size: 10pt; line-height: 1.45; }
+          main { max-width: 100%; overflow: visible; }
+          header { border-bottom: 1px solid #d4d4d4; margin-bottom: 18pt; padding-bottom: 12pt; }
+          h1 { font-size: 20pt; line-height: 1.15; margin: 0; }
+          h2 { color: #525252; font-size: 9pt; letter-spacing: .08em; margin: 18pt 0 6pt; text-transform: uppercase; }
+          p { margin: 0; }
+          .subtitle, .footer { color: #525252; }
+          .subtitle { margin-top: 4pt; }
+          .summary { display: table; table-layout: fixed; border-collapse: separate; border-spacing: 8pt 0; margin: 0 -8pt; width: calc(100% + 16pt); }
+          .metric { border: 1px solid #d4d4d4; border-radius: 6pt; display: table-cell; padding: 10pt; width: 33.333%; }
+          .metric-label { color: #525252; font-size: 8pt; }
+          .metric-value { font-size: 18pt; font-weight: 700; line-height: 1.1; margin-top: 4pt; }
+          .alert { background: #fff7f7; border: 1px solid #f0b8b8; border-radius: 6pt; margin-top: 14pt; padding: 10pt; }
+          .alert strong { display: block; }
+          .alert ul { margin: 6pt 0 0; padding-left: 16pt; }
+          section { break-inside: auto; overflow: visible; }
+          table { border-collapse: collapse; table-layout: fixed; width: 100%; }
+          th, td { border: 1px solid #d4d4d4; overflow-wrap: anywhere; padding: 7pt; text-align: left; vertical-align: top; }
+          th { background: #f5f5f5; color: #525252; font-size: 8pt; font-weight: 600; }
+          th:nth-child(1), td:nth-child(1) { width: 12%; }
+          th:nth-child(2), td:nth-child(2) { width: 25%; }
+          th:nth-child(3), td:nth-child(3) { width: 29%; }
+          th:nth-child(4), td:nth-child(4) { width: 15%; }
+          th:nth-child(5), td:nth-child(5) { width: 19%; }
+          thead { display: table-header-group; }
+          tr { break-inside: avoid; page-break-inside: avoid; }
+          .empty { color: #525252; text-align: center; }
+          .footer { border-top: 1px solid #d4d4d4; margin-top: 18pt; padding-top: 10pt; }
+        </style>
+      </head>
+      <body>
+        <main>
+          <header>
+            <h1>${escapeHtml(copy.title)}</h1>
+            <p class="subtitle">${escapeHtml(copy.subtitle)}</p>
+          </header>
+          <div class="summary">
+            <div class="metric"><p class="metric-label">${escapeHtml(copy.appointments)}</p><p class="metric-value">${appointments.length}</p></div>
+            <div class="metric"><p class="metric-label">${escapeHtml(copy.arrived)}</p><p class="metric-value">${appointments.filter((item) => item.status === "ARRIVED").length}</p></div>
+            <div class="metric"><p class="metric-label">${escapeHtml(copy.alerts)}</p><p class="metric-value">${alertAppointments.length}</p></div>
+          </div>
+          ${
+            alertAppointments.length
+              ? `<aside class="alert"><strong>${escapeHtml(copy.clinicalAlerts)}</strong><ul>${alertAppointments
+                  .map(
+                    (item) =>
+                      `<li><strong>${escapeHtml(item.patientName)}:</strong> ${escapeHtml(getLocalizedClinicalAlert(item.patientId, item.clinicalAlert ?? "", locale))}</li>`,
+                  )
+                  .join("")}</ul></aside>`
+              : ""
+          }
+          ${table(morning, copy.morning)}
+          ${table(afternoon, locale === "es" ? "Tarde" : "Afternoon")}
+          <p class="footer">${escapeHtml(copy.footer)}</p>
+        </main>
+      </body>
+    </html>`;
+}
+
+function getLocalizedStatus(
+  status: HuddleAppointment["status"],
+  locale: "es" | "en",
+) {
+  const labels = {
+    es: {
+      ARRIVED: "En recepción",
+      CANCELLED: "Cancelado",
+      COMPLETED: "Completado",
+      CONFIRMED: "Confirmado",
+      SCHEDULED: "Programado",
+    },
+    en: {
+      ARRIVED: "Arrived",
+      CANCELLED: "Cancelled",
+      COMPLETED: "Completed",
+      CONFIRMED: "Confirmed",
+      SCHEDULED: "Scheduled",
+    },
+  };
+
+  return labels[locale][status];
+}
+
+function escapeHtml(value: string | number) {
+  return String(value).replace(/[&<>"]|'/g, (character) => {
+    const entities: Record<string, string> = {
+      '"': "&quot;",
+      "&": "&amp;",
+      "'": "&#039;",
+      "<": "&lt;",
+      ">": "&gt;",
+    };
+
+    return entities[character];
+  });
 }
 
 function HuddleTable({
