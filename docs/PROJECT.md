@@ -1,4 +1,4 @@
-# DMS — Project
+# DMS: Project
 
 > Product scope, domain rules, and business constraints for the DMS workspace.
 
@@ -67,8 +67,8 @@ DMS is an independent demonstration informed by operational systems built for re
 
 ## Related documentation
 
-- [README.md](../README.md) — project overview, live demo link, and local setup.
-- [ARCHITECTURE.md](ARCHITECTURE.md) — system topology, component boundaries, and invariants.
-- [DEVELOPMENT.md](DEVELOPMENT.md) — local environment configuration, environment variables, and database workflow.
-- [TESTING.md](TESTING.md) — test strategy, verification commands, and CI pipeline.
-- [SECURITY.md](../.github/SECURITY.md) — private vulnerability reporting and demo-data safety guidelines.
+- [README.md](../README.md): project overview, live demo link, and local setup.
+- [ARCHITECTURE.md](ARCHITECTURE.md): system topology, component boundaries, and invariants.
+- [DEVELOPMENT.md](DEVELOPMENT.md): local environment configuration, environment variables, and database workflow.
+- [TESTING.md](TESTING.md): test strategy, verification commands, and CI pipeline.
+- [SECURITY.md](../.github/SECURITY.md): private vulnerability reporting and demo-data safety guidelines.

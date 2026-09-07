@@ -1,4 +1,4 @@
-# DMS — Development
+# DMS: Development
 
 > Developer setup, environment configuration, and daily workflow for DMS.
 
@@ -88,7 +88,7 @@ The demo seed dataset is deterministic and immutable. Whenever exploratory testi
 
 ## Related documentation
 
-- [README.md](../README.md) — project overview, live demo link, and local setup.
-- [ARCHITECTURE.md](ARCHITECTURE.md) — architecture, component boundaries, and invariants.
-- [TESTING.md](TESTING.md) — test layers, fixture isolation, and CI verification pipeline.
-- [PROJECT.md](PROJECT.md) — product scope, domain rules, and business constraints.
+- [README.md](../README.md): project overview, live demo link, and local setup.
+- [ARCHITECTURE.md](ARCHITECTURE.md): architecture, component boundaries, and invariants.
+- [TESTING.md](TESTING.md): test layers, fixture isolation, and CI verification pipeline.
+- [PROJECT.md](PROJECT.md): product scope, domain rules, and business constraints.

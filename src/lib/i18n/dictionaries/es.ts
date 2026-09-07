@@ -119,7 +119,7 @@ export const esDictionary: Dictionary = {
     toggleLanguage: "Cambiar idioma (ES/EN)",
   },
   landing: {
-    metaTitle: "DMS — Gestión operativa odontológica",
+    metaTitle: "DMS: Gestión operativa odontológica",
     metaDescription:
       "Espacio de trabajo unificado para clínicas odontológicas: turnos, fichas de pacientes, catálogo de tratamientos y notas clínicas.",
     navWorkflow: "Flujo de trabajo",

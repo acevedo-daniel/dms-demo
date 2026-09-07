@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     id: "/",
     lang: "es-AR",
-    name: "DMS — Gestión operativa odontológica",
+    name: "DMS: Gestión operativa odontológica",
     short_name: "DMS",
     description:
       "Un espacio de trabajo para coordinar la operación diaria de clínicas odontológicas.",

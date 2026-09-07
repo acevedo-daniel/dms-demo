@@ -461,7 +461,7 @@ export function StudioTimePicker({
                 : "Clinical slots (30 min)"}
             </span>
             <span className="font-mono text-xs text-muted-foreground">
-              09:00 — 17:30
+              09:00 - 17:30
             </span>
           </div>
 

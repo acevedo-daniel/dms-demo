@@ -439,7 +439,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* 1. The Clinical Day in Motion — 4-Pillar Bento Grid */}
+      {/* 1. The Clinical Day in Motion: 4-Pillar Bento Grid */}
       <section
         aria-labelledby="workflow-title"
         className="mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8 lg:py-36 border-t border-border"
@@ -811,7 +811,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* 2. Engineering Signals — Enterprise Reliability */}
+      {/* 2. Engineering Signals: Enterprise Reliability */}
       <section
         aria-labelledby="engineering-signals-title"
         className="mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8 lg:py-36 border-t border-border"

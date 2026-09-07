@@ -1,4 +1,4 @@
-# DMS — Testing
+# DMS: Testing
 
 > Verification strategy, test layers, and release quality gates for DMS.
 
@@ -75,7 +75,7 @@ Every pull request and push to `main` triggers `.github/workflows/ci.yml`. The a
 
 ## Related documentation
 
-- [README.md](../README.md) — project overview, live demo link, and local setup.
-- [PROJECT.md](PROJECT.md) — product scope, domain rules, and business constraints.
-- [ARCHITECTURE.md](ARCHITECTURE.md) — system topology, component boundaries, and invariants.
-- [DEVELOPMENT.md](DEVELOPMENT.md) — local setup, environment configuration, and database workflow.
+- [README.md](../README.md): project overview, live demo link, and local setup.
+- [PROJECT.md](PROJECT.md): product scope, domain rules, and business constraints.
+- [ARCHITECTURE.md](ARCHITECTURE.md): system topology, component boundaries, and invariants.
+- [DEVELOPMENT.md](DEVELOPMENT.md): local setup, environment configuration, and database workflow.

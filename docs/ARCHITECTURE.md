@@ -1,4 +1,4 @@
-# DMS — Architecture
+# DMS: Architecture
 
 > System topology, component boundaries, and technical invariants for DMS.
 
@@ -56,8 +56,8 @@ Browser -> Next.js App Router -> Better Auth / Zod validation boundary
 
 ## Related documentation
 
-- [README.md](../README.md) — project entry point, live demo link, and local setup.
-- [PROJECT.md](PROJECT.md) — product scope, domain rules, and business constraints.
-- [DEVELOPMENT.md](DEVELOPMENT.md) — developer setup, environment variables, and database workflow.
-- [TESTING.md](TESTING.md) — test layers, fixture isolation, and CI verification pipeline.
-- [SECURITY.md](../.github/SECURITY.md) — private vulnerability reporting and demo-data safety guidelines.
+- [README.md](../README.md): project entry point, live demo link, and local setup.
+- [PROJECT.md](PROJECT.md): product scope, domain rules, and business constraints.
+- [DEVELOPMENT.md](DEVELOPMENT.md): developer setup, environment variables, and database workflow.
+- [TESTING.md](TESTING.md): test layers, fixture isolation, and CI verification pipeline.
+- [SECURITY.md](../.github/SECURITY.md): private vulnerability reporting and demo-data safety guidelines.

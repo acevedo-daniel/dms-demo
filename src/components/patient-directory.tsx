@@ -458,7 +458,7 @@ export function PatientDirectory({
                         <p className="mt-0.5 truncate text-xs text-muted-foreground sm:text-sm">
                           {localizedTreatment?.name ??
                             patient.nextAppointment?.treatmentName ??
-                            "—"}
+                            "-"}
                         </p>
                       </div>
                     </div>

@@ -4,7 +4,7 @@
 
 > A calm, focused workspace for coordinating daily dental practice operations.
 
-DMS brings appointments, patient records, treatment context, and operational notes into one cohesive surface. The public experience is anchored in Atelier Dental—a curated, fictional practice designed to show how real clinical workflows fit together throughout the day. Every practice, patient, and clinical note in this repository is strictly fictional.
+DMS brings appointments, patient records, treatment context, and operational notes into one cohesive surface. The public experience is anchored in Atelier Dental, a curated, fictional practice designed to show how real clinical workflows fit together throughout the day. Every practice, patient, and clinical note in this repository is strictly fictional.
 
 **[Explore the live demo](https://dms-showcase.vercel.app)**
 
@@ -113,8 +113,8 @@ The GitHub Actions CI pipeline runs these exact checks on Node.js 24 against an 
 
 ## Documentation
 
-- [Project scope](docs/PROJECT.md) — product scope, domain rules, and business constraints.
-- [Architecture](docs/ARCHITECTURE.md) — system topology, component boundaries, and invariants.
-- [Development](docs/DEVELOPMENT.md) — local environment, database workflow, and command reference.
-- [Testing](docs/TESTING.md) — test layers, fixture isolation, and CI verification pipeline.
-- [Security policy](.github/SECURITY.md) — private vulnerability reporting and demo-data safety guidelines.
+- [Project scope](docs/PROJECT.md): product scope, domain rules, and business constraints.
+- [Architecture](docs/ARCHITECTURE.md): system topology, component boundaries, and invariants.
+- [Development](docs/DEVELOPMENT.md): local environment, database workflow, and command reference.
+- [Testing](docs/TESTING.md): test layers, fixture isolation, and CI verification pipeline.
+- [Security policy](.github/SECURITY.md): private vulnerability reporting and demo-data safety guidelines.
